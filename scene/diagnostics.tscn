@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://dv531a1kpiajg"]
+
+[ext_resource type="Script" uid="uid://b5u2mfaqjv7a" path="res://scripts/diagnostics.gd" id="2_diagnostics"]
+
+[node name="diagnostices" type="Node2D"]
+script = ExtResource("2_diagnostics")
+
+
+
+[node name="bg" type="ColorRect" parent="."]
+offset_left = -15.0
+offset_top = 1.0
+offset_right = 1919.0
+offset_bottom = 1090.0
+
+[node name="Label" type="Label" parent="bg"]
+modulate = Color(0, 0, 0, 1)
+self_modulate = Color(0.22382358, 0.22382358, 0.22382355, 1)
+top_level = true
+layout_mode = 0
+offset_left = 137.0
+offset_top = 78.0
+offset_right = 340.0
+offset_bottom = 141.0
+text = "Connecting to device..."
