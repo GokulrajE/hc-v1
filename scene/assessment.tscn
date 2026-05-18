@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://d1mxvv1r4eyw3"]
+
+[ext_resource type="Script" uid="uid://hdbpglk6lfwu" path="res://scripts/assessment.gd" id="1_assessment"]
+
+[node name="Assessment" type="Node2D" unique_id=1234567899]
+script = ExtResource("1_assessment")
+
+[node name="bg" type="ColorRect" parent="." unique_id=1234567900]
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 1928.0
+offset_bottom = 1092.0
+
+[node name="title" type="Label" parent="." unique_id=1234567901]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 50.0
+offset_right = 1850.0
+offset_bottom = 150.0
+theme_override_font_sizes/font_size = 50
+text = "Assessment"
+
+[node name="user_info" type="Label" parent="." unique_id=1234567902]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 200.0
+offset_right = 1850.0
+offset_bottom = 600.0
+theme_override_font_sizes/font_size = 30
+text = ""
+
+[node name="back_button" type="Button" parent="." unique_id=1234567903]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 950.0
+offset_right = 250.0
+offset_bottom = 1020.0
+theme_override_font_sizes/font_size = 30
+text = "Back"

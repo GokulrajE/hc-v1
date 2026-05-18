@@ -1,25 +1,32 @@
 [gd_scene format=3 uid="uid://dv531a1kpiajg"]
 
-[ext_resource type="Script" uid="uid://b5u2mfaqjv7a" path="res://scripts/diagnostics.gd" id="2_diagnostics"]
+[ext_resource type="Script" uid="uid://r63jocgxrirr" path="res://scripts/diagnostics.gd" id="2_diagnostics"]
 
-[node name="diagnostices" type="Node2D"]
+[node name="diagnostices" type="Node2D" unique_id=1175945287]
 script = ExtResource("2_diagnostics")
 
-
-
-[node name="bg" type="ColorRect" parent="."]
+[node name="bg" type="ColorRect" parent="." unique_id=1265239335]
 offset_left = -15.0
 offset_top = 1.0
 offset_right = 1919.0
 offset_bottom = 1090.0
 
-[node name="Label" type="Label" parent="bg"]
+[node name="Label" type="Label" parent="bg" unique_id=752851063]
 modulate = Color(0, 0, 0, 1)
 self_modulate = Color(0.22382358, 0.22382358, 0.22382355, 1)
 top_level = true
 layout_mode = 0
 offset_left = 137.0
 offset_top = 78.0
-offset_right = 340.0
-offset_bottom = 141.0
+offset_right = 1800.0
+offset_bottom = 1000.0
 text = "Connecting to device..."
+
+[node name="back_button" type="Button" parent="." unique_id=4000000001]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 950.0
+offset_right = 250.0
+offset_bottom = 1020.0
+theme_override_font_sizes/font_size = 30
+text = "Back"

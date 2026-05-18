@@ -7,23 +7,24 @@ signal device_disconnected()
 var manager: GdSerialManager
 var packet_buffer: PackedByteArray = PackedByteArray()
 var device_is_connected: bool = false
-var skip_checksum_validation: bool = false  # Debug mode
+var skip_checksum_validation: bool = false
+var _active_port: String = ""
 
 # Data format configuration
-var data_format: String = ""  # Format string from config file (e.g., "fffffff...")
-var data_types: Array = []    # Array of chars: 'b', 'i', 'f'
-var data_labels: Array = []   # Labels for each data field
-var data_size: int = 0        # Expected payload size
+var data_format: String = ""
+var data_types: Array = []
+var data_labels: Array = []
+var data_size: int = 0
 
 # Format configuration
 const FORMAT_CHARS: PackedByteArray = [ord('b'), ord('i'), ord('f')]
 const FORMAT_SIZES: Array = [1, 2, 4]
 
 # Extracted device data
-var device_data: Array = []   # List of parsed values
+var device_data: Array = []
 var payload_bytes: PackedByteArray = PackedByteArray()
 
-# Sensor properties (mapped from device data array indices)
+# Sensor properties
 var force_1: float = 0.0
 var force_2: float = 0.0
 var angle_1: float = 0.0
@@ -40,87 +41,24 @@ var button_5: int = 0
 var button_6: int = 0
 var button_7: int = 0
 
-# Moving average for distance between
+# Moving average
 var moving_average_length: int = 5
 var moving_average_counter: int = 0
 var moving_average_value: float = 0.0
 
 func _ready():
-	print("HCComm _ready() starting...")
-
-	# List available ports first
-	print("\n=== Available COM Ports ===")
-	list_available_ports()
-	print("===========================\n")
-
-	# Try to initialize serial manager
-	print("Attempting to connect to device on COM15...")
-	if ClassDB.can_instantiate("GdSerialManager"):
-		print("GdSerialManager is available")
-		manager = GdSerialManager.new()
-		if manager:
-			print("GdSerialManager instance created")
-			manager.data_received.connect(_on_serial_data_received)
-			print("Attempting to open COM15 at 115200 baud...")
-			var port_opened = manager.open("COM15", 115200, 2000)  # Use open() method instead of open_port()
-			if port_opened:
-				print("✓ SUCCESS: Serial port COM15 opened!")
-				device_is_connected = true
-				device_connected.emit()
-			else:
-				print("✗ ERROR: Failed to open COM15. Device may not be connected.")
-				device_is_connected = false
-				device_disconnected.emit()
-		else:
-			print("Error: Could not create GdSerialManager instance")
-			device_is_connected = false
-			device_disconnected.emit()
-	else:
-		print("✗ ERROR: GdSerialManager not available. Check if gdserial addon is enabled.")
-		device_is_connected = false
-		device_disconnected.emit()
-
-	# Load data format configuration (optional)
 	load_data_format()
-
-	# Temporarily skip checksum validation for debugging
-	# TODO: Fix checksum calculation to match device protocol
 	skip_checksum_validation = true
-	print("DEBUG: Checksum validation DISABLED - accepting all packets")
-
-func list_available_ports() -> void:
-	# List all available serial ports
-	if not ClassDB.can_instantiate("GdSerialManager"):
-		print("GdSerialManager not available - cannot list ports")
-		return
-
-	var temp_manager = GdSerialManager.new()
-	var ports = temp_manager.list_ports()
-
-	if ports.is_empty():
-		print("No serial ports found")
-		return
-
-	print("Found %d port(s):" % ports.size())
-	for idx in ports.keys():
-		var port_info = ports[idx]
-		print("  Port: %s" % port_info.get("port_name", "Unknown"))
-		print("    Type: %s" % port_info.get("port_type", "Unknown"))
-		print("    Device: %s" % port_info.get("device_name", "Unknown"))
+	
 
 func _process(_delta: float):
 	if manager:
 		manager.poll_events()
 
 func _on_serial_data_received(_port: String, data: PackedByteArray) -> void:
-	# Add received bytes to buffer
 	packet_buffer.append_array(data)
-
-	# Debug first packet received
 	if packet_buffer.size() > 0 and data.size() > 0:
 		print("DEBUG: Received %d bytes, buffer size now: %d" % [data.size(), packet_buffer.size()])
-
-	# Try to parse complete packets
 	_parse_packets()
 
 func _parse_packets() -> void:
@@ -151,12 +89,11 @@ func _parse_packets() -> void:
 				checksum_calc = (checksum_calc + byte) & 0xFF
 
 			if skip_checksum_validation or checksum_calc == checksum_received:
-				# Valid packet - process it
 				payload_bytes = payload
 				_update_device_data()
 				new_device_data.emit()
 				packet_count += 1
-				if packet_count % 100 == 0:  # Log every 100 packets
+				if packet_count % 100 == 0:
 					print("✓ Received %d valid packets" % packet_count)
 			else:
 				print("DEBUG: Checksum mismatch")
@@ -321,3 +258,32 @@ func get_formatted_data() -> String:
 				result += "%s,%.10g\n" % [label, float(device_data[i])]
 
 	return result
+
+func connect_device(port: String, baud: int) -> void:
+	print("HCComm: opening %s at %d baud..." % [port, baud])
+	if not ClassDB.can_instantiate("GdSerialManager"):
+		push_error("GdSerialManager not available")
+		device_is_connected = false
+		device_disconnected.emit()
+		return
+	manager = GdSerialManager.new()
+	manager.data_received.connect(_on_serial_data_received)
+	_active_port = port
+	var ok: bool = manager.open(port, baud, 2000)
+	if ok:
+		print("✓ HCComm: %s opened!" % port)
+		device_is_connected = true
+		device_connected.emit()
+	else:
+		push_error("✗ HCComm: failed to open %s" % port)
+		device_is_connected = false
+		device_disconnected.emit()
+
+func disconnect_device() -> void:
+	if manager and _active_port != "" and manager.is_open(_active_port):
+		manager.close(_active_port)
+		print("HCComm: %s closed." % _active_port)
+	device_is_connected = false
+	device_disconnected.emit()
+	manager = null
+	_active_port = ""

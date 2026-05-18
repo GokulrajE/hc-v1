@@ -1,0 +1,104 @@
+extends Node
+
+static var trial_start_time: float = 0.0
+static var raw_data_buffer: String = ""
+static var current_raw_filepath: String = ""
+static var packet_number: int = 0
+
+func start_new_trial(session: int, trial: int, movement: String) -> void:
+	trial_start_time = Time.get_ticks_msec() / 1000.0
+	raw_data_buffer = ""
+	packet_number = 0
+
+	var filename = DataManager.get_raw_filename(session, trial, movement)
+	var user_path = DataManager.get_user_path(AppData.hospital_id)
+	var rawdata_dir = user_path + "rawdata/"
+
+	if not DirAccess.dir_exists_absolute(rawdata_dir):
+		DirAccess.make_dir_absolute(rawdata_dir)
+
+	current_raw_filepath = rawdata_dir + filename
+	if not DataManager.create_raw_file(current_raw_filepath):
+		push_error("Failed to create raw data file: %s" % current_raw_filepath)
+
+func write_frame_data() -> void:
+	if current_raw_filepath == "":
+		return
+
+	packet_number += 1
+	var timestamp = (Time.get_ticks_msec() / 1000.0) - trial_start_time
+
+	var row = [
+		"%.3f" % timestamp,
+		packet_number,
+		"%.2f" % HCcomm.force_1,
+		"%.2f" % HCcomm.force_2,
+		"%.2f" % HCcomm.angle_1,
+		"%.2f" % HCcomm.angle_2,
+		"%.2f" % HCcomm.angle_3,
+		"%.2f" % HCcomm.angle_4,
+		"%.2f" % HCcomm.distance_1,
+		"%.2f" % HCcomm.distance_2,
+		HCcomm.button_1,
+		HCcomm.button_2,
+		HCcomm.button_3,
+		HCcomm.button_4,
+		HCcomm.button_5,
+		HCcomm.button_6,
+		HCcomm.button_7
+	]
+
+	raw_data_buffer += ",".join(row.map(func(x): return str(x))) + "\n"
+
+func flush_raw_data() -> void:
+	if current_raw_filepath == "" or raw_data_buffer == "":
+		return
+
+	var file = FileAccess.open(current_raw_filepath, FileAccess.READ_WRITE)
+	if file:
+		file.seek_end()
+		file.store_buffer(raw_data_buffer.to_utf8_buffer())
+
+func stop_trial(n_targets: int, n_success: int, n_failure: int) -> void:
+	flush_raw_data()
+
+	var trial_duration = (Time.get_ticks_msec() / 1000.0) - trial_start_time
+	var success_rate = 0.0
+	if n_targets > 0:
+		success_rate = float(n_success) / float(n_targets) * 100.0
+
+	var trial_time = trial_duration
+	AppData.cumulative_targets += n_targets
+	AppData.cumulative_hits += n_success
+	AppData.cumulative_misses += n_failure
+
+	var raw_filename = DataManager.get_raw_filename(AppData.session_number, AppData.trial_number_session, AppData.selected_movement)
+
+	var session_row = [
+		AppData.session_number,
+		Time.get_datetime_string_from_system(),
+		AppData.trial_number_day,
+		AppData.trial_number_session,
+		"%.2f" % trial_start_time,
+		"%.2f" % (trial_start_time + trial_duration),
+		AppData.selected_movement,
+		AppData.game_name,
+		"%.2f" % AppData.reach_speed,
+		"%.2f" % AppData.game_parameter,
+		"%.2f" % trial_duration,
+		"%.1f" % success_rate,
+		"%.2f" % trial_time,
+		n_targets,
+		n_success,
+		n_failure,
+		AppData.cumulative_targets,
+		AppData.cumulative_hits,
+		AppData.cumulative_misses,
+		raw_filename
+	]
+
+	DataManager.append_session_row(AppData.hospital_id, session_row)
+
+	current_raw_filepath = ""
+	raw_data_buffer = ""
+	packet_number = 0
