@@ -1,0 +1,136 @@
+[gd_scene format=3 uid="uid://b7g6avymw81c6"]
+
+[ext_resource type="Script" uid="uid://cqrs6iqn782ce" path="res://scripts/knob_assessment.gd" id="1_qjwtc"]
+[ext_resource type="PackedScene" uid="uid://dpbidut4lns0r" path="res://scene/knob_progress.tscn" id="1_ypp8v"]
+
+[node name="KnobAssessment" type="Node2D" unique_id=1393376503]
+script = ExtResource("1_qjwtc")
+
+[node name="bg" type="ColorRect" parent="." unique_id=705555560]
+offset_left = -7.0
+offset_top = -12.0
+offset_right = 1977.0
+offset_bottom = 1114.0
+color = Color(0.5641601, 0.56416, 0.56416, 1)
+
+[node name="title" type="Label" parent="." unique_id=1359696859]
+offset_left = 50.0
+offset_top = 50.0
+offset_right = 1850.0
+offset_bottom = 150.0
+theme_override_font_sizes/font_size = 50
+text = "ASSESS KNOB"
+
+[node name="subtitle" type="Label" parent="." unique_id=1498431493]
+offset_left = 50.0
+offset_top = 116.0
+offset_right = 1850.0
+offset_bottom = 166.0
+theme_override_font_sizes/font_size = 30
+text = "Real-time Knob Angle Monitoring"
+metadata/_edit_use_anchors_ = true
+
+[node name="knob_1_title" type="Label" parent="." unique_id=1903930885]
+offset_left = 645.0
+offset_top = 152.0
+offset_right = 2445.0
+offset_bottom = 202.0
+theme_override_font_sizes/font_size = 30
+metadata/_edit_use_anchors_ = true
+
+[node name="knob_1_angle_lable" type="Label" parent="." unique_id=2071436040]
+offset_left = 1399.0
+offset_top = 494.0
+offset_right = 1699.0
+offset_bottom = 577.0
+theme_override_font_sizes/font_size = 60
+text = "0.00°"
+metadata/_edit_use_anchors_ = true
+
+[node name="knob_2_progress" parent="." unique_id=2142195604 instance=ExtResource("1_ypp8v")]
+offset_left = 568.0
+offset_top = 237.0
+offset_right = 953.0
+offset_bottom = 493.0
+rotation = 0.0
+scale = Vector2(2, 2)
+
+[node name="min_max_container" type="VBoxContainer" parent="." unique_id=1858876454]
+offset_left = 60.49
+offset_top = 324.0
+offset_right = 445.49
+offset_bottom = 480.0
+rotation = -6.2831855
+theme_override_constants/separation = 15
+metadata/_edit_use_anchors_ = true
+
+[node name="min_label" type="Label" parent="min_max_container" unique_id=761930159]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Min: 0.00°"
+
+[node name="max_label" type="Label" parent="min_max_container" unique_id=1661315522]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Max: 0.00°"
+
+[node name="current_label" type="Label" parent="min_max_container" unique_id=968037027]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Current: 0.00°"
+
+[node name="status_label" type="Label" parent="." unique_id=248003420]
+offset_left = 395.0
+offset_top = 831.0
+offset_right = 1692.0
+offset_bottom = 881.0
+theme_override_colors/font_color = Color(0.06469653, 0.06469653, 0.06469653, 1)
+theme_override_font_sizes/font_size = 25
+text = "Device Status: Not Connected"
+metadata/_edit_use_anchors_ = true
+
+[node name="back_button" type="Button" parent="." unique_id=988509043]
+offset_left = 50.0
+offset_top = 950.0
+offset_right = 250.0
+offset_bottom = 1020.0
+theme_override_font_sizes/font_size = 30
+text = "Back"
+metadata/_edit_use_anchors_ = true
+
+[node name="start_button" type="Button" parent="." unique_id=1407606303]
+visible = false
+offset_left = 650.0
+offset_top = 950.0
+offset_right = 900.0
+offset_bottom = 1020.0
+theme_override_font_sizes/font_size = 30
+text = "START Assessment"
+
+[node name="stop_button" type="Button" parent="." unique_id=1450466279]
+visible = false
+offset_left = 950.0
+offset_top = 950.0
+offset_right = 1200.0
+offset_bottom = 1020.0
+theme_override_font_sizes/font_size = 30
+text = "STOP & Continue"
+
+[node name="redo_button" type="Button" parent="." unique_id=497461371]
+visible = false
+offset_left = 1350.0
+offset_top = 950.0
+offset_right = 1550.0
+offset_bottom = 1020.0
+theme_override_font_sizes/font_size = 30
+text = "REDO AROM"
+
+[node name="save_button" type="Button" parent="." unique_id=2026612596]
+visible = false
+offset_left = 1650.0
+offset_top = 950.0
+offset_right = 1850.0
+offset_bottom = 1020.0
+theme_override_font_sizes/font_size = 30
+text = "Save Assessment"
+metadata/_edit_use_anchors_ = true

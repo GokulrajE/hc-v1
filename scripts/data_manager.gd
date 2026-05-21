@@ -1,8 +1,12 @@
 extends Node
 
-const CONFIG_HEADER = ["HospitalID", "Name", "Age", "Location", "AffectedLimb", "DevicePort", "CreatedDate"]
+const CONFIG_HEADER = ["DateTime", "HospitalID", "Name", "Age", "Location", "AffectedLimb","PinchGrasp1", "PinchGrasp2", "Buttons"]
 const SESSION_HEADER = ["SessionNumber", "DateTime", "TrialNumberDay", "TrialNumberSession", "TrialStartTime", "TrialStopTime", "Movement", "GameName", "ReachSpeed", "GameParameter", "GameDuration", "SuccessRate", "MoveTime", "CurrentTargets", "CurrentHits", "CurrentMisses", "CumulativeTargets", "CumulativeHits", "CumulativeMisses", "RawDataFileName"]
 const RAW_HEADER = ["Timestamp", "PacketNumber", "Force1", "Force2", "Angle1", "Angle2", "Angle3", "Angle4", "Distance1", "Distance2", "Button1", "Button2", "Button3", "Button4", "Button5", "Button6", "Button7"]
+
+func get_formatted_datetime() -> String:
+	var dt = Time.get_datetime_dict_from_system()
+	return "%02d-%02d-%04d %02d:%02d:%02d" % [dt.day, dt.month, dt.year, dt.hour, dt.minute, dt.second]
 
 func get_data_root() -> String:
 	if OS.is_debug_build():
@@ -111,6 +115,13 @@ func load_config(hospital_id: String) -> Dictionary:
 
 func get_raw_filename(session: int, trial: int, movement: String) -> String:
 	return "raw-s%02d-t%03d-%s.csv" % [session, trial, movement.to_lower()]
+
+func get_rom_file_path(mechanism: String) -> String:
+	if AppData.hospital_id == "":
+		push_error("DataManager: hospital_id not set in AppData")
+		return ""
+	var rom_dir = get_user_path(AppData.hospital_id) + "rom/"
+	return rom_dir + mechanism.to_lower().replace(" ", "_") + "_rom.csv"
 
 func append_session_row(hospital_id: String, row: Array) -> bool:
 	var filepath = get_user_path(hospital_id) + "sessions/sessions.csv"

@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://dpbidut4lns0r"]
+
+[ext_resource type="Texture2D" uid="uid://cov80lucdvvvm" path="res://sprites/Circle Filled.png" id="1_8esm6"]
+[ext_resource type="Texture2D" uid="uid://b24ueyj415u2i" path="res://sprites/needle (2).png" id="2_jseeo"]
+
+[node name="knob_2_progress" type="TextureProgressBar" unique_id=2142195604]
+offset_left = 694.0
+offset_top = 545.0
+offset_right = 968.0
+offset_bottom = 801.0
+rotation = 6.2831855
+max_value = 360.0
+value = 360.0
+fill_mode = 5
+radial_fill_degrees = 75.7
+texture_under = ExtResource("1_8esm6")
+tint_under = Color(0.91980773, 0.32219374, 0.34966817, 1)
+
+[node name="knob_2_progress_cw" type="TextureProgressBar" parent="." unique_id=854941506]
+layout_mode = 0
+offset_right = 274.0
+offset_bottom = 274.675
+rotation = 6.2831855
+max_value = 360.0
+value = 360.0
+fill_mode = 4
+radial_fill_degrees = 75.8
+texture_progress = ExtResource("1_8esm6")
+tint_under = Color(0.079287894, 0.035640597, 0.017197918, 1)
+tint_over = Color(0.26147652, 0.26147655, 0.26147643, 1)
+tint_progress = Color(0.13813606, 0.33970347, 0.27663723, 1)
+
+[node name="knob_2_progress_ccw" type="TextureProgressBar" parent="." unique_id=2108943705]
+layout_mode = 0
+offset_right = 274.0
+offset_bottom = 256.0
+rotation = 6.2831855
+max_value = 360.0
+value = 360.0
+fill_mode = 5
+radial_fill_degrees = 0.0
+texture_progress = ExtResource("1_8esm6")
+tint_under = Color(0.079287894, 0.035640597, 0.017197918, 1)
+tint_over = Color(0.26147652, 0.26147655, 0.26147643, 1)
+tint_progress = Color(0.13725491, 0.34117648, 0.2784314, 1)
+
+[node name="needle" type="Sprite2D" parent="." unique_id=187528433]
+position = Vector2(128.15265, 130.21516)
+rotation = 0.15009831
+scale = Vector2(0.096002646, 0.09997247)
+skew = 0.012217305
+texture = ExtResource("2_jseeo")
+offset = Vector2(0, -248.805)

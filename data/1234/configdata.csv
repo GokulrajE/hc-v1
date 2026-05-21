@@ -1,5 +1,5 @@
 :Location: vellore
 :Device: HC-V1
 :User: 1234
-HospitalID,Name,Age,Location,AffectedLimb,DevicePort,CreatedDate
-1234,sfdsafd,32,vellore,Left,COM15,2026-05-18T16:42:42
+DateTime,HospitalID,Name,Age,Location,AffectedLimb,PinchGrasp1,PinchGrasp2,Buttons
+21-05-2026 15:31:38,1234,gokul,24,vellore,Right,true,true,true

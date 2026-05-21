@@ -1,0 +1,16 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://igbwr4e10ioy"
+
+[deps]
+
+source_file="res://data/1234/rawdata/arom-grip-21-05-2026_15-32-58.csv"
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

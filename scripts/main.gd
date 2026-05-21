@@ -6,14 +6,23 @@ var login_button: Button
 var diagnostics_button: Button
 var device_status_label: Label
 var message_label: Label
+var connection_status: TextureRect
+
+
+
+# Color constants
+const COLOR_CONNECTED: Color = Color(0.21568628, 0.9411765, 0.09411765, 1)  # Green
+const COLOR_DISCONNECTED: Color = Color(1.0, 0.2, 0.2, 1)  # Red
+const COLOR_CONNECTING: Color = Color(1.0, 0.65, 0.0, 1)  # Orange
 
 func _ready() -> void:
 	hospital_id_input = get_node_or_null("bg/hospital_id_input")
-	signup_button = get_node_or_null("bg/knobs/knob1")
-	login_button = get_node_or_null("bg/knobs/knob2")
-	diagnostics_button = get_node_or_null("bg/knobs/knob3")
+	signup_button = get_node_or_null("bg/signup")
+	login_button = get_node_or_null("bg/login")
+	diagnostics_button = get_node_or_null("bg/diagnostics")
 	device_status_label = get_node_or_null("device_status")
 	message_label = get_node_or_null("message_label")
+	connection_status = get_node_or_null("connectionStatus")
 
 	if signup_button:
 		signup_button.text = "Signup"
@@ -29,8 +38,12 @@ func _ready() -> void:
 
 	if HCcomm:
 		HCcomm.device_connected.connect(_on_device_connected)
-		
+		HCcomm.device_disconnected.connect(_on_device_disconnected)
+
 	_update_device_status()
+
+	if HCcomm and not HCcomm.device_is_connected:
+		Appdata.open_connection()
 
 func _on_device_connected() -> void:
 	_update_device_status()
@@ -42,8 +55,14 @@ func _update_device_status() -> void:
 	if device_status_label:
 		if HCcomm and HCcomm.device_is_connected:
 			device_status_label.text = "Device: CONNECTED"
-		else:
+			_set_connection_color(COLOR_CONNECTED)
+		elif HCcomm and not HCcomm.device_is_connected:
 			device_status_label.text = "Device: NOT CONNECTED"
+			_set_connection_color(COLOR_DISCONNECTED)
+
+func _set_connection_color(color: Color) -> void:
+	if connection_status:
+		connection_status.self_modulate = color
 
 func _on_signup_pressed() -> void:
 	get_tree().change_scene_to_file("res://scene/signup.tscn")
@@ -75,12 +94,7 @@ func _on_login_pressed() -> void:
 			message_label.text = "Failed to load user"
 		return
 
-	get_tree().change_scene_to_file("res://scene/assessment.tscn")
+	get_tree().change_scene_to_file("res://scene/mechanism.tscn")
 
 func _on_diagnostics_pressed() -> void:
 	get_tree().change_scene_to_file("res://scene/diagnostics.tscn")
-
-func _attempt_device_connection() -> void:
-	if HCcomm and not HCcomm.device_is_connected:
-		AppData.open_connection()
-	_update_device_status()

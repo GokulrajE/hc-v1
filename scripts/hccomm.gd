@@ -57,8 +57,6 @@ func _process(_delta: float):
 
 func _on_serial_data_received(_port: String, data: PackedByteArray) -> void:
 	packet_buffer.append_array(data)
-	if packet_buffer.size() > 0 and data.size() > 0:
-		print("DEBUG: Received %d bytes, buffer size now: %d" % [data.size(), packet_buffer.size()])
 	_parse_packets()
 
 func _parse_packets() -> void:

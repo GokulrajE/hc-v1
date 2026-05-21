@@ -44,7 +44,8 @@ func _on_login_pressed() -> void:
 			message_label.text = "Failed to load user"
 		return
 
-	get_tree().change_scene_to_file("res://scene/assessment.tscn")
+	AppData.current_mechanism = ""
+	get_tree().change_scene_to_file("res://scene/mechanism.tscn")
 
 func _on_back_pressed() -> void:
 	get_tree().change_scene_to_file("res://scene/main.tscn")

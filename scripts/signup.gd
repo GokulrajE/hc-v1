@@ -57,8 +57,7 @@ func _on_save_pressed() -> void:
 		"Age": age_input.text.strip_edges(),
 		"Location": location_input.text.strip_edges(),
 		"AffectedLimb": limb_input.get_item_text(limb_input.selected) if limb_input else "Unknown",
-		"DevicePort": "COM15",
-		"CreatedDate": Time.get_datetime_string_from_system()
+		"DateTime": DataManager.get_formatted_datetime()
 	}
 
 	if not DataManager.save_config(config_data):
