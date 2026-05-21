@@ -20,7 +20,6 @@ offset_right = 1850.0
 offset_bottom = 150.0
 theme_override_font_sizes/font_size = 50
 text = "ASSESS HANDLE"
-metadata/_edit_use_anchors_ = true
 
 [node name="subtitle" type="Label" parent="." unique_id=1646912236]
 offset_left = 50.0

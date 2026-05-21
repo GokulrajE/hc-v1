@@ -13,8 +13,8 @@ var gauge_center: Vector2
 
 # Zone colors for different states
 var zone_colors: Dictionary = {
-	"background": Color(0.3, 0.698, 0.668, 1.0),
-	"default": Color(0.438, 0.223, 0.144, 1.0),
+	"background": Color(0.0, 0.0, 0.0, 1.0),
+	"default": Color(0.724, 0.496, 0.979, 1.0),
 	"validation_yellow": Color(1.0, 0.85, 0.0, 1.0),
 	"validation_green": Color(0.0, 0.8, 0.4, 1.0),
 }
@@ -78,16 +78,16 @@ func _draw() -> void:
 		_draw_labels()
 
 func _draw_arc_track() -> void:
-	var start_rad = deg_to_rad(min_angle)
-	var end_rad = deg_to_rad(max_angle)
+	var start_rad = deg_to_rad(min_angle - 180.0)
+	var end_rad = deg_to_rad(max_angle - 180.0)
 
 	# Draw the track as an arc outline
 	draw_arc(gauge_center, gauge_radius, start_rad, end_rad, 64, zone_colors["default"], gauge_width)
 
 func _draw_shade_zones() -> void:
 	for zone in shade_zones:
-		var start_rad = deg_to_rad(zone["start"])
-		var end_rad = deg_to_rad(zone["end"])
+		var start_rad = deg_to_rad(zone["start"] - 180.0)
+		var end_rad = deg_to_rad(zone["end"] - 180.0)
 
 		# Draw filled arc for the zone
 		_draw_filled_arc(
@@ -112,7 +112,7 @@ func _draw_filled_arc(center: Vector2, radius: float, start_angle: float, end_an
 	draw_colored_polygon(points, color)
 
 func _draw_needle() -> void:
-	var current_rad = deg_to_rad(current_angle)
+	var current_rad = deg_to_rad(current_angle - 180.0)
 
 	# Draw line from center to outer edge
 	var outer_point = gauge_center + Vector2(cos(current_rad), sin(current_rad)) * (gauge_radius + 10)
@@ -129,7 +129,7 @@ func _draw_labels() -> void:
 
 	var current_deg = int(min_angle)
 	while current_deg <= int(max_angle):
-		var angle_rad = deg_to_rad(float(current_deg))
+		var angle_rad = deg_to_rad(float(current_deg) - 180.0)
 
 		# Draw small tick mark
 		var tick_start = gauge_center + Vector2(cos(angle_rad), sin(angle_rad)) * (gauge_radius - 5)
