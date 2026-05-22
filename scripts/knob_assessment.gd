@@ -49,7 +49,7 @@ const REQUIRED_REACHES = 5
 
 func _ready() -> void:
 	knob_1_title = get_node_or_null("knob_1_title")
-	knob_1_angle_label = get_node_or_null("knob_1_angle_lable")
+	knob_1_angle_label = get_node_or_null("knob_1_angle_label")
 	status_label = get_node_or_null("status_label")
 	back_button = get_node_or_null("back_button")
 	save_button = get_node_or_null("save_button")
@@ -85,6 +85,9 @@ func _ready() -> void:
 		redo_button.visible = false
 
 	if HCcomm:
+		# Disconnect if already connected to prevent duplicate signal error
+		if HCcomm.is_connected("new_device_data", Callable(self, "_on_device_data_received")):
+			HCcomm.disconnect("new_device_data", Callable(self, "_on_device_data_received"))
 		HCcomm.new_device_data.connect(_on_device_data_received)
 		# HCcomm.device_connected.connect(_on_device_connected)
 		# HCcomm.device_disconnected.connect(_on_device_disconnected)
@@ -341,5 +344,13 @@ func _on_save_pressed() -> void:
 		push_error("KnobAssessment: Failed to save assessment data for %s" % selected_knob)
 
 func _on_back_pressed() -> void:
-	
+	_cleanup()
 	get_tree().change_scene_to_file("res://scene/mechanism.tscn")
+
+func _cleanup() -> void:
+	# Disconnect from signals to prevent errors when re-entering scene
+	if HCcomm and HCcomm.is_connected("new_device_data", Callable(self, "_on_device_data_received")):
+		HCcomm.disconnect("new_device_data", Callable(self, "_on_device_data_received"))
+
+func _exit_tree() -> void:
+	_cleanup()

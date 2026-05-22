@@ -1,97 +1,140 @@
-[gd_scene format=3 uid="uid://dx18chaepmhna3"]
+[gd_scene format=3 uid="uid://cd6hlgynj0m1m"]
 
-[ext_resource type="Script" path="res://scripts/pinch_button_assessment.gd" id="1_pinch_script"]
+[ext_resource type="Script" uid="uid://b5fg7oswgrqkh" path="res://scripts/pinch_button_assessment.gd" id="1_pinch_script"]
+[ext_resource type="PackedScene" uid="uid://ca8b3v7p5hc5" path="res://scene/connect_status.tscn" id="2_qncqe"]
+
+[sub_resource type="StyleBoxFlat" id="BackButtonStyle"]
+bg_color = Color(0.4, 0.4, 0.4, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="SaveButtonStyle"]
+bg_color = Color(0.2, 0.7, 0.4, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
 
 [node name="PinchButtonAssessment" type="Node2D" unique_id=269487740]
 script = ExtResource("1_pinch_script")
 
 [node name="bg" type="ColorRect" parent="." unique_id=2025287765]
 z_index = -1
-offset_left = -7.0
-offset_top = -12.0
-offset_right = 1977.0
-offset_bottom = 1114.0
-color = Color(0.5641601, 0.56416, 0.56416, 1)
+offset_left = -31.0
+offset_top = -20.0
+offset_right = 1953.0
+offset_bottom = 1106.0
+color = Color(0.12, 0.12, 0.15, 1)
+
+[node name="ConnectStatus" parent="." unique_id=442870427 instance=ExtResource("2_qncqe")]
 
 [node name="title" type="Label" parent="." unique_id=1917235158]
-offset_left = 50.0
-offset_top = 50.0
-offset_right = 1850.0
-offset_bottom = 150.0
-theme_override_font_sizes/font_size = 50
-text = "ASSESS PINCH & BUTTONS"
+offset_left = 83.0
+offset_top = 15.0
+offset_right = 1883.0
+offset_bottom = 111.0
+theme_override_colors/font_color = Color(0, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 70
+text = "PINCH & BUTTONS ASSESSMENT"
+horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true
 
 [node name="subtitle" type="Label" parent="." unique_id=937018189]
-offset_left = 50.0
-offset_top = 116.0
-offset_right = 1850.0
-offset_bottom = 166.0
-theme_override_font_sizes/font_size = 30
-text = "Pinch Grasp & Button Press Assessment"
-metadata/_edit_use_anchors_ = true
-
-[node name="pinch1_sprite" type="ColorRect" parent="." unique_id=1196699947]
-offset_left = 300.0
-offset_top = 250.0
-offset_right = 600.0
-offset_bottom = 350.0
-color = Color(1, 1, 1, 1)
-mouse_filter = 1
-metadata/_edit_use_anchors_ = true
-
-[node name="pinch1_label" type="Label" parent="." unique_id=1196699948]
-offset_left = 300.0
-offset_top = 360.0
-offset_right = 600.0
-offset_bottom = 410.0
+offset_left = 111.0
+offset_top = 98.0
+offset_right = 1911.0
+offset_bottom = 148.0
+theme_override_colors/font_color = Color(0.7, 0.7, 0.75, 1)
 theme_override_font_sizes/font_size = 24
-text = "Pinch 1"
+text = "Press and hold for 5 seconds to complete each assessment"
+horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true
 
-[node name="pinch2_sprite" type="ColorRect" parent="." unique_id=1196699949]
-offset_left = 700.0
-offset_top = 250.0
-offset_right = 1000.0
-offset_bottom = 350.0
-color = Color(1, 1, 1, 1)
-mouse_filter = 1
-metadata/_edit_use_anchors_ = true
+[node name="assessment_container" type="VBoxContainer" parent="." unique_id=2025287766]
+offset_left = 128.0
+offset_top = 200.0
+offset_right = 1744.0
+offset_bottom = 808.0
 
-[node name="pinch2_label" type="Label" parent="." unique_id=1196699950]
-offset_left = 700.0
-offset_top = 360.0
-offset_right = 1000.0
-offset_bottom = 410.0
-theme_override_font_sizes/font_size = 24
-text = "Pinch 2"
-metadata/_edit_use_anchors_ = true
+[node name="pinch1_card" type="ColorRect" parent="assessment_container" unique_id=1196699947]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+color = Color(0.2, 0.2, 0.25, 1)
 
-[node name="buttons_sprite" type="ColorRect" parent="." unique_id=1196699951]
-offset_left = 1100.0
-offset_top = 250.0
-offset_right = 1400.0
-offset_bottom = 350.0
-color = Color(1, 1, 1, 1)
-mouse_filter = 1
-metadata/_edit_use_anchors_ = true
+[node name="pinch2_card" type="ColorRect" parent="assessment_container" unique_id=1196699950]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+color = Color(0.2, 0.2, 0.25, 1)
 
-[node name="buttons_label" type="Label" parent="." unique_id=1196699952]
-offset_left = 1100.0
-offset_top = 360.0
-offset_right = 1400.0
-offset_bottom = 410.0
-theme_override_font_sizes/font_size = 24
-text = "Buttons"
-metadata/_edit_use_anchors_ = true
+[node name="buttons_card" type="ColorRect" parent="assessment_container" unique_id=1196699953]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+color = Color(0.2, 0.2, 0.25, 1)
 
-[node name="status_label" type="Label" parent="." unique_id=1196699946]
-offset_left = 50.0
-offset_top = 500.0
-offset_right = 1850.0
-offset_bottom = 850.0
-theme_override_font_sizes/font_size = 40
-text = "Select assessment to begin"
+[node name="pinch1_card#pinch1_label" type="Label" parent="." unique_id=1196699948]
+offset_left = 176.0
+offset_top = 257.0
+offset_right = 476.0
+offset_bottom = 324.0
+theme_override_colors/font_color = Color(0, 0.9, 0.8, 1)
+theme_override_font_sizes/font_size = 48
+text = "PINCH 1"
+
+[node name="pinch1_card#pinch1_status" type="Label" parent="." unique_id=1196699949]
+offset_left = 486.0
+offset_top = 285.0
+offset_right = 1036.0
+offset_bottom = 335.0
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 20
+text = "Click to start assessment"
+
+[node name="pinch2_card#pinch2_label" type="Label" parent="." unique_id=1196699951]
+offset_left = 171.0
+offset_top = 455.0
+offset_right = 471.0
+offset_bottom = 522.0
+theme_override_colors/font_color = Color(0.8, 0, 0.9, 1)
+theme_override_font_sizes/font_size = 48
+text = "PINCH 2"
+
+[node name="pinch2_card#pinch2_status" type="Label" parent="." unique_id=1196699952]
+offset_left = 495.0
+offset_top = 471.0
+offset_right = 1045.0
+offset_bottom = 521.0
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 20
+text = "Click to start assessment"
+
+[node name="buttons_card#buttons_label" type="Label" parent="." unique_id=1196699954]
+offset_left = 177.0
+offset_top = 650.0
+offset_right = 477.0
+offset_bottom = 717.0
+theme_override_colors/font_color = Color(1, 0.6, 0, 1)
+theme_override_font_sizes/font_size = 48
+text = "BUTTONS"
+
+[node name="buttons_card#buttons_status" type="Label" parent="." unique_id=1196699955]
+offset_left = 499.0
+offset_top = 681.0
+offset_right = 1049.0
+offset_bottom = 731.0
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 20
+text = "Click to start assessment"
+
+[node name="progress_label" type="Label" parent="." unique_id=1196699956]
+offset_left = 169.0
+offset_top = 988.0
+offset_right = 1909.0
+offset_bottom = 1038.0
+theme_override_colors/font_color = Color(0.6, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true
 
 [node name="back_button" type="Button" parent="." unique_id=946906280]
@@ -99,16 +142,34 @@ offset_left = 50.0
 offset_top = 950.0
 offset_right = 250.0
 offset_bottom = 1020.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("BackButtonStyle")
+theme_override_styles/pressed = SubResource("BackButtonStyle")
+theme_override_styles/hover = SubResource("BackButtonStyle")
+theme_override_styles/focus = SubResource("BackButtonStyle")
 text = "Back"
 metadata/_edit_use_anchors_ = true
 
 [node name="save_button" type="Button" parent="." unique_id=1063475869]
 visible = false
-offset_left = 1650.0
+offset_left = 1700.0
 offset_top = 950.0
-offset_right = 1850.0
+offset_right = 1900.0
 offset_bottom = 1020.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 30
-text = "Save Assessment"
+theme_override_styles/normal = SubResource("SaveButtonStyle")
+theme_override_styles/pressed = SubResource("SaveButtonStyle")
+theme_override_styles/hover = SubResource("SaveButtonStyle")
+theme_override_styles/focus = SubResource("SaveButtonStyle")
+text = "Save"
 metadata/_edit_use_anchors_ = true
+
+[node name="status_label" type="Label" parent="." unique_id=1779087785]
+offset_left = 31.0
+offset_top = 833.0
+offset_right = 1890.0
+offset_bottom = 914.0
+theme_override_font_sizes/font_size = 50
+text = " Step 1 Complete! Ready for Step 2 - Click BUTTONS card to start Step 2"

@@ -1,6 +1,14 @@
 [gd_scene format=3 uid="uid://dv531a1kpiajg"]
 
 [ext_resource type="Script" uid="uid://r63jocgxrirr" path="res://scripts/diagnostics.gd" id="2_diagnostics"]
+[ext_resource type="PackedScene" uid="uid://ca8b3v7p5hc5" path="res://scene/connect_status.tscn" id="2_el4we"]
+
+[sub_resource type="StyleBoxFlat" id="BackButtonStyle"]
+bg_color = Color(0.4, 0.4, 0.4, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [node name="diagnostices" type="Node2D" unique_id=1175945287]
 script = ExtResource("2_diagnostics")
@@ -10,23 +18,154 @@ offset_left = -15.0
 offset_top = 1.0
 offset_right = 1919.0
 offset_bottom = 1090.0
+color = Color(0.12, 0.12, 0.15, 1)
 
-[node name="Label" type="Label" parent="bg" unique_id=752851063]
-modulate = Color(0, 0, 0, 1)
-self_modulate = Color(0.22382358, 0.22382358, 0.22382355, 1)
-top_level = true
-layout_mode = 0
-offset_left = 137.0
-offset_top = 78.0
+[node name="title" type="Label" parent="." unique_id=752851064]
+offset_left = 50.0
+offset_top = 20.0
+offset_right = 1850.0
+offset_bottom = 100.0
+theme_override_colors/font_color = Color(0, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 70
+text = "DEVICE DIAGNOSTICS"
+horizontal_alignment = 1
+
+[node name="subtitle" type="Label" parent="." unique_id=752851065]
+offset_left = 50.0
+offset_top = 100.0
+offset_right = 1850.0
+offset_bottom = 150.0
+theme_override_colors/font_color = Color(0.7, 0.7, 0.75, 1)
+theme_override_font_sizes/font_size = 24
+text = "Real-time sensor data monitoring"
+horizontal_alignment = 1
+
+[node name="forces_card" type="ColorRect" parent="." unique_id=752851066]
+offset_left = 50.0
+offset_top = 170.0
+offset_right = 600.0
+offset_bottom = 320.0
+color = Color(0.2, 0.2, 0.25, 1)
+
+[node name="forces_label" type="Label" parent="." unique_id=752851067]
+offset_left = 68.0
+offset_top = 170.0
+offset_right = 298.0
+offset_bottom = 220.0
+theme_override_colors/font_color = Color(0, 0.9, 0.8, 1)
+theme_override_font_sizes/font_size = 32
+text = "FORCES"
+
+[node name="force_data" type="Label" parent="." unique_id=752851068]
+offset_left = 70.0
+offset_top = 219.0
+offset_right = 580.0
+offset_bottom = 309.0
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 20
+text = "Force 1: 0.00
+Force 2: 0.00
+Total: 0.00"
+
+[node name="angles_card" type="ColorRect" parent="." unique_id=752851069]
+offset_left = 650.0
+offset_top = 170.0
+offset_right = 1200.0
+offset_bottom = 320.0
+color = Color(0.2, 0.2, 0.25, 1)
+
+[node name="angles_label" type="Label" parent="." unique_id=752851070]
+offset_left = 666.0
+offset_top = 176.0
+offset_right = 896.0
+offset_bottom = 226.0
+theme_override_colors/font_color = Color(0.8, 0, 0.9, 1)
+theme_override_font_sizes/font_size = 32
+text = "ANGLES"
+
+[node name="angles_data" type="Label" parent="." unique_id=752851071]
+offset_left = 666.0
+offset_top = 224.0
+offset_right = 1176.0
+offset_bottom = 284.0
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 20
+text = "Angle 1: 0.00° | Angle 2: 0.00°
+Angle 3: 0.00° | Angle 4: 0.00°"
+
+[node name="distances_card" type="ColorRect" parent="." unique_id=752851072]
+offset_left = 1250.0
+offset_top = 170.0
 offset_right = 1800.0
-offset_bottom = 1000.0
-text = "Connecting to device..."
+offset_bottom = 320.0
+color = Color(0.2, 0.2, 0.25, 1)
 
-[node name="back_button" type="Button" parent="." unique_id=4000000001]
-layout_mode = 0
+[node name="distances_label" type="Label" parent="." unique_id=752851073]
+offset_left = 1266.0
+offset_top = 172.0
+offset_right = 1496.0
+offset_bottom = 222.0
+theme_override_colors/font_color = Color(1, 0.6, 0, 1)
+theme_override_font_sizes/font_size = 32
+text = "DISTANCES"
+
+[node name="distances_data" type="Label" parent="." unique_id=752851074]
+offset_left = 1266.0
+offset_top = 228.0
+offset_right = 1776.0
+offset_bottom = 288.0
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 20
+text = "Distance 1: 0.00
+Distance 2: 0.00"
+
+[node name="buttons_card" type="ColorRect" parent="." unique_id=752851075]
+offset_left = 50.0
+offset_top = 350.0
+offset_right = 1800.0
+offset_bottom = 550.0
+color = Color(0.2, 0.2, 0.25, 1)
+
+[node name="buttons_label" type="Label" parent="." unique_id=752851076]
+offset_left = 70.0
+offset_top = 365.0
+offset_right = 300.0
+offset_bottom = 415.0
+theme_override_colors/font_color = Color(0.2, 1, 0.4, 1)
+theme_override_font_sizes/font_size = 32
+text = "BUTTONS"
+
+[node name="buttons_data" type="Label" parent="." unique_id=752851077]
+offset_left = 70.0
+offset_top = 425.0
+offset_right = 1780.0
+offset_bottom = 530.0
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 20
+text = "Button 1: OFF | Button 2: OFF | Button 3: OFF | Button 4: OFF | Button 5: OFF
+Button 6: OFF | Button 7: OFF"
+
+[node name="Label" type="Label" parent="." unique_id=752851063]
+offset_left = 50.0
+offset_top = 600.0
+offset_right = 1850.0
+offset_bottom = 700.0
+theme_override_colors/font_color = Color(0.6, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 28
+text = "Connecting to device..."
+horizontal_alignment = 1
+
+[node name="ConnectStatus" parent="." unique_id=442870427 instance=ExtResource("2_el4we")]
+
+[node name="back_button" type="Button" parent="." unique_id=-294967295]
 offset_left = 50.0
 offset_top = 950.0
 offset_right = 250.0
 offset_bottom = 1020.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("BackButtonStyle")
+theme_override_styles/hover = SubResource("BackButtonStyle")
+theme_override_styles/pressed = SubResource("BackButtonStyle")
+theme_override_styles/focus = SubResource("BackButtonStyle")
 text = "Back"

@@ -4,6 +4,7 @@ var status_label: Label
 var distance_label: Label
 var back_button: Button
 var save_button: Button
+var setmin_button: Button
 var setmax_button: Button
 var minprogressbar1: ProgressBar
 var minprogressbar2: ProgressBar
@@ -16,8 +17,8 @@ var distance_min: float = 6.0
 var distance_max: float = 6.0
 
 # Tripod assessment states
-enum AssessmentStep { setmin, setmax, complete }
-var current_step = AssessmentStep.setmin
+enum AssessmentStep { setmax, setmin, complete }
+var current_step = AssessmentStep.setmax
 
 const MIN_DISTANCE = 2.0
 const MAX_DISTANCE = 6.0
@@ -27,6 +28,7 @@ func _ready() -> void:
 	distance_label = get_node_or_null("distance_label")
 	back_button = get_node_or_null("back_button")
 	save_button = get_node_or_null("save_button")
+	setmin_button = get_node_or_null("setmin_button")
 	setmax_button = get_node_or_null("setmax_button")
 	minprogressbar1 = get_node_or_null("minProgressBarE-B")
 	minprogressbar2 = get_node_or_null("minProgressBarE-B/minProgressBarB-E")
@@ -44,7 +46,14 @@ func _ready() -> void:
 		setmax_button.pressed.connect(_on_setmax_pressed)
 		setmax_button.visible = true
 
+	if setmin_button:
+		setmin_button.pressed.connect(_on_setmin_pressed)
+		setmin_button.visible = false
+
 	if HCcomm:
+		# Disconnect if already connected to prevent duplicate signal error
+		if HCcomm.is_connected("new_device_data", Callable(self, "_on_device_data_received")):
+			HCcomm.disconnect("new_device_data", Callable(self, "_on_device_data_received"))
 		HCcomm.new_device_data.connect(_on_device_data_received)
 
 	print("TripodAssessment: Started for Tripod Grip mechanism")
@@ -58,10 +67,10 @@ func _on_device_data_received() -> void:
 	distance_current = HCcomm.get_btw_distance()
 
 	match current_step:
-		AssessmentStep.setmin:
-			_update_min_bars()
 		AssessmentStep.setmax:
 			_update_max_bars()
+		AssessmentStep.setmin:
+			_update_min_bars()
 
 	if distance_label:
 		distance_label.text = "Distance: %.2f cm" % distance_current
@@ -91,21 +100,30 @@ func _update_max_bars() -> void:
 func _update_display() -> void:
 	if status_label:
 		match current_step:
-			AssessmentStep.setmin:
-				status_label.text = "STEP 1: Squeeze the tripod grip to find minimum compression distance"
 			AssessmentStep.setmax:
-				status_label.text = "STEP 2: Release and expand to find maximum extension distance"
+				status_label.text = "STEP 1: Release and expand to find maximum extension distance, then click SET MAX"
+			AssessmentStep.setmin:
+				status_label.text = "STEP 2: Squeeze the tripod grip to find minimum compression distance, then click SET MIN"
 			AssessmentStep.complete:
-				status_label.text = "✓ Assessment complete! Click SAVE to store results"
+				status_label.text = "✓ Assessment complete! Click SAVE ASSESSMENT to store results"
 
 func _on_setmax_pressed() -> void:
-	# Store the minimum value and move to setmax phase
-	distance_max = distance_current  # Initialize with current value
-	current_step = AssessmentStep.setmax
+	# Store the maximum value and move to setmin phase
+	distance_max = distance_current
+	current_step = AssessmentStep.setmin
 	setmax_button.visible = false
+	setmin_button.visible = true
+	_update_display()
+	print("TripodAssessment: Maximum distance set to %.2f cm - Now finding minimum" % distance_max)
+
+func _on_setmin_pressed() -> void:
+	# Store the minimum value and show save button
+	distance_min = distance_current
+	current_step = AssessmentStep.complete
+	setmin_button.visible = false
 	save_button.visible = true
 	_update_display()
-	print("TripodAssessment: Minimum distance set to %.2f cm - Now finding maximum" % distance_min)
+	print("TripodAssessment: Minimum distance set to %.2f cm - Ready to save" % distance_min)
 
 func _start_arom_raw_logging() -> void:
 	AppDataTrial.start_arom_raw_data_logging()
@@ -137,4 +155,13 @@ func _on_save_pressed() -> void:
 		push_error("TripodAssessment: Failed to save assessment data for Tripod Grip")
 
 func _on_back_pressed() -> void:
+	_cleanup()
 	get_tree().change_scene_to_file("res://scene/mechanism.tscn")
+
+func _cleanup() -> void:
+	# Disconnect from signals to prevent errors when re-entering scene
+	if HCcomm and HCcomm.is_connected("new_device_data", Callable(self, "_on_device_data_received")):
+		HCcomm.disconnect("new_device_data", Callable(self, "_on_device_data_received"))
+
+func _exit_tree() -> void:
+	_cleanup()

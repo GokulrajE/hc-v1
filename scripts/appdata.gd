@@ -2,7 +2,7 @@ class_name AppData
 extends Node
 
 
-const COM_PORT: String = "COM17"
+const COM_PORT: String = "COM15"
 const BAUD_RATE: int = 115200
 
 static var hospital_id: String = ""

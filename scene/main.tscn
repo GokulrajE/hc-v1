@@ -1,47 +1,29 @@
-[gd_scene format=3 uid="uid://c7pe2ljy6vp86"]
+[gd_scene format=3 uid="uid://cqqdrmttatkt6"]
 
 [ext_resource type="Script" uid="uid://c1f5q80jclndn" path="res://scripts/main.gd" id="1_itxqv"]
 [ext_resource type="Texture2D" uid="uid://cov80lucdvvvm" path="res://sprites/Circle Filled.png" id="2_v0l8b"]
+[ext_resource type="PackedScene" uid="uid://ca8b3v7p5hc5" path="res://scene/connect_status.tscn" id="2_wp4xf"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v0l8b"]
-bg_color = Color(0.86974865, 0.31361288, 0.36818975, 1)
-corner_radius_top_left = 20
-corner_radius_top_right = 20
-corner_radius_bottom_right = 20
-corner_radius_bottom_left = 20
+[sub_resource type="StyleBoxFlat" id="LoginButtonStyle"]
+bg_color = Color(0.2, 0.5, 0.8, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_brvut"]
+[sub_resource type="StyleBoxFlat" id="SignupButtonStyle"]
+bg_color = Color(0.2, 0.7, 0.4, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0ha60"]
-bg_color = Color(5.0537287e-06, 0.66976297, 0.3770743, 1)
-corner_radius_top_left = 20
-corner_radius_top_right = 20
-corner_radius_bottom_right = 20
-corner_radius_bottom_left = 20
-
-[sub_resource type="SystemFont" id="SystemFont_4j5ol"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p1hux"]
-bg_color = Color(0.3315369, 0.39813408, 0.9106888, 1)
-corner_radius_top_left = 20
-corner_radius_top_right = 20
-corner_radius_bottom_right = 20
-corner_radius_bottom_left = 20
-corner_detail = 10
-
-[sub_resource type="FontVariation" id="FontVariation_v0l8b"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wp4xf"]
-bg_color = Color(0.6777721, 0.81271434, 0.9453413, 1)
-border_width_left = 5
-border_width_top = 5
-border_width_right = 5
-border_width_bottom = 5
-border_color = Color(0.14312807, 0.3033072, 0.60686415, 1)
-corner_radius_top_left = 30
-corner_radius_top_right = 30
-corner_radius_bottom_right = 30
-corner_radius_bottom_left = 30
+[sub_resource type="StyleBoxFlat" id="DiagnosticsButtonStyle"]
+bg_color = Color(1, 0.6, 0.2, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [node name="Main" type="Control" unique_id=1361795996]
 layout_mode = 3
@@ -55,91 +37,146 @@ script = ExtResource("1_itxqv")
 [node name="bg" type="ColorRect" parent="." unique_id=1209439868]
 layout_mode = 0
 offset_left = -10.0
-offset_top = -10.0
-offset_right = 1928.0
-offset_bottom = 1092.0
+offset_top = -9.0
+offset_right = 1933.0
+offset_bottom = 1091.0
+color = Color(0.12, 0.12, 0.15, 1)
 
-[node name="signup" type="Button" parent="bg" unique_id=1771840276]
+[node name="ConnectStatus" parent="bg" unique_id=442870427 instance=ExtResource("2_wp4xf")]
+
+[node name="card_bg" type="ColorRect" parent="bg" unique_id=1209439869]
 layout_mode = 0
-offset_left = 548.0
-offset_top = 583.0
-offset_right = 893.0
-offset_bottom = 703.0
-theme_override_font_sizes/font_size = 50
-theme_override_styles/normal = SubResource("StyleBoxFlat_v0l8b")
-text = "Signup"
-icon = SubResource("ViewportTexture_brvut")
+offset_left = 400.0
+offset_top = 300.0
+offset_right = 1520.0
+offset_bottom = 850.0
+color = Color(0.2, 0.2, 0.25, 1)
 
 [node name="login" type="Button" parent="bg" unique_id=2007227419]
+custom_minimum_size = Vector2(1020, 100)
 layout_mode = 0
-offset_left = 1014.0
-offset_top = 584.0
-offset_right = 1359.0
-offset_bottom = 708.0
+offset_left = 450.0
+offset_top = 530.0
+offset_right = 1470.0
+offset_bottom = 630.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 50
-theme_override_styles/normal = SubResource("StyleBoxFlat_0ha60")
-text = "Login"
+theme_override_font_sizes/font_size = 44
+theme_override_styles/normal = SubResource("LoginButtonStyle")
+theme_override_styles/pressed = SubResource("LoginButtonStyle")
+theme_override_styles/hover = SubResource("LoginButtonStyle")
+theme_override_styles/focus = SubResource("LoginButtonStyle")
+text = "LOGIN"
+
+[node name="signup_label" type="Label" parent="bg" unique_id=1234567894]
+layout_mode = 0
+offset_left = 450.0
+offset_top = 660.0
+offset_right = 1470.0
+offset_bottom = 710.0
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 26
+text = "New User?"
+
+[node name="signup" type="Button" parent="bg" unique_id=1771840276]
+custom_minimum_size = Vector2(1020, 100)
+layout_mode = 0
+offset_left = 450.0
+offset_top = 720.0
+offset_right = 1470.0
+offset_bottom = 820.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 44
+theme_override_styles/normal = SubResource("SignupButtonStyle")
+theme_override_styles/pressed = SubResource("SignupButtonStyle")
+theme_override_styles/hover = SubResource("SignupButtonStyle")
+theme_override_styles/focus = SubResource("SignupButtonStyle")
+text = "SIGNUP"
 
 [node name="diagnostics" type="Button" parent="bg" unique_id=319754380]
+custom_minimum_size = Vector2(300, 80)
 layout_mode = 0
-offset_left = 78.0
-offset_top = 894.0
-offset_right = 426.0
-offset_bottom = 1019.0
+offset_left = 100.0
+offset_top = 950.0
+offset_right = 400.0
+offset_bottom = 1030.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = SubResource("SystemFont_4j5ol")
-theme_override_font_sizes/font_size = 50
-theme_override_styles/normal = SubResource("StyleBoxFlat_p1hux")
+theme_override_font_sizes/font_size = 36
+theme_override_styles/normal = SubResource("DiagnosticsButtonStyle")
+theme_override_styles/pressed = SubResource("DiagnosticsButtonStyle")
+theme_override_styles/hover = SubResource("DiagnosticsButtonStyle")
+theme_override_styles/focus = SubResource("DiagnosticsButtonStyle")
 text = "Diagnostics"
 
-[node name="hospital_id_input" type="LineEdit" parent="bg" unique_id=1234567890]
+[node name="login_label" type="Label" parent="bg" unique_id=1234567893]
 layout_mode = 0
-offset_left = 625.0
-offset_top = 374.0
-offset_right = 1271.0
-offset_bottom = 509.0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_placeholder_color = Color(0, 0, 0, 0.6)
-theme_override_constants/outline_size = 2
-theme_override_constants/caret_width = 4
-theme_override_constants/minimum_character_width = 6
-theme_override_fonts/font = SubResource("FontVariation_v0l8b")
-theme_override_font_sizes/font_size = 40
-theme_override_styles/normal = SubResource("StyleBoxFlat_wp4xf")
-placeholder_text = "Enter Hospital ID"
+offset_left = 450.0
+offset_top = 330.0
+offset_right = 1470.0
+offset_bottom = 380.0
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 28
+text = "Login to Your Account"
 
-[node name="RichTextLabel" type="RichTextLabel" parent="bg" unique_id=840081165]
-modulate = Color(0.28059554, 0.09940376, 0.04600265, 1)
+[node name="hospital_id_input" type="LineEdit" parent="bg" unique_id=1234567890]
+custom_minimum_size = Vector2(1020, 80)
 layout_mode = 0
-offset_left = 654.0
-offset_top = 162.0
-offset_right = 1316.0
-offset_bottom = 323.0
-theme_override_font_sizes/normal_font_size = 91
-text = "HYPER CUBE"
+offset_left = 450.0
+offset_top = 400.0
+offset_right = 1470.0
+offset_bottom = 480.0
+theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
+theme_override_colors/font_placeholder_color = Color(0.6, 0.6, 0.65, 1)
+theme_override_colors/caret_color = Color(0, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 36
+placeholder_text = "Enter Hospital ID"
+alignment = 1
+
+[node name="title" type="Label" parent="." unique_id=840081165]
+layout_mode = 0
+offset_left = 100.0
+offset_top = 30.0
+offset_right = 1800.0
+offset_bottom = 120.0
+theme_override_colors/font_color = Color(0, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 80
+text = "HYPERCUBE REHABILITATION"
+horizontal_alignment = 1
+
+[node name="subtitle" type="Label" parent="." unique_id=840081166]
+layout_mode = 0
+offset_left = 34.0
+offset_top = 134.0
+offset_right = 1734.0
+offset_bottom = 184.0
+theme_override_colors/font_color = Color(0.7, 0.7, 0.75, 1)
+theme_override_font_sizes/font_size = 26
+text = "Device Communication & Assessment System"
+horizontal_alignment = 1
 
 [node name="device_status" type="Label" parent="." unique_id=1234567891]
 layout_mode = 0
-offset_left = 1555.0
-offset_top = 19.0
-offset_right = 1937.0
-offset_bottom = 66.0
-theme_override_colors/font_color = Color(0.040268797, 0.040268805, 0.040268797, 1)
-theme_override_font_sizes/font_siz
-e = 30
+offset_left = 1510.0
+offset_top = 54.0
+offset_right = 1910.0
+offset_bottom = 114.0
+theme_override_colors/font_color = Color(0.6, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 28
 text = "Device: CONNECTING..."
+horizontal_alignment = 2
 
 [node name="message_label" type="Label" parent="." unique_id=1234567892]
 layout_mode = 0
-offset_left = 547.0
-offset_top = 789.0
-offset_right = 1293.0
-offset_bottom = 889.0
-theme_override_colors/font_color = Color(0.81479406, 0.16844693, 0.22940356, 1)
-theme_override_font_sizes/font_size = 30
+offset_left = 450.0
+offset_top = 860.0
+offset_right = 1470.0
+offset_bottom = 930.0
+theme_override_colors/font_color = Color(0.2, 1, 0.4, 1)
+theme_override_font_sizes/font_size = 26
+horizontal_alignment = 1
+autowrap_mode = 2
 
 [node name="connectionStatus" type="TextureRect" parent="." unique_id=2098887041]
+visible = false
 self_modulate = Color(0.21568628, 0.9411765, 0.09411765, 1)
 layout_mode = 0
 offset_left = 1735.0

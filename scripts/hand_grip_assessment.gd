@@ -73,6 +73,9 @@ func _ready() -> void:
 		redo_button.visible = false
 
 	if HCcomm:
+		# Disconnect if already connected to prevent duplicate signal error
+		if HCcomm.is_connected("new_device_data", Callable(self, "_on_device_data_received")):
+			HCcomm.disconnect("new_device_data", Callable(self, "_on_device_data_received"))
 		HCcomm.new_device_data.connect(_on_device_data_received)
 
 	print("HandleAssessment: Started for Handle mechanism")
@@ -320,4 +323,13 @@ func _on_save_pressed() -> void:
 		push_error("HandGripAssessment: Failed to save assessment data for Handle")
 
 func _on_back_pressed() -> void:
+	_cleanup()
 	get_tree().change_scene_to_file("res://scene/mechanism.tscn")
+
+func _cleanup() -> void:
+	# Disconnect from signals to prevent errors when re-entering scene
+	if HCcomm and HCcomm.is_connected("new_device_data", Callable(self, "_on_device_data_received")):
+		HCcomm.disconnect("new_device_data", Callable(self, "_on_device_data_received"))
+
+func _exit_tree() -> void:
+	_cleanup()

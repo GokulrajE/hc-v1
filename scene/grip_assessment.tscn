@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://epcthnc8vfwm"]
 
 [ext_resource type="Script" uid="uid://dwdi0atas1xpu" path="res://scripts/grip_assessment.gd" id="1_grip_script"]
+[ext_resource type="PackedScene" uid="uid://ca8b3v7p5hc5" path="res://scene/connect_status.tscn" id="2_vtsi7"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tfudh"]
 bg_color = Color(0.7254902, 0.45490196, 0.9372549, 1)
@@ -8,62 +9,121 @@ bg_color = Color(0.7254902, 0.45490196, 0.9372549, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3u5u1"]
 bg_color = Color(0.4256809, 0.13830227, 0.6084575, 1)
 
+[sub_resource type="StyleBoxFlat" id="StartButtonStyle"]
+bg_color = Color(0.2, 0.5, 0.8, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StopButtonStyle"]
+bg_color = Color(0.6, 0.2, 0.8, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="RedoButtonStyle"]
+bg_color = Color(1.0, 0.4, 0.2, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="SaveButtonStyle"]
+bg_color = Color(0.2, 0.7, 0.4, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="BackButtonStyle"]
+bg_color = Color(0.4, 0.4, 0.4, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
 [node name="GripAssessment" type="Node2D" unique_id=993556866]
 script = ExtResource("1_grip_script")
 
 [node name="bg" type="ColorRect" parent="." unique_id=200221558]
-offset_left = -14.0
-offset_top = -19.0
-offset_right = 1970.0
-offset_bottom = 1107.0
-color = Color(0.5641601, 0.56416, 0.56416, 1)
+offset_left = -22.0
+offset_top = 2.0
+offset_right = 1916.0
+offset_bottom = 1104.0
+color = Color(0.12, 0.12, 0.15, 1)
+
+[node name="ConnectStatus" parent="." unique_id=442870427 instance=ExtResource("2_vtsi7")]
 
 [node name="title" type="Label" parent="." unique_id=1950225308]
 offset_left = 50.0
-offset_top = 50.0
+offset_top = 20.0
 offset_right = 1850.0
-offset_bottom = 150.0
-theme_override_font_sizes/font_size = 50
-text = "ASSESS  GRIP"
+offset_bottom = 100.0
+theme_override_colors/font_color = Color(0, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 70
+text = "GRIP ASSESSMENT"
+horizontal_alignment = 1
 
 [node name="subtitle" type="Label" parent="." unique_id=761336723]
 offset_left = 50.0
-offset_top = 116.0
+offset_top = 100.0
 offset_right = 1850.0
-offset_bottom = 166.0
-theme_override_font_sizes/font_size = 30
-text = "Real-time Force Monitoring"
+offset_bottom = 150.0
+theme_override_colors/font_color = Color(0.7, 0.7, 0.75, 1)
+theme_override_font_sizes/font_size = 24
+text = "Real-time grip force monitoring and threshold assessment"
+horizontal_alignment = 1
+
+[node name="card_bg" type="ColorRect" parent="." unique_id=1836120846]
+offset_left = 431.0
+offset_top = 168.0
+offset_right = 1551.0
+offset_bottom = 838.0
+color = Color(0.2, 0.2, 0.25, 1)
 
 [node name="status_label" type="Label" parent="." unique_id=1138660240]
-offset_left = 60.0
-offset_top = 16.0
-offset_right = 1357.0
-offset_bottom = 66.0
-theme_override_colors/font_color = Color(0.06469653, 0.06469653, 0.06469653, 1)
-theme_override_font_sizes/font_size = 25
+offset_left = 434.0
+offset_top = 773.0
+offset_right = 1554.0
+offset_bottom = 833.0
+theme_override_colors/font_color = Color(0.6, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 22
 text = "Device Status: Not Connected"
+horizontal_alignment = 1
 
 [node name="back_button" type="Button" parent="." unique_id=1836120844]
 offset_left = 50.0
 offset_top = 950.0
 offset_right = 250.0
 offset_bottom = 1020.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("BackButtonStyle")
+theme_override_styles/hover = SubResource("BackButtonStyle")
+theme_override_styles/pressed = SubResource("BackButtonStyle")
+theme_override_styles/focus = SubResource("BackButtonStyle")
 text = "Back"
 
 [node name="save_button" type="Button" parent="." unique_id=1836120845]
-offset_left = 1650.0
-offset_top = 950.0
-offset_right = 1850.0
-offset_bottom = 1020.0
-theme_override_font_sizes/font_size = 30
+offset_left = 500.0
+offset_top = 870.0
+offset_right = 950.0
+offset_bottom = 940.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("SaveButtonStyle")
+theme_override_styles/hover = SubResource("SaveButtonStyle")
+theme_override_styles/pressed = SubResource("SaveButtonStyle")
+theme_override_styles/focus = SubResource("SaveButtonStyle")
 text = "Save Assessment"
 
 [node name="grip_progress" type="ProgressBar" parent="." unique_id=273649138]
-offset_left = 902.0
-offset_top = 174.0
-offset_right = 1010.0
-offset_bottom = 808.0
+offset_left = 950.0
+offset_top = 280.0
+offset_right = 1020.0
+offset_bottom = 700.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_styles/background = SubResource("StyleBoxFlat_tfudh")
 theme_override_styles/fill = SubResource("StyleBoxFlat_3u5u1")
@@ -74,9 +134,11 @@ allow_greater = true
 fill_mode = 3
 
 [node name="grip_value" type="Label" parent="." unique_id=1768650071]
-offset_left = 880.0
-offset_top = 866.0
-offset_right = 1059.0
-offset_bottom = 962.0
-theme_override_font_sizes/font_size = 30
+offset_left = 450.0
+offset_top = 300.0
+offset_right = 900.0
+offset_bottom = 400.0
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 60
 text = "Grip: 0.0 N"
+horizontal_alignment = 1

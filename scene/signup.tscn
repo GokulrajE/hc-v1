@@ -2,6 +2,20 @@
 
 [ext_resource type="Script" uid="uid://enc2djuosup1" path="res://scripts/signup.gd" id="1_4g4rp"]
 
+[sub_resource type="StyleBoxFlat" id="SaveButtonStyle"]
+bg_color = Color(0.2, 0.7, 0.4, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="StyleBoxFlat" id="BackButtonStyle"]
+bg_color = Color(0.4, 0.4, 0.4, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
 [node name="signup" type="Node2D" unique_id=1466517184]
 script = ExtResource("1_4g4rp")
 
@@ -10,85 +24,132 @@ offset_left = -10.0
 offset_top = -10.0
 offset_right = 1928.0
 offset_bottom = 1092.0
+color = Color(0.12, 0.12, 0.15, 1)
+
+[node name="card_bg" type="ColorRect" parent="." unique_id=162250501]
+offset_left = 339.0
+offset_top = 161.0
+offset_right = 1539.0
+offset_bottom = 944.0
+color = Color(0.2, 0.2, 0.25, 1)
+
+[node name="title" type="Label" parent="." unique_id=162250502]
+offset_left = 350.0
+offset_top = 20.0
+offset_right = 1550.0
+offset_bottom = 103.0
+theme_override_colors/font_color = Color(0, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 60
+text = "REGISTER"
+horizontal_alignment = 1
+
+[node name="subtitle" type="Label" parent="." unique_id=162250503]
+offset_left = 357.0
+offset_top = 101.0
+offset_right = 1557.0
+offset_bottom = 141.0
+theme_override_colors/font_color = Color(0.7, 0.7, 0.75, 1)
+theme_override_font_sizes/font_size = 22
+text = "Enter Patient information below"
+horizontal_alignment = 1
 
 [node name="label_hospital_id" type="Label" parent="." unique_id=2000000001]
-offset_left = 50.0
-offset_top = 231.0
-offset_right = 200.0
-offset_bottom = 280.0
-theme_override_font_sizes/font_size = 30
-text = "Hospital ID:"
+offset_left = 380.0
+offset_top = 200.0
+offset_right = 600.0
+offset_bottom = 250.0
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 26
+text = "Hospital ID"
 
 [node name="hospitalID" type="TextEdit" parent="." unique_id=221227022]
-offset_left = 254.0
-offset_top = 231.0
-offset_right = 757.0
-offset_bottom = 325.0
-theme_override_font_sizes/font_size = 50
-placeholder_text = "enter hospital id"
+custom_minimum_size = Vector2(670, 70)
+offset_left = 380.0
+offset_top = 260.0
+offset_right = 1050.0
+offset_bottom = 330.0
+theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
+theme_override_colors/font_placeholder_color = Color(0.6, 0.6, 0.65, 1)
+theme_override_font_sizes/font_size = 32
+placeholder_text = "Enter HospitalID"
 
 [node name="label_name" type="Label" parent="." unique_id=2000000002]
-offset_left = 50.0
-offset_top = 395.0
-offset_right = 200.0
-offset_bottom = 444.0
-theme_override_font_sizes/font_size = 30
-text = "Name:"
+offset_left = 1080.0
+offset_top = 200.0
+offset_right = 1300.0
+offset_bottom = 250.0
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 26
+text = "Full Name"
 
 [node name="name" type="TextEdit" parent="." unique_id=1714211675]
-offset_left = 264.0
-offset_top = 395.0
-offset_right = 770.0
-offset_bottom = 492.0
-theme_override_font_sizes/font_size = 50
-placeholder_text = "enter name"
+custom_minimum_size = Vector2(420, 70)
+offset_left = 1080.0
+offset_top = 260.0
+offset_right = 1500.0
+offset_bottom = 330.0
+theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
+theme_override_colors/font_placeholder_color = Color(0.6, 0.6, 0.65, 1)
+theme_override_font_sizes/font_size = 32
+placeholder_text = "Enter Name"
 
 [node name="label_age" type="Label" parent="." unique_id=2000000003]
-offset_left = 850.0
-offset_top = 214.0
-offset_right = 950.0
-offset_bottom = 263.0
-theme_override_font_sizes/font_size = 30
-text = "Age:"
+offset_left = 380.0
+offset_top = 370.0
+offset_right = 600.0
+offset_bottom = 420.0
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 26
+text = "Age"
 
 [node name="age" type="TextEdit" parent="." unique_id=814608644]
-offset_left = 983.0
-offset_top = 214.0
-offset_right = 1626.0
-offset_bottom = 345.0
-theme_override_font_sizes/font_size = 50
-placeholder_text = "enter age"
+custom_minimum_size = Vector2(670, 70)
+offset_left = 380.0
+offset_top = 430.0
+offset_right = 1050.0
+offset_bottom = 500.0
+theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
+theme_override_colors/font_placeholder_color = Color(0.6, 0.6, 0.65, 1)
+theme_override_font_sizes/font_size = 32
+placeholder_text = "Enter Age"
 
 [node name="label_location" type="Label" parent="." unique_id=2000000004]
-offset_left = 850.0
-offset_top = 381.0
-offset_right = 980.0
-offset_bottom = 430.0
-theme_override_font_sizes/font_size = 30
-text = "Location:"
+offset_left = 1080.0
+offset_top = 370.0
+offset_right = 1300.0
+offset_bottom = 420.0
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 26
+text = "Location"
 
 [node name="location" type="TextEdit" parent="." unique_id=512305030]
-offset_left = 950.0
-offset_top = 381.0
-offset_right = 1576.0
-offset_bottom = 502.0
-theme_override_font_sizes/font_size = 50
-placeholder_text = "enter location"
+custom_minimum_size = Vector2(420, 70)
+offset_left = 1080.0
+offset_top = 430.0
+offset_right = 1500.0
+offset_bottom = 500.0
+theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
+theme_override_colors/font_placeholder_color = Color(0.6, 0.6, 0.65, 1)
+theme_override_font_sizes/font_size = 32
+placeholder_text = "Enter Location"
 
 [node name="label_limb" type="Label" parent="." unique_id=2000000005]
-offset_left = 50.0
-offset_top = 550.0
-offset_right = 200.0
-offset_bottom = 599.0
-theme_override_font_sizes/font_size = 30
-text = "Affected Limb:"
+offset_left = 380.0
+offset_top = 540.0
+offset_right = 600.0
+offset_bottom = 590.0
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 26
+text = "Affected Limb"
 
 [node name="limb" type="OptionButton" parent="." unique_id=2000000006]
-offset_left = 254.0
-offset_top = 550.0
-offset_right = 500.0
-offset_bottom = 620.0
-theme_override_font_sizes/font_size = 30
+custom_minimum_size = Vector2(670, 70)
+offset_left = 380.0
+offset_top = 600.0
+offset_right = 1050.0
+offset_bottom = 670.0
+theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
+theme_override_font_sizes/font_size = 28
 selected = 0
 item_count = 2
 popup/item_0/text = "Left"
@@ -97,24 +158,39 @@ popup/item_1/text = "Right"
 popup/item_1/id = 1
 
 [node name="save" type="Button" parent="." unique_id=1815016385]
-offset_left = 400.0
-offset_top = 698.0
-offset_right = 800.0
-offset_bottom = 790.0
-theme_override_font_sizes/font_size = 100
-text = "Save"
+custom_minimum_size = Vector2(570, 100)
+offset_left = 380.0
+offset_top = 730.0
+offset_right = 950.0
+offset_bottom = 830.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 44
+theme_override_styles/normal = SubResource("SaveButtonStyle")
+theme_override_styles/pressed = SubResource("SaveButtonStyle")
+theme_override_styles/hover = SubResource("SaveButtonStyle")
+theme_override_styles/focus = SubResource("SaveButtonStyle")
+text = "SAVE"
 
 [node name="back_button" type="Button" parent="." unique_id=2000000007]
-offset_left = 900.0
-offset_top = 698.0
-offset_right = 1300.0
-offset_bottom = 790.0
-theme_override_font_sizes/font_size = 100
-text = "Back"
+custom_minimum_size = Vector2(520, 100)
+offset_left = 980.0
+offset_top = 730.0
+offset_right = 1500.0
+offset_bottom = 830.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 44
+theme_override_styles/normal = SubResource("BackButtonStyle")
+theme_override_styles/pressed = SubResource("BackButtonStyle")
+theme_override_styles/hover = SubResource("BackButtonStyle")
+theme_override_styles/focus = SubResource("BackButtonStyle")
+text = "BACK"
 
 [node name="status_label" type="Label" parent="." unique_id=2000000008]
-offset_left = 50.0
-offset_top = 850.0
-offset_right = 1850.0
-offset_bottom = 1000.0
-theme_override_font_sizes/font_size = 30
+offset_left = 380.0
+offset_top = 860.0
+offset_right = 1500.0
+offset_bottom = 930.0
+theme_override_colors/font_color = Color(0.2, 1, 0.4, 1)
+theme_override_font_sizes/font_size = 26
+horizontal_alignment = 1
+autowrap_mode = 2

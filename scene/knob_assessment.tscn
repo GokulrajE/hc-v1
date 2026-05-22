@@ -2,135 +2,207 @@
 
 [ext_resource type="Script" uid="uid://cqrs6iqn782ce" path="res://scripts/knob_assessment.gd" id="1_qjwtc"]
 [ext_resource type="PackedScene" uid="uid://dpbidut4lns0r" path="res://scene/knob_progress.tscn" id="1_ypp8v"]
+[ext_resource type="PackedScene" uid="uid://ca8b3v7p5hc5" path="res://scene/connect_status.tscn" id="2_4qrfr"]
+
+[sub_resource type="StyleBoxFlat" id="BackButtonStyle"]
+bg_color = Color(0.4, 0.4, 0.4, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StartButtonStyle"]
+bg_color = Color(0.2, 0.5, 0.8, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StopButtonStyle"]
+bg_color = Color(0.6, 0.2, 0.8, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="RedoButtonStyle"]
+bg_color = Color(1, 0.4, 0.2, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="SaveButtonStyle"]
+bg_color = Color(0.2, 0.7, 0.4, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
 
 [node name="KnobAssessment" type="Node2D" unique_id=1393376503]
 script = ExtResource("1_qjwtc")
 
 [node name="bg" type="ColorRect" parent="." unique_id=705555560]
-offset_left = -7.0
-offset_top = -12.0
-offset_right = 1977.0
-offset_bottom = 1114.0
-color = Color(0.5641601, 0.56416, 0.56416, 1)
+offset_left = -22.0
+offset_top = 2.0
+offset_right = 1916.0
+offset_bottom = 1104.0
+color = Color(0.12, 0.12, 0.15, 1)
+
+[node name="ConnectStatus" parent="." unique_id=442870427 instance=ExtResource("2_4qrfr")]
 
 [node name="title" type="Label" parent="." unique_id=1359696859]
 offset_left = 50.0
-offset_top = 50.0
+offset_top = 20.0
 offset_right = 1850.0
-offset_bottom = 150.0
-theme_override_font_sizes/font_size = 50
+offset_bottom = 100.0
+theme_override_colors/font_color = Color(0, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 70
 text = "ASSESS KNOB"
+horizontal_alignment = 1
 
 [node name="subtitle" type="Label" parent="." unique_id=1498431493]
 offset_left = 50.0
-offset_top = 116.0
+offset_top = 100.0
 offset_right = 1850.0
-offset_bottom = 166.0
-theme_override_font_sizes/font_size = 30
-text = "Real-time Knob Angle Monitoring"
-metadata/_edit_use_anchors_ = true
+offset_bottom = 150.0
+theme_override_colors/font_color = Color(0.7, 0.7, 0.75, 1)
+theme_override_font_sizes/font_size = 24
+text = "Real-time angle monitoring and range assessment"
+horizontal_alignment = 1
 
-[node name="knob_1_title" type="Label" parent="." unique_id=1903930885]
-offset_left = 645.0
-offset_top = 152.0
-offset_right = 2445.0
-offset_bottom = 202.0
-theme_override_font_sizes/font_size = 30
-metadata/_edit_use_anchors_ = true
+[node name="card_bg" type="ColorRect" parent="." unique_id=1903930885]
+offset_left = 391.0
+offset_top = 176.0
+offset_right = 1511.0
+offset_bottom = 846.0
+color = Color(0.2, 0.2, 0.25, 1)
 
-[node name="knob_1_angle_lable" type="Label" parent="." unique_id=2071436040]
-offset_left = 1399.0
-offset_top = 494.0
-offset_right = 1699.0
-offset_bottom = 577.0
-theme_override_font_sizes/font_size = 60
+[node name="knob_1_title" type="Label" parent="." unique_id=1903930886]
+offset_left = 400.0
+offset_top = 190.0
+offset_right = 1520.0
+offset_bottom = 260.0
+theme_override_colors/font_color = Color(0, 0.9, 0.8, 1)
+theme_override_font_sizes/font_size = 48
+horizontal_alignment = 1
+
+[node name="knob_1_angle_label" type="Label" parent="." unique_id=2071436040]
+offset_left = 897.0
+offset_top = 232.0
+offset_right = 1497.0
+offset_bottom = 332.0
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 72
 text = "0.00°"
-metadata/_edit_use_anchors_ = true
+horizontal_alignment = 1
 
 [node name="knob_2_progress" parent="." unique_id=2142195604 instance=ExtResource("1_ypp8v")]
-offset_left = 568.0
-offset_top = 237.0
-offset_right = 953.0
-offset_bottom = 493.0
-rotation = 0.0
-scale = Vector2(2, 2)
+offset_left = 492.0
+offset_top = 226.0
+offset_right = 762.34717
+offset_bottom = 482.0
 
 [node name="min_max_container" type="VBoxContainer" parent="." unique_id=1858876454]
-offset_left = 60.49
-offset_top = 324.0
-offset_right = 445.49
-offset_bottom = 480.0
-rotation = -6.2831855
-theme_override_constants/separation = 15
-metadata/_edit_use_anchors_ = true
+offset_left = 1121.0
+offset_top = 419.0
+offset_right = 1459.0
+offset_bottom = 649.0
+theme_override_constants/separation = 20
 
 [node name="min_label" type="Label" parent="min_max_container" unique_id=761930159]
 layout_mode = 2
-theme_override_font_sizes/font_size = 30
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 28
 text = "Min: 0.00°"
 
 [node name="max_label" type="Label" parent="min_max_container" unique_id=1661315522]
 layout_mode = 2
-theme_override_font_sizes/font_size = 30
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 28
 text = "Max: 0.00°"
 
 [node name="current_label" type="Label" parent="min_max_container" unique_id=968037027]
 layout_mode = 2
-theme_override_font_sizes/font_size = 30
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 28
 text = "Current: 0.00°"
 
 [node name="status_label" type="Label" parent="." unique_id=248003420]
-offset_left = 395.0
-offset_top = 831.0
-offset_right = 1692.0
-offset_bottom = 881.0
-theme_override_colors/font_color = Color(0.06469653, 0.06469653, 0.06469653, 1)
-theme_override_font_sizes/font_size = 25
+offset_left = 404.0
+offset_top = 784.0
+offset_right = 1524.0
+offset_bottom = 844.0
+theme_override_colors/font_color = Color(0.6, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 22
 text = "Device Status: Not Connected"
-metadata/_edit_use_anchors_ = true
+horizontal_alignment = 1
 
 [node name="back_button" type="Button" parent="." unique_id=988509043]
 offset_left = 50.0
 offset_top = 950.0
 offset_right = 250.0
 offset_bottom = 1020.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("BackButtonStyle")
+theme_override_styles/pressed = SubResource("BackButtonStyle")
+theme_override_styles/hover = SubResource("BackButtonStyle")
+theme_override_styles/focus = SubResource("BackButtonStyle")
 text = "Back"
-metadata/_edit_use_anchors_ = true
 
 [node name="start_button" type="Button" parent="." unique_id=1407606303]
 visible = false
-offset_left = 650.0
-offset_top = 950.0
-offset_right = 900.0
-offset_bottom = 1020.0
-theme_override_font_sizes/font_size = 30
+offset_left = 500.0
+offset_top = 870.0
+offset_right = 950.0
+offset_bottom = 940.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StartButtonStyle")
+theme_override_styles/pressed = SubResource("StartButtonStyle")
+theme_override_styles/hover = SubResource("StartButtonStyle")
+theme_override_styles/focus = SubResource("StartButtonStyle")
 text = "START Assessment"
 
 [node name="stop_button" type="Button" parent="." unique_id=1450466279]
 visible = false
-offset_left = 950.0
-offset_top = 950.0
-offset_right = 1200.0
-offset_bottom = 1020.0
-theme_override_font_sizes/font_size = 30
+offset_left = 1000.0
+offset_top = 870.0
+offset_right = 1450.0
+offset_bottom = 940.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StopButtonStyle")
+theme_override_styles/pressed = SubResource("StopButtonStyle")
+theme_override_styles/hover = SubResource("StopButtonStyle")
+theme_override_styles/focus = SubResource("StopButtonStyle")
 text = "STOP & Continue"
 
 [node name="redo_button" type="Button" parent="." unique_id=497461371]
 visible = false
-offset_left = 1350.0
-offset_top = 950.0
-offset_right = 1550.0
-offset_bottom = 1020.0
-theme_override_font_sizes/font_size = 30
+offset_left = 500.0
+offset_top = 870.0
+offset_right = 950.0
+offset_bottom = 940.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("RedoButtonStyle")
+theme_override_styles/pressed = SubResource("RedoButtonStyle")
+theme_override_styles/hover = SubResource("RedoButtonStyle")
+theme_override_styles/focus = SubResource("RedoButtonStyle")
 text = "REDO AROM"
 
 [node name="save_button" type="Button" parent="." unique_id=2026612596]
 visible = false
-offset_left = 1650.0
-offset_top = 950.0
-offset_right = 1850.0
-offset_bottom = 1020.0
-theme_override_font_sizes/font_size = 30
+offset_left = 1000.0
+offset_top = 870.0
+offset_right = 1450.0
+offset_bottom = 940.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("SaveButtonStyle")
+theme_override_styles/pressed = SubResource("SaveButtonStyle")
+theme_override_styles/hover = SubResource("SaveButtonStyle")
+theme_override_styles/focus = SubResource("SaveButtonStyle")
 text = "Save Assessment"
-metadata/_edit_use_anchors_ = true
