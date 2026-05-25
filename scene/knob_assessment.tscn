@@ -206,3 +206,14 @@ theme_override_styles/pressed = SubResource("SaveButtonStyle")
 theme_override_styles/hover = SubResource("SaveButtonStyle")
 theme_override_styles/focus = SubResource("SaveButtonStyle")
 text = "Save Assessment"
+
+[node name="timer_label" type="Label" parent="." unique_id=3108822968]
+visible = false
+offset_left = 1300.0
+offset_top = 330.0
+offset_right = 1510.0
+offset_bottom = 430.0
+theme_override_colors/font_color = Color(0, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 80
+text = "60"
+horizontal_alignment = 1

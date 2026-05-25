@@ -15,6 +15,11 @@ var current_label: Label
 var knob_progress_cw: TextureProgressBar
 var knob_progress_ccw: TextureProgressBar
 var needle : Sprite2D
+var reach_count_label: Label
+var flash_timer: float = 0.0
+var pulse_time: float = 0.0
+var target_dot_max: Sprite2D = null
+var target_dot_min: Sprite2D = null
 
 var min_angle = 0.0
 var max_angle = 0.0
@@ -63,6 +68,7 @@ func _ready() -> void:
 	knob_progress_cw = get_node_or_null("knob_2_progress/knob_2_progress_cw")
 	knob_progress_ccw = get_node_or_null("knob_2_progress/knob_2_progress_ccw")
 	needle = get_node_or_null("knob_2_progress/needle")
+	reach_count_label = get_node_or_null("reach_count")
 
 	if back_button:
 		back_button.pressed.connect(_on_back_pressed)
@@ -223,6 +229,7 @@ func _advance_to_step3() -> void:
 	reach_count = 0
 	last_reached_min = false
 	last_reached_max = false
+	pulse_time = 0.0
 	if stop_button:
 		stop_button.visible = false
 	if redo_button:
@@ -233,6 +240,31 @@ func _advance_to_step3() -> void:
 		min_label.text = "AROM Min: %.2f°" % arom_min
 	if max_label:
 		max_label.text = "AROM Max: %.2f°" % arom_max
+
+	# Show reach count label and create indicator dots
+	if reach_count_label:
+		reach_count_label.visible = true
+		reach_count_label.text = "1"
+		reach_count_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+
+	# Create pulsing dots at arc tips (positioned outside the progress bar)
+	var circle_tex = load("res://sprites/Circle Filled.png")
+	var knob_node = get_node_or_null("knob_2_progress")
+	if knob_node and circle_tex:
+		target_dot_max = Sprite2D.new()
+		target_dot_max.texture = circle_tex
+		target_dot_max.scale = Vector2(0.09, 0.09)
+		target_dot_max.position = Vector2(137, 137) + Vector2(
+			cos(deg_to_rad(-90.0 + arom_max)), sin(deg_to_rad(-90.0 + arom_max))) * 130.0
+		knob_node.add_child(target_dot_max)
+
+		target_dot_min = Sprite2D.new()
+		target_dot_min.texture = circle_tex
+		target_dot_min.scale = Vector2(0.09, 0.09)
+		target_dot_min.position = Vector2(137, 137) + Vector2(
+			cos(deg_to_rad(-90.0 - abs(arom_min))), sin(deg_to_rad(-90.0 - abs(arom_min)))) * 150.0
+		knob_node.add_child(target_dot_min)
+
 	print("KnobAssessment: Step 2 complete! AROM: %.2f° to %.2f°" % [arom_min, arom_max])
 
 func _process_step3() -> void:
@@ -249,6 +281,10 @@ func _process_step3() -> void:
 		last_reached_max = true
 		last_reached_min = false
 		reach_count += 1
+		# Trigger needle flash on reach
+		flash_timer = 0.3
+		if needle:
+			needle.modulate = Color(1.5, 1.5, 1.5, 1)
 
 	if current_label:
 		current_label.text = "Reaches: %d/%d | Time: %.1f s" % [reach_count, REQUIRED_REACHES, reaching_timer]
@@ -271,6 +307,22 @@ func _complete_step3() -> void:
 			status_label.text = "Time expired. Reaches: %d/%d - Click SAVE to submit" % [reach_count, REQUIRED_REACHES]
 	if save_button:
 		save_button.visible = true
+
+	# Hide timer and remove indicator dots
+	if reach_count_label:
+		reach_count_label.visible = false
+	if target_dot_max:
+		target_dot_max.queue_free()
+		target_dot_max = null
+	if target_dot_min:
+		target_dot_min.queue_free()
+		target_dot_min = null
+	# Restore bar colors
+	if knob_progress_cw:
+		knob_progress_cw.modulate = Color(1, 1, 1, 1)
+	if knob_progress_ccw:
+		knob_progress_ccw.modulate = Color(1, 1, 1, 1)
+
 	print("KnobAssessment: Step 3 complete! Reaches: %d in %.1f seconds" % [reach_count, reaching_timer])
 
 func _update_min_max() -> void:
@@ -289,6 +341,55 @@ func _update_knob_progress() -> void:
 		return
 	knob_progress_cw.radial_fill_degrees = max_angle
 	knob_progress_ccw.radial_fill_degrees = abs(min_angle)
+
+	if current_step != AssessmentStep.STEP3_REACHING:
+		knob_progress_cw.modulate = Color(1, 1, 1, 1)
+		knob_progress_ccw.modulate = Color(1, 1, 1, 1)
+		return
+
+	var near = 5.0
+	var going_to_max = last_reached_min
+	var pulse = 0.5 + 0.5 * sin(pulse_time * 6.0)
+
+	# CW bar (max side)
+	if current_angle >= arom_max:
+		knob_progress_cw.modulate = Color(0.878, 0.87, 0.291, 1.0)
+	elif going_to_max and current_angle >= arom_max - near:
+		knob_progress_cw.modulate = Color(1, 1, 0.2 + pulse * 0.2, 1)
+	elif going_to_max:
+		knob_progress_cw.modulate = Color(1.0, 0.9 + pulse * 0.1, 0.0, 1)
+	else:
+		knob_progress_cw.modulate = Color(1.637, 1.165, 0.0, 1.0)
+
+	# CCW bar (min side)
+	if current_angle <= arom_min:
+		knob_progress_ccw.modulate = Color(0.878, 0.87, 0.291, 1.0)
+	elif not going_to_max and current_angle <= arom_min + near:
+		knob_progress_ccw.modulate = Color(1, 1, 0.2 + pulse * 0.2, 1)
+	elif not going_to_max:
+		knob_progress_ccw.modulate = Color(1.0, 0.9 + pulse * 0.1, 0.0, 1)
+	else:
+		knob_progress_ccw.modulate = Color(1.637, 1.165, 0.0, 1.0)
+
+	# Pulse the active indicator dot; dim the inactive one
+	if target_dot_max and target_dot_min:
+		var dot_scale = 0.065 + pulse * 0.035
+		if going_to_max:
+			target_dot_max.scale = Vector2(dot_scale, dot_scale)
+			target_dot_max.modulate = Color(0.2, 0.8, 1, 0.8 + pulse * 0.2)
+			target_dot_min.scale = Vector2(0.055, 0.055)
+			target_dot_min.modulate = Color(0.21, 0.129, 0.069, 0.3)
+			# Position reach count label over active (max) dot
+			if reach_count_label:
+				reach_count_label.global_position = get_node_or_null("knob_2_progress").global_position + target_dot_max.position - Vector2(20, 20)
+		else:
+			target_dot_min.scale = Vector2(dot_scale, dot_scale)
+			target_dot_min.modulate = Color(0.2, 0.8, 1, 0.8 + pulse * 0.2)
+			target_dot_max.scale = Vector2(0.055, 0.055)
+			target_dot_max.modulate = Color(0.21, 0.129, 0.069, 0.3)
+			# Position reach count label over active (min) dot
+			if reach_count_label:
+				reach_count_label.global_position = get_node_or_null("knob_2_progress").global_position + target_dot_min.position - Vector2(20, 20)
 
 func _update_needle_rotation() -> void:
 	if not needle:
@@ -315,8 +416,20 @@ func _start_arom_raw_logging() -> void:
 	print("KnobAssessment: Started AROM raw data logging for %s" % Appdata.selected_mechanism.name)
 
 func _physics_process(_delta: float) -> void:
+	var dt = get_physics_process_delta_time()
 	if current_step == AssessmentStep.STEP3_REACHING:
-		reaching_timer += get_physics_process_delta_time()
+		reaching_timer += dt
+		pulse_time += dt
+
+		# Update reach count display
+		if reach_count_label:
+			reach_count_label.text = "%d" % (reach_count + 1)
+
+	# Needle flash decay
+	if flash_timer > 0.0:
+		flash_timer -= dt
+		if flash_timer <= 0.0 and needle:
+			needle.modulate = Color(1, 1, 1, 1)
 
 func _on_save_pressed() -> void:
 	if Appdata.selected_mechanism == null:

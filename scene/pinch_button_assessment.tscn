@@ -2,6 +2,10 @@
 
 [ext_resource type="Script" uid="uid://b5fg7oswgrqkh" path="res://scripts/pinch_button_assessment.gd" id="1_pinch_script"]
 [ext_resource type="PackedScene" uid="uid://ca8b3v7p5hc5" path="res://scene/connect_status.tscn" id="2_qncqe"]
+[ext_resource type="Texture2D" uid="uid://cov80lucdvvvm" path="res://sprites/Circle Filled.png" id="3_kcucj"]
+
+[sub_resource type="CircleShape2D" id="CircleClickShape"]
+radius = 180.0
 
 [sub_resource type="StyleBoxFlat" id="BackButtonStyle"]
 bg_color = Color(0.4, 0.4, 0.4, 1)
@@ -22,10 +26,10 @@ script = ExtResource("1_pinch_script")
 
 [node name="bg" type="ColorRect" parent="." unique_id=2025287765]
 z_index = -1
-offset_left = -31.0
-offset_top = -20.0
-offset_right = 1953.0
-offset_bottom = 1106.0
+offset_left = -28.0
+offset_top = -17.0
+offset_right = 1956.0
+offset_bottom = 1109.0
 color = Color(0.12, 0.12, 0.15, 1)
 
 [node name="ConnectStatus" parent="." unique_id=442870427 instance=ExtResource("2_qncqe")]
@@ -52,88 +56,51 @@ text = "Press and hold for 5 seconds to complete each assessment"
 horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true
 
-[node name="assessment_container" type="VBoxContainer" parent="." unique_id=2025287766]
-offset_left = 128.0
-offset_top = 200.0
-offset_right = 1744.0
-offset_bottom = 808.0
+[node name="title2" type="Label" parent="." unique_id=1229104482]
+offset_left = 600.0
+offset_top = 150.0
+offset_right = 1300.0
+offset_bottom = 250.0
+theme_override_font_sizes/font_size = 80
+text = "PINCH - 1"
+horizontal_alignment = 1
 
-[node name="pinch1_card" type="ColorRect" parent="assessment_container" unique_id=1196699947]
-custom_minimum_size = Vector2(0, 200)
-layout_mode = 2
-color = Color(0.2, 0.2, 0.25, 1)
+[node name="buttonstateUI" type="Sprite2D" parent="." unique_id=1621334457]
+modulate = Color(0, 1, 0, 1)
+position = Vector2(950.615, 463.66)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("3_kcucj")
 
-[node name="pinch2_card" type="ColorRect" parent="assessment_container" unique_id=1196699950]
-custom_minimum_size = Vector2(0, 200)
-layout_mode = 2
-color = Color(0.2, 0.2, 0.25, 1)
+[node name="CircleClickArea" type="Area2D" parent="buttonstateUI" unique_id=1621334458]
 
-[node name="buttons_card" type="ColorRect" parent="assessment_container" unique_id=1196699953]
-custom_minimum_size = Vector2(0, 200)
-layout_mode = 2
-color = Color(0.2, 0.2, 0.25, 1)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="buttonstateUI/CircleClickArea" unique_id=1621334459]
+shape = SubResource("CircleClickShape")
 
-[node name="pinch1_card#pinch1_label" type="Label" parent="." unique_id=1196699948]
-offset_left = 176.0
-offset_top = 257.0
-offset_right = 476.0
-offset_bottom = 324.0
-theme_override_colors/font_color = Color(0, 0.9, 0.8, 1)
-theme_override_font_sizes/font_size = 48
-text = "PINCH 1"
+[node name="timertext" type="Label" parent="." unique_id=397371974]
+offset_left = 850.0
+offset_top = 350.0
+offset_right = 1066.0
+offset_bottom = 550.0
+theme_override_font_sizes/font_size = 150
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="pinch1_card#pinch1_status" type="Label" parent="." unique_id=1196699949]
-offset_left = 486.0
-offset_top = 285.0
-offset_right = 1036.0
-offset_bottom = 335.0
-theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
-theme_override_font_sizes/font_size = 20
-text = "Click to start assessment"
-
-[node name="pinch2_card#pinch2_label" type="Label" parent="." unique_id=1196699951]
-offset_left = 171.0
-offset_top = 455.0
-offset_right = 471.0
-offset_bottom = 522.0
-theme_override_colors/font_color = Color(0.8, 0, 0.9, 1)
-theme_override_font_sizes/font_size = 48
-text = "PINCH 2"
-
-[node name="pinch2_card#pinch2_status" type="Label" parent="." unique_id=1196699952]
-offset_left = 495.0
-offset_top = 471.0
-offset_right = 1045.0
-offset_bottom = 521.0
-theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
-theme_override_font_sizes/font_size = 20
-text = "Click to start assessment"
-
-[node name="buttons_card#buttons_label" type="Label" parent="." unique_id=1196699954]
-offset_left = 177.0
-offset_top = 650.0
-offset_right = 477.0
-offset_bottom = 717.0
-theme_override_colors/font_color = Color(1, 0.6, 0, 1)
-theme_override_font_sizes/font_size = 48
-text = "BUTTONS"
-
-[node name="buttons_card#buttons_status" type="Label" parent="." unique_id=1196699955]
-offset_left = 499.0
-offset_top = 681.0
-offset_right = 1049.0
-offset_bottom = 731.0
-theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
-theme_override_font_sizes/font_size = 20
-text = "Click to start assessment"
+[node name="status_label" type="Label" parent="." unique_id=1779087785]
+offset_left = 110.0
+offset_top = 725.0
+offset_right = 1910.0
+offset_bottom = 824.0
+theme_override_font_sizes/font_size = 36
+horizontal_alignment = 1
+autowrap_mode = 2
 
 [node name="progress_label" type="Label" parent="." unique_id=1196699956]
 offset_left = 169.0
-offset_top = 988.0
+offset_top = 883.0
 offset_right = 1909.0
-offset_bottom = 1038.0
+offset_bottom = 953.0
 theme_override_colors/font_color = Color(0.6, 0.8, 1, 1)
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 48
 horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true
 
@@ -166,10 +133,20 @@ theme_override_styles/focus = SubResource("SaveButtonStyle")
 text = "Save"
 metadata/_edit_use_anchors_ = true
 
-[node name="status_label" type="Label" parent="." unique_id=1779087785]
-offset_left = 31.0
-offset_top = 833.0
-offset_right = 1890.0
-offset_bottom = 914.0
+[node name="basic_assessment" type="Button" parent="." unique_id=1704055314]
+visible = false
+offset_left = 528.0
+offset_top = 645.0
+offset_right = 984.0
+offset_bottom = 757.0
 theme_override_font_sizes/font_size = 50
-text = " Step 1 Complete! Ready for Step 2 - Click BUTTONS card to start Step 2"
+text = "BASIC ASSESSMENT"
+
+[node name="validate_assessment" type="Button" parent="." unique_id=336432271]
+visible = false
+offset_left = 1166.0
+offset_top = 645.0
+offset_right = 1622.0
+offset_bottom = 757.0
+theme_override_font_sizes/font_size = 50
+text = "VALIDATE ASSESSMENT"

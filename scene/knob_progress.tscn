@@ -29,7 +29,7 @@ radial_fill_degrees = 75.8
 texture_progress = ExtResource("1_8esm6")
 tint_under = Color(0.079287894, 0.035640597, 0.017197918, 1)
 tint_over = Color(0.26147652, 0.26147655, 0.26147643, 1)
-tint_progress = Color(0.13813606, 0.33970347, 0.27663723, 1)
+tint_progress = Color(0.9, 0.9, 0.1, 1)
 
 [node name="knob_2_progress_ccw" type="TextureProgressBar" parent="." unique_id=2108943705]
 layout_mode = 0
@@ -43,7 +43,7 @@ radial_fill_degrees = 0.0
 texture_progress = ExtResource("1_8esm6")
 tint_under = Color(0.079287894, 0.035640597, 0.017197918, 1)
 tint_over = Color(0.26147652, 0.26147655, 0.26147643, 1)
-tint_progress = Color(0.13725491, 0.34117648, 0.2784314, 1)
+tint_progress = Color(0.9, 0.9, 0.1, 1)
 
 [node name="needle" type="Sprite2D" parent="." unique_id=187528433]
 position = Vector2(128.15265, 130.21516)

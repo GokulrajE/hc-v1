@@ -4,6 +4,13 @@
 [ext_resource type="PackedScene" uid="uid://ca8b3v7p5hc5" path="res://scene/connect_status.tscn" id="2_6xpbs"]
 [ext_resource type="PackedScene" uid="uid://b8o0ehwpbqws3" path="res://scene/angle_gauge.tscn" id="2_angle_gauge"]
 
+[sub_resource type="StyleBoxFlat" id="BackButtonStyle"]
+bg_color = Color(0.4, 0.4, 0.4, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
 [sub_resource type="StyleBoxFlat" id="StartButtonStyle"]
 bg_color = Color(0.2, 0.5, 0.8, 1)
 corner_radius_top_left = 12
@@ -19,7 +26,7 @@ corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
 
 [sub_resource type="StyleBoxFlat" id="RedoButtonStyle"]
-bg_color = Color(1.0, 0.4, 0.2, 1)
+bg_color = Color(1, 0.4, 0.2, 1)
 corner_radius_top_left = 12
 corner_radius_top_right = 12
 corner_radius_bottom_right = 12
@@ -32,21 +39,14 @@ corner_radius_top_right = 12
 corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
 
-[sub_resource type="StyleBoxFlat" id="BackButtonStyle"]
-bg_color = Color(0.4, 0.4, 0.4, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-
 [node name="HandleGripAssessment" type="Node2D" unique_id=1018238928]
 script = ExtResource("1_npr1h")
 
 [node name="bg" type="ColorRect" parent="." unique_id=1373793416]
-offset_left = -22.0
-offset_top = 2.0
-offset_right = 1916.0
-offset_bottom = 1104.0
+offset_left = -14.0
+offset_top = -14.0
+offset_right = 1939.0
+offset_bottom = 1081.0
 color = Color(0.12, 0.12, 0.15, 1)
 
 [node name="ConnectStatus" parent="." unique_id=442870427 instance=ExtResource("2_6xpbs")]
@@ -147,8 +147,8 @@ offset_bottom = 1020.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = SubResource("BackButtonStyle")
-theme_override_styles/hover = SubResource("BackButtonStyle")
 theme_override_styles/pressed = SubResource("BackButtonStyle")
+theme_override_styles/hover = SubResource("BackButtonStyle")
 theme_override_styles/focus = SubResource("BackButtonStyle")
 text = "Back"
 
@@ -161,8 +161,8 @@ offset_bottom = 940.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = SubResource("StartButtonStyle")
-theme_override_styles/hover = SubResource("StartButtonStyle")
 theme_override_styles/pressed = SubResource("StartButtonStyle")
+theme_override_styles/hover = SubResource("StartButtonStyle")
 theme_override_styles/focus = SubResource("StartButtonStyle")
 text = "START Assessment"
 
@@ -175,8 +175,8 @@ offset_bottom = 940.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = SubResource("StopButtonStyle")
-theme_override_styles/hover = SubResource("StopButtonStyle")
 theme_override_styles/pressed = SubResource("StopButtonStyle")
+theme_override_styles/hover = SubResource("StopButtonStyle")
 theme_override_styles/focus = SubResource("StopButtonStyle")
 text = "STOP & Continue"
 
@@ -189,8 +189,8 @@ offset_bottom = 940.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = SubResource("RedoButtonStyle")
-theme_override_styles/hover = SubResource("RedoButtonStyle")
 theme_override_styles/pressed = SubResource("RedoButtonStyle")
+theme_override_styles/hover = SubResource("RedoButtonStyle")
 theme_override_styles/focus = SubResource("RedoButtonStyle")
 text = "REDO AROM"
 
@@ -203,7 +203,18 @@ offset_bottom = 940.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = SubResource("SaveButtonStyle")
-theme_override_styles/hover = SubResource("SaveButtonStyle")
 theme_override_styles/pressed = SubResource("SaveButtonStyle")
+theme_override_styles/hover = SubResource("SaveButtonStyle")
 theme_override_styles/focus = SubResource("SaveButtonStyle")
 text = "Save Assessment"
+
+[node name="reach_count" type="Label" parent="." unique_id=-1186144328]
+visible = false
+offset_left = 413.0
+offset_top = 205.0
+offset_right = 559.0
+offset_bottom = 315.0
+theme_override_colors/font_color = Color(0, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 80
+text = "1"
+horizontal_alignment = 1

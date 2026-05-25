@@ -3,32 +3,12 @@
 [ext_resource type="Script" uid="uid://dwdi0atas1xpu" path="res://scripts/grip_assessment.gd" id="1_grip_script"]
 [ext_resource type="PackedScene" uid="uid://ca8b3v7p5hc5" path="res://scene/connect_status.tscn" id="2_vtsi7"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tfudh"]
-bg_color = Color(0.7254902, 0.45490196, 0.9372549, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3u5u1"]
-bg_color = Color(0.4256809, 0.13830227, 0.6084575, 1)
-
-[sub_resource type="StyleBoxFlat" id="StartButtonStyle"]
-bg_color = Color(0.2, 0.5, 0.8, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
-
-[sub_resource type="StyleBoxFlat" id="StopButtonStyle"]
-bg_color = Color(0.6, 0.2, 0.8, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
-
-[sub_resource type="StyleBoxFlat" id="RedoButtonStyle"]
-bg_color = Color(1.0, 0.4, 0.2, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
+[sub_resource type="StyleBoxFlat" id="BackButtonStyle"]
+bg_color = Color(0.4, 0.4, 0.4, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [sub_resource type="StyleBoxFlat" id="SaveButtonStyle"]
 bg_color = Color(0.2, 0.7, 0.4, 1)
@@ -37,12 +17,11 @@ corner_radius_top_right = 12
 corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
 
-[sub_resource type="StyleBoxFlat" id="BackButtonStyle"]
-bg_color = Color(0.4, 0.4, 0.4, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tfudh"]
+bg_color = Color(0.7254902, 0.45490196, 0.9372549, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3u5u1"]
+bg_color = Color(0.4256809, 0.13830227, 0.6084575, 1)
 
 [node name="GripAssessment" type="Node2D" unique_id=993556866]
 script = ExtResource("1_grip_script")
@@ -101,8 +80,8 @@ offset_bottom = 1020.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = SubResource("BackButtonStyle")
-theme_override_styles/hover = SubResource("BackButtonStyle")
 theme_override_styles/pressed = SubResource("BackButtonStyle")
+theme_override_styles/hover = SubResource("BackButtonStyle")
 theme_override_styles/focus = SubResource("BackButtonStyle")
 text = "Back"
 
@@ -114,8 +93,8 @@ offset_bottom = 940.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = SubResource("SaveButtonStyle")
-theme_override_styles/hover = SubResource("SaveButtonStyle")
 theme_override_styles/pressed = SubResource("SaveButtonStyle")
+theme_override_styles/hover = SubResource("SaveButtonStyle")
 theme_override_styles/focus = SubResource("SaveButtonStyle")
 text = "Save Assessment"
 
@@ -127,7 +106,7 @@ offset_bottom = 700.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_styles/background = SubResource("StyleBoxFlat_tfudh")
 theme_override_styles/fill = SubResource("StyleBoxFlat_3u5u1")
-max_value = 40.0
+max_value = 20.0
 step = 1.0
 rounded = true
 allow_greater = true
