@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://bdw6cdbd266j3"]
 
-[ext_resource type="Script" uid="uid://bvaov6f011835" path="res://scripts/hand_grip_assessment.gd" id="1_npr1h"]
-[ext_resource type="PackedScene" uid="uid://ca8b3v7p5hc5" path="res://scene/connect_status.tscn" id="2_6xpbs"]
-[ext_resource type="PackedScene" uid="uid://b8o0ehwpbqws3" path="res://scene/angle_gauge.tscn" id="2_angle_gauge"]
+[ext_resource type="Script" uid="uid://drt1ncfmu76nx" path="res://scripts/handle_assessment.gd" id="1_dh28w"]
+[ext_resource type="PackedScene" uid="uid://ca8b3v7p5hc5" path="res://scene/connect_status.tscn" id="2_h2pwd"]
+[ext_resource type="PackedScene" uid="uid://b8o0ehwpbqws3" path="res://scene/angle_gauge.tscn" id="3_wrv6t"]
 
 [sub_resource type="StyleBoxFlat" id="BackButtonStyle"]
 bg_color = Color(0.4, 0.4, 0.4, 1)
@@ -39,8 +39,8 @@ corner_radius_top_right = 12
 corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
 
-[node name="HandleGripAssessment" type="Node2D" unique_id=1018238928]
-script = ExtResource("1_npr1h")
+[node name="HandleAssessment" type="Node2D" unique_id=1018238928]
+script = ExtResource("1_dh28w")
 
 [node name="bg" type="ColorRect" parent="." unique_id=1373793416]
 offset_left = -14.0
@@ -49,7 +49,7 @@ offset_right = 1939.0
 offset_bottom = 1081.0
 color = Color(0.12, 0.12, 0.15, 1)
 
-[node name="ConnectStatus" parent="." unique_id=442870427 instance=ExtResource("2_6xpbs")]
+[node name="ConnectStatus" parent="." unique_id=442870427 instance=ExtResource("2_h2pwd")]
 position = Vector2(-7, -12)
 
 [node name="title" type="Label" parent="." unique_id=1331216032]
@@ -97,7 +97,7 @@ offset_top = 380.0
 offset_right = 750.0
 offset_bottom = 680.0
 
-[node name="angle_gauge" parent="gauge_container" unique_id=-1080399395 instance=ExtResource("2_angle_gauge")]
+[node name="angle_gauge" parent="gauge_container" unique_id=-1080399395 instance=ExtResource("3_wrv6t")]
 layout_mode = 0
 offset_left = 154.0
 offset_top = -34.0
@@ -210,10 +210,10 @@ text = "Save Assessment"
 
 [node name="reach_count" type="Label" parent="." unique_id=-1186144328]
 visible = false
-offset_left = 413.0
-offset_top = 205.0
-offset_right = 559.0
-offset_bottom = 315.0
+offset_left = 429.0
+offset_top = 191.0
+offset_right = 575.0
+offset_bottom = 301.0
 theme_override_colors/font_color = Color(0, 0.8, 1, 1)
 theme_override_font_sizes/font_size = 80
 text = "1"

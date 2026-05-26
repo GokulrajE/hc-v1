@@ -207,7 +207,7 @@ theme_override_styles/hover = SubResource("SaveButtonStyle")
 theme_override_styles/focus = SubResource("SaveButtonStyle")
 text = "Save Assessment"
 
-[node name="timer_label" type="Label" parent="." unique_id=3108822968]
+[node name="reach_count" type="Label" parent="." unique_id=-1186144328]
 visible = false
 offset_left = 1300.0
 offset_top = 330.0

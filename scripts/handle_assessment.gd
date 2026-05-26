@@ -13,6 +13,7 @@ var max_label: Label
 var current_label: Label
 var angle_gauge: Control
 var reach_count_label: Label
+var reaching_timer_label: Label
 
 var min_angle = 0.0
 var max_angle = 0.0
@@ -53,6 +54,7 @@ func _ready() -> void:
 	max_label = get_node_or_null("min_max_container/max_label")
 	current_label = get_node_or_null("min_max_container/current_label")
 	reach_count_label = get_node_or_null("reach_count")
+	reaching_timer_label = get_node_or_null("reaching_timer_display")
 
 	angle_gauge = get_node_or_null("gauge_container/angle_gauge")
 
@@ -256,7 +258,7 @@ func _process_step3() -> void:
 		flash_timer = 0.3
 
 	if reach_count_label:
-		reach_count_label.text = "%d" % (reach_count + 1)
+		reach_count_label.text = "%d" % (reach_count)
 
 	if reach_count >= REQUIRED_REACHES:
 		_complete_step3()
@@ -267,7 +269,7 @@ func _complete_step3() -> void:
 	step3_complete = true
 	if status_label:
 		if reach_count >= REQUIRED_REACHES and reaching_timer <= REACHING_TIME_LIMIT:
-			status_label.text = "✓ Assessment Complete! Reaches: %d in %.1f seconds - Click SAVE" % [reach_count, reaching_timer]
+			status_label.text = "✓ Assessment Complete! Reaches: %d in %.2f seconds - Click SAVE" % [reach_count, reaching_timer]
 		else:
 			status_label.text = "Time expired. Reaches: %d/%d - Click SAVE to submit" % [reach_count, REQUIRED_REACHES]
 	if save_button:
@@ -280,16 +282,23 @@ func _complete_step3() -> void:
 	if target_dot_min:
 		target_dot_min.queue_free()
 		target_dot_min = null
-	print("HandGripAssessment: Step 3 complete! Reaches: %d in %.1f seconds" % [reach_count, reaching_timer])
+	print("HandGripAssessment: Step 3 complete! Reaches: %d in %.2f seconds" % [reach_count, reaching_timer])
 
 func _physics_process(_delta: float) -> void:
 	var dt = get_physics_process_delta_time()
 	if current_step == AssessmentStep.STEP3_REACHING:
-		reaching_timer += dt
+		if not step3_complete:
+			reaching_timer += dt
 		pulse_time += dt
 
 		if reach_count_label:
-			reach_count_label.text = "%d" % (reach_count + 1)
+			reach_count_label.text = "%d" % (reach_count)
+
+		if reaching_timer_label:
+			reaching_timer_label.text = "Time: %d s" % int(reaching_timer)
+
+		if status_label:
+			status_label.text = "Reaches: %d/%d | Time: %d/60 s" % [reach_count, REQUIRED_REACHES, int(reaching_timer)]
 
 	# Needle flash decay
 	if flash_timer > 0.0:
@@ -367,12 +376,12 @@ func _on_save_pressed() -> void:
 		return
 
 	AppDataTrial.stop_arom_raw_data_logging()
-	Appdata.selected_mechanism.set_new_arom_values(arom_min, arom_max, reaching_timer)
+	Appdata.selected_mechanism.set_new_arom_values(arom_min, arom_max, float(int(reaching_timer)))
 
 	if Appdata.selected_mechanism.save_assessment_data():
 		if status_label:
-			status_label.text = "✓ Success! AROM: %.2f° to %.2f° | Reaches: %d in %.1f s" % [arom_min, arom_max, reach_count, reaching_timer]
-		print("HandGripAssessment: Assessment saved successfully for Handle - Time: %.1f s" % reaching_timer)
+			status_label.text = "✓ Success! AROM: %.2f° to %.2f° | Reaches: %d in %d s" % [arom_min, arom_max, reach_count, int(reaching_timer)]
+		print("HandGripAssessment: Assessment saved successfully for Handle - Time: %d s" % int(reaching_timer))
 		await get_tree().create_timer(1.5).timeout
 		get_tree().change_scene_to_file("res://scene/mechanism.tscn")
 	else:

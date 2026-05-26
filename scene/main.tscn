@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://cqqdrmttatkt6"]
+[gd_scene format=3 uid="uid://c7pe2ljy6vp86"]
 
 [ext_resource type="Script" uid="uid://c1f5q80jclndn" path="res://scripts/main.gd" id="1_itxqv"]
 [ext_resource type="Texture2D" uid="uid://cov80lucdvvvm" path="res://sprites/Circle Filled.png" id="2_v0l8b"]

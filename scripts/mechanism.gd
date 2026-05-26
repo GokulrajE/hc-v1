@@ -58,7 +58,7 @@ func _on_hand_grip_pressed() -> void:
 	else:
 		message_label.text = "Starting AROM assessment for Handle...\nPlease squeeze the handle through its full range."
 		await get_tree().create_timer(0.5).timeout
-		get_tree().change_scene_to_file("res://scene/handle_grip_assessment.tscn")
+		get_tree().change_scene_to_file("res://scene/handle_assessment.tscn")
 
 func _on_grip_pressed() -> void:
 	Appdata.set_mechanism("Grip")

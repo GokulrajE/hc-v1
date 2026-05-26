@@ -16,6 +16,7 @@ var knob_progress_cw: TextureProgressBar
 var knob_progress_ccw: TextureProgressBar
 var needle : Sprite2D
 var reach_count_label: Label
+var reaching_timer_label: Label
 var flash_timer: float = 0.0
 var pulse_time: float = 0.0
 var target_dot_max: Sprite2D = null
@@ -69,6 +70,7 @@ func _ready() -> void:
 	knob_progress_ccw = get_node_or_null("knob_2_progress/knob_2_progress_ccw")
 	needle = get_node_or_null("knob_2_progress/needle")
 	reach_count_label = get_node_or_null("reach_count")
+	reaching_timer_label = get_node_or_null("reaching_timer_display")
 
 	if back_button:
 		back_button.pressed.connect(_on_back_pressed)
@@ -245,7 +247,10 @@ func _advance_to_step3() -> void:
 	if reach_count_label:
 		reach_count_label.visible = true
 		reach_count_label.text = "1"
-		reach_count_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+		reach_count_label.add_theme_color_override(
+	"font_color",
+	Color(0.1, 0.15, 0.3, 1)
+)
 
 	# Create pulsing dots at arc tips (positioned outside the progress bar)
 	var circle_tex = load("res://sprites/Circle Filled.png")
@@ -287,7 +292,7 @@ func _process_step3() -> void:
 			needle.modulate = Color(1.5, 1.5, 1.5, 1)
 
 	if current_label:
-		current_label.text = "Reaches: %d/%d | Time: %.1f s" % [reach_count, REQUIRED_REACHES, reaching_timer]
+		current_label.text = "Reaches: %d/%d | Time: %.2f s" % [reach_count, REQUIRED_REACHES, reaching_timer]
 
 	if reach_count >= REQUIRED_REACHES:
 		_complete_step3()
@@ -302,7 +307,7 @@ func _complete_step3() -> void:
 		redo_button.visible = false
 	if status_label:
 		if reach_count >= REQUIRED_REACHES and reaching_timer <= REACHING_TIME_LIMIT:
-			status_label.text = "✓ Assessment Complete! Reaches: %d in %.1f seconds - Click SAVE" % [reach_count, reaching_timer]
+			status_label.text = "✓ Assessment Complete! Reaches: %d in %.2f seconds - Click SAVE" % [reach_count, reaching_timer]
 		else:
 			status_label.text = "Time expired. Reaches: %d/%d - Click SAVE to submit" % [reach_count, REQUIRED_REACHES]
 	if save_button:
@@ -323,7 +328,7 @@ func _complete_step3() -> void:
 	if knob_progress_ccw:
 		knob_progress_ccw.modulate = Color(1, 1, 1, 1)
 
-	print("KnobAssessment: Step 3 complete! Reaches: %d in %.1f seconds" % [reach_count, reaching_timer])
+	print("KnobAssessment: Step 3 complete! Reaches: %d in %.2f seconds" % [reach_count, reaching_timer])
 
 func _update_min_max() -> void:
 	if current_angle < min_angle:
@@ -418,12 +423,19 @@ func _start_arom_raw_logging() -> void:
 func _physics_process(_delta: float) -> void:
 	var dt = get_physics_process_delta_time()
 	if current_step == AssessmentStep.STEP3_REACHING:
-		reaching_timer += dt
+		if not step3_complete:
+			reaching_timer += dt
 		pulse_time += dt
 
 		# Update reach count display
 		if reach_count_label:
-			reach_count_label.text = "%d" % (reach_count + 1)
+			reach_count_label.text = "%d" % (reach_count)
+
+		if reaching_timer_label:
+			reaching_timer_label.text = "Time: %d s" % int(reaching_timer)
+
+		if status_label:
+			status_label.text = "Reaches: %d/%d | Time: %d/60 s" % [reach_count, REQUIRED_REACHES, int(reaching_timer)]
 
 	# Needle flash decay
 	if flash_timer > 0.0:
@@ -442,13 +454,13 @@ func _on_save_pressed() -> void:
 	AppDataTrial.stop_arom_raw_data_logging()
 
 	# Set AROM values from step 2 assessment
-	Appdata.selected_mechanism.set_new_arom_values(arom_min, arom_max)
+	Appdata.selected_mechanism.set_new_arom_values(arom_min, arom_max, float(int(reaching_timer)))
 
 	# Save assessment data
 	if Appdata.selected_mechanism.save_assessment_data():
 		if status_label:
-			status_label.text = "✓ Success! AROM: %.2f° to %.2f° | Reaches: %d in %.1f s" % [arom_min, arom_max, reach_count, reaching_timer]
-		print("KnobAssessment: Assessment saved successfully for %s" % selected_knob)
+			status_label.text = "✓ Success! AROM: %.2f° to %.2f° | Reaches: %d in %d s" % [arom_min, arom_max, reach_count, int(reaching_timer)]
+		print("KnobAssessment: Assessment saved successfully for %s - Time: %d s" % [selected_knob, int(reaching_timer)])
 		await get_tree().create_timer(1.5).timeout
 		get_tree().change_scene_to_file("res://scene/mechanism.tscn")
 	else:
