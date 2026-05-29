@@ -1,0 +1,199 @@
+[gd_scene format=3 uid="uid://m2bdyt0lucv"]
+
+[ext_resource type="Texture2D" uid="uid://ck870kcullkjb" path="res://assets/safecrossing/roads/roadterrainpack/sidewalk1.png" id="1_ymdbp"]
+[ext_resource type="Texture2D" uid="uid://cyfhqi3bmykbb" path="res://assets/safecrossing/roads/roadterrainpack/road.png" id="2_46714"]
+[ext_resource type="Texture2D" uid="uid://ndcyqt0sudhk" path="res://assets/safecrossing/roads/roadterrainpack/road1_dblsolidline_ver.png" id="3_7ksk7"]
+[ext_resource type="Texture2D" uid="uid://0wib48eb87g8" path="res://assets/safecrossing/cars/Cars/car_yellow_1.png" id="5_nr5f7"]
+[ext_resource type="Texture2D" uid="uid://cucqmycq1xaei" path="res://assets/safecrossing/cars/Cars/car_blue_1.png" id="6_fbsbh"]
+[ext_resource type="Texture2D" uid="uid://bll5jj5w5nrpx" path="res://assets/safecrossing/cars/Cars/car_black_1.png" id="7_4m6f7"]
+[ext_resource type="Texture2D" uid="uid://cqif3hk7xg7xe" path="res://assets/safecrossing/cars/Cars/car_green_1.png" id="8_wr5ww"]
+[ext_resource type="Texture2D" uid="uid://b77cejb6meutp" path="res://assets/safecrossing/cars/Cars/car_red_1.png" id="9_xa6it"]
+[ext_resource type="Script" uid="uid://c6i4g4qk4het0" path="res://scripts/safecrossing/entities/sc_traffic_car.gd" id="10_qw7p8"]
+[ext_resource type="Texture2D" uid="uid://23rekga5jvsa" path="res://assets/safecrossing/buildings/PNG/buildingTiles_000.png" id="10_xa6it"]
+[ext_resource type="Texture2D" uid="uid://cv1338yf135ra" path="res://assets/safecrossing/buildings/PNG/buildingTiles_072.png" id="11_75g06"]
+[ext_resource type="Texture2D" uid="uid://ogtkg73yy5y4" path="res://assets/safecrossing/buildings/PNG/buildingTiles_041.png" id="12_ub4a4"]
+[ext_resource type="Texture2D" uid="uid://p4jq8tico04e" path="res://assets/safecrossing/buildings/PNG/buildingTiles_013.png" id="13_rcmjo"]
+[ext_resource type="Texture2D" uid="uid://dkov1hn1mrqw3" path="res://assets/safecrossing/buildings/PNG/buildingTiles_021.png" id="14_rcmjo"]
+[ext_resource type="Texture2D" uid="uid://dg8ebff0xjqny" path="res://assets/safecrossing/buildings/PNG/buildingTiles_022.png" id="15_sreqy"]
+[ext_resource type="Texture2D" uid="uid://rk2umou7h56" path="res://assets/safecrossing/buildings/PNG/buildingTiles_018.png" id="16_bdeos"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_sreqy"]
+load_path = "res://.godot/imported/CP_V1.0.4.png-4a1f168ff802cc51d4ac2f8800bcfd41.ctex"
+
+[node name="SignalScene" type="Node2D" unique_id=995255850]
+
+[node name="sidewalk" type="TextureRect" parent="." unique_id=674235816]
+offset_right = 511.0
+offset_bottom = 1100.0
+texture = ExtResource("1_ymdbp")
+stretch_mode = 1
+
+[node name="sidewalk2" type="TextureRect" parent="." unique_id=1405237573]
+offset_left = 1410.0
+offset_right = 1921.0
+offset_bottom = 1100.0
+texture = ExtResource("1_ymdbp")
+stretch_mode = 1
+
+[node name="road" type="TextureRect" parent="." unique_id=1716485921]
+offset_left = 465.0
+offset_right = 1466.0
+offset_bottom = 1100.0
+texture = ExtResource("2_46714")
+stretch_mode = 1
+
+[node name="divider" type="TextureRect" parent="road" unique_id=1104058997]
+layout_mode = 0
+offset_left = 455.0
+offset_top = 4.0
+offset_right = 583.0007
+offset_bottom = 1052.0
+texture = ExtResource("3_7ksk7")
+stretch_mode = 1
+
+[node name="sideroad" type="TextureRect" parent="." unique_id=2104934947]
+offset_top = 2.0
+offset_right = 467.0
+offset_bottom = 541.0
+texture = ExtResource("2_46714")
+stretch_mode = 1
+
+[node name="sideroad2" type="TextureRect" parent="." unique_id=14568537]
+offset_left = 1458.0
+offset_top = -2.0
+offset_right = 1925.0
+offset_bottom = 575.0
+texture = ExtResource("2_46714")
+stretch_mode = 1
+
+[node name="post" type="Sprite2D" parent="." unique_id=1020655670]
+visibility_layer = 32769
+position = Vector2(443, 571)
+scale = Vector2(3.6835978, 2.6315382)
+texture = SubResource("CompressedTexture2D_sreqy")
+region_enabled = true
+region_rect = Rect2(438.736, 457.128, 31.255, 57.736)
+
+[node name="right1" type="Sprite2D" parent="." unique_id=429246591]
+position = Vector2(-100, 65)
+rotation = -4.6984262
+scale = Vector2(1.1521543, 1)
+texture = ExtResource("5_nr5f7")
+script = ExtResource("10_qw7p8")
+min_speed = 150.0
+max_speed = 250.0
+start_x = -100.0
+reset_x = -100.0
+
+[node name="right2" type="Sprite2D" parent="." unique_id=1244486142]
+position = Vector2(-100, 276)
+rotation = -4.6984262
+scale = Vector2(1.1521543, 1)
+texture = ExtResource("6_fbsbh")
+script = ExtResource("10_qw7p8")
+min_speed = 120.0
+max_speed = 280.0
+start_x = -100.0
+reset_x = -100.0
+
+[node name="right3" type="Sprite2D" parent="." unique_id=570473709]
+position = Vector2(-100, 475)
+rotation = -4.6984262
+scale = Vector2(1.1521543, 1)
+texture = ExtResource("7_4m6f7")
+script = ExtResource("10_qw7p8")
+min_speed = 180.0
+start_x = -100.0
+
+[node name="left1" type="Sprite2D" parent="." unique_id=1994729456]
+position = Vector2(1920, 348.342)
+rotation = -1.5865043
+scale = Vector2(1.2477565, 1.050211)
+texture = ExtResource("8_wr5ww")
+script = ExtResource("10_qw7p8")
+car_type = "left"
+min_speed = 150.0
+max_speed = 250.0
+start_x = 1920.0
+reset_x = 1920.0
+
+[node name="left2" type="Sprite2D" parent="." unique_id=142310066]
+position = Vector2(1920, 132)
+rotation = -1.6144296
+scale = Vector2(1.1521543, 1)
+texture = ExtResource("9_xa6it")
+script = ExtResource("10_qw7p8")
+car_type = "left"
+min_speed = 120.0
+max_speed = 280.0
+start_x = 1920.0
+reset_x = 1920.0
+
+[node name="small1" type="Sprite2D" parent="." unique_id=1574245211]
+position = Vector2(404, 793)
+rotation = -6.2831855
+texture = ExtResource("10_xa6it")
+
+[node name="Sprite2D" type="Sprite2D" parent="small1" unique_id=909933442]
+position = Vector2(-1.9999821, -20.000027)
+scale = Vector2(1.211165, 1.148057)
+texture = ExtResource("11_75g06")
+
+[node name="small3" type="Sprite2D" parent="." unique_id=1055689341]
+position = Vector2(1508, 716)
+rotation = -6.2831855
+texture = ExtResource("10_xa6it")
+
+[node name="Sprite2D" type="Sprite2D" parent="small3" unique_id=1449896193]
+position = Vector2(-1.9999821, -20.000027)
+scale = Vector2(1.211165, 1.148057)
+texture = ExtResource("11_75g06")
+
+[node name="small2" type="Sprite2D" parent="." unique_id=443450899]
+position = Vector2(424, 880)
+texture = ExtResource("10_xa6it")
+
+[node name="Sprite2D" type="Sprite2D" parent="small2" unique_id=412720462]
+position = Vector2(-4.685652, -16.32217)
+scale = Vector2(1.211165, 1.148057)
+texture = ExtResource("11_75g06")
+
+[node name="big1" type="Sprite2D" parent="." unique_id=341276699]
+position = Vector2(348.00003, 1013)
+scale = Vector2(1.814564, 2.2403917)
+texture = ExtResource("12_ub4a4")
+
+[node name="Sprite2D" type="Sprite2D" parent="big1" unique_id=1942019355]
+position = Vector2(-0.55109644, -39.209908)
+scale = Vector2(1.211165, 1.148057)
+texture = ExtResource("13_rcmjo")
+
+[node name="big4" type="Sprite2D" parent="." unique_id=925002388]
+position = Vector2(320.00003, 646)
+scale = Vector2(1.814564, 2.2403917)
+texture = ExtResource("14_rcmjo")
+
+[node name="Sprite2D" type="Sprite2D" parent="big4" unique_id=1566741573]
+position = Vector2(-0.55109644, -39.209908)
+scale = Vector2(1.211165, 1.148057)
+texture = ExtResource("13_rcmjo")
+
+[node name="big3" type="Sprite2D" parent="." unique_id=1081570349]
+position = Vector2(1590, 843.00006)
+scale = Vector2(1.8145639, 2.2403915)
+texture = ExtResource("15_sreqy")
+
+[node name="Sprite2D" type="Sprite2D" parent="big3" unique_id=1862997376]
+position = Vector2(-0.55109644, -39.209908)
+scale = Vector2(1.211165, 1.148057)
+texture = ExtResource("13_rcmjo")
+
+[node name="big2" type="Sprite2D" parent="." unique_id=492589591]
+position = Vector2(1585, 1028)
+scale = Vector2(1.814564, 2.2403917)
+texture = ExtResource("16_bdeos")
+
+[node name="Sprite2D" type="Sprite2D" parent="big2" unique_id=124294877]
+position = Vector2(-0.55109644, -39.209908)
+scale = Vector2(1.211165, 1.148057)
+texture = ExtResource("13_rcmjo")

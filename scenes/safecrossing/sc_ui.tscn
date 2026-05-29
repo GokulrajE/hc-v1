@@ -1,0 +1,75 @@
+[gd_scene load_steps=2 format=3 uid="uid://sc_ui"]
+
+[ext_resource type="Script" path="res://scripts/safecrossing/ui/sc_ui.gd" id="1"]
+
+[node name="UI" type="CanvasLayer"]
+script = ExtResource("1")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchors_left = 0.0
+anchors_top = 0.0
+anchors_right = 1.0
+anchors_bottom = 1.0
+theme_overrides_constants/margin_left = 20
+theme_overrides_constants/margin_top = 20
+theme_overrides_constants/margin_right = 20
+theme_overrides_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_overrides_constants/separation = 10
+
+[node name="ScoreLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Score: 0"
+
+[node name="DistanceLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Distance: 0m"
+
+[node name="SpeedLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Speed: 0"
+
+[node name="GameOverPanel" type="Panel" parent="."]
+visible = false
+anchors_left = 0.5
+anchors_top = 0.5
+anchors_right = 0.5
+anchors_bottom = 0.5
+offset_left = -200.0
+offset_top = -150.0
+offset_right = 200.0
+offset_bottom = 150.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GameOverPanel"]
+layout_mode = 1
+anchors_left = 0.0
+anchors_top = 0.0
+anchors_right = 1.0
+anchors_bottom = 1.0
+theme_overrides_constants/separation = 20
+alignment = 1
+
+[node name="GameOverLabel" type="Label" parent="GameOverPanel/VBoxContainer"]
+layout_mode = 2
+text = "GAME OVER!"
+horizontal_alignment = 1
+
+[node name="FinalScoreLabel" type="Label" parent="GameOverPanel/VBoxContainer"]
+layout_mode = 2
+text = "Score: 0"
+horizontal_alignment = 1
+
+[node name="FinalDistanceLabel" type="Label" parent="GameOverPanel/VBoxContainer"]
+layout_mode = 2
+text = "Distance: 0m"
+horizontal_alignment = 1
+
+[node name="RestartButton" type="Button" parent="GameOverPanel/VBoxContainer"]
+layout_mode = 2
+text = "RESTART"
+
+[node name="MenuButton" type="Button" parent="GameOverPanel/VBoxContainer"]
+layout_mode = 2
+text = "MAIN MENU"

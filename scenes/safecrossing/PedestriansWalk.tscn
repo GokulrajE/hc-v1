@@ -1,0 +1,136 @@
+[gd_scene format=3 uid="uid://dbtr2v3kdee4b"]
+
+[ext_resource type="Texture2D" uid="uid://ck870kcullkjb" path="res://assets/safecrossing/roads/roadterrainpack/sidewalk1.png" id="1_rwsj2"]
+[ext_resource type="Texture2D" uid="uid://cyfhqi3bmykbb" path="res://assets/safecrossing/roads/roadterrainpack/road.png" id="2_xrguj"]
+[ext_resource type="Texture2D" uid="uid://ndcyqt0sudhk" path="res://assets/safecrossing/roads/roadterrainpack/road1_dblsolidline_ver.png" id="3_mwoj4"]
+[ext_resource type="Texture2D" uid="uid://c7hbjekim54ai" path="res://assets/safecrossing/roads/roadterrainpack/road1_solidline_ver.png" id="4_jtkbs"]
+[ext_resource type="Texture2D" uid="uid://dr821844d1eiy" path="res://assets/safecrossing/Pedestrians/adventurer_walk2.png" id="5_66o4n"]
+[ext_resource type="Texture2D" uid="uid://dnilc8ni7b6rd" path="res://assets/safecrossing/Pedestrians/player_walk2.png" id="5_mwoj4"]
+[ext_resource type="Texture2D" uid="uid://doqakp0pc131" path="res://assets/safecrossing/Pedestrians/adventurer_walk1.png" id="6_msw1b"]
+[ext_resource type="Texture2D" uid="uid://b858umewmjyjj" path="res://assets/safecrossing/Pedestrians/player_walk1.png" id="6_mwoj4"]
+[ext_resource type="Script" uid="uid://h3agixdu4gvu" path="res://scripts/safecrossing/entities/sc_character.gd" id="7_mwoj4"]
+[ext_resource type="Texture2D" uid="uid://c1a855ypxljef" path="res://assets/safecrossing/Pedestrians/female_walk1.png" id="8_g6vn8"]
+[ext_resource type="Texture2D" uid="uid://ba2lchlowjox4" path="res://assets/safecrossing/Pedestrians/female_walk2.png" id="9_gs6xk"]
+[ext_resource type="Texture2D" uid="uid://k5k336w0mgam" path="res://assets/safecrossing/Pedestrians/soldier_walk1.png" id="10_2jjoo"]
+[ext_resource type="Texture2D" uid="uid://6pvuk58xyd6w" path="res://assets/safecrossing/Pedestrians/soldier_walk2.png" id="11_fow63"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_66o4n"]
+resource_local_to_scene = true
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_mwoj4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_mwoj4")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_2jjoo"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_g6vn8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_gs6xk")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_rql1h"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("10_2jjoo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_fow63")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_iv46p"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_msw1b")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_66o4n")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="PedestriansWalk" type="Node2D" unique_id=1053774396]
+
+[node name="sidewalk" type="TextureRect" parent="." unique_id=1491110878]
+offset_right = 511.0
+offset_bottom = 1100.0
+texture = ExtResource("1_rwsj2")
+stretch_mode = 1
+
+[node name="sidewalk2" type="TextureRect" parent="." unique_id=1166468311]
+offset_left = 1410.0
+offset_right = 1921.0
+offset_bottom = 1100.0
+texture = ExtResource("1_rwsj2")
+stretch_mode = 1
+
+[node name="road" type="TextureRect" parent="." unique_id=1175345941]
+offset_left = 465.0
+offset_right = 1466.0
+offset_bottom = 1100.0
+texture = ExtResource("2_xrguj")
+stretch_mode = 1
+
+[node name="divider" type="TextureRect" parent="road" unique_id=523759394]
+layout_mode = 0
+offset_left = 455.0
+offset_top = 4.0
+offset_right = 583.0007
+offset_bottom = 1052.0
+texture = ExtResource("3_mwoj4")
+stretch_mode = 1
+
+[node name="crossingLine" type="TextureRect" parent="." unique_id=1333878982]
+offset_left = 470.0
+offset_top = 420.0
+offset_right = 1459.0
+offset_bottom = 634.0
+texture = ExtResource("4_jtkbs")
+stretch_mode = 1
+
+[node name="character1" type="AnimatedSprite2D" parent="." unique_id=188022156]
+position = Vector2(559, 459)
+scale = Vector2(0.90000015, 1)
+sprite_frames = SubResource("SpriteFrames_66o4n")
+frame_progress = 0.1660259
+script = ExtResource("7_mwoj4")
+
+[node name="character2" type="AnimatedSprite2D" parent="." unique_id=1323393711]
+position = Vector2(64, 462)
+scale = Vector2(0.90000015, 1)
+sprite_frames = SubResource("SpriteFrames_2jjoo")
+script = ExtResource("7_mwoj4")
+
+[node name="character3" type="AnimatedSprite2D" parent="." unique_id=1203255796]
+position = Vector2(227, 462)
+scale = Vector2(0.90000015, 1)
+sprite_frames = SubResource("SpriteFrames_rql1h")
+script = ExtResource("7_mwoj4")
+
+[node name="character4" type="AnimatedSprite2D" parent="." unique_id=1188286359]
+position = Vector2(378, 462)
+scale = Vector2(0.90000015, 1)
+sprite_frames = SubResource("SpriteFrames_iv46p")
+script = ExtResource("7_mwoj4")

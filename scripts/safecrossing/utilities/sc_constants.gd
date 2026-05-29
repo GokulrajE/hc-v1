@@ -1,0 +1,43 @@
+class_name SCConstants
+
+extends Node
+
+# Screen dimensions
+const SCREEN_WIDTH = 800
+const SCREEN_HEIGHT = 600
+
+# Game speed
+const BASE_SPEED = 300.0
+const MAX_SPEED = 600.0
+const SPEED_INCREMENT = 1.02
+
+# Car
+const CAR_WIDTH = 32
+const CAR_HEIGHT = 48
+const CAR_LANE_WIDTH = 100
+const CAR_LANES = 3
+
+# Pedestrian
+const PEDESTRIAN_WIDTH = 24
+const PEDESTRIAN_HEIGHT = 32
+const PEDESTRIAN_SPEED = 150.0
+
+# Spawning
+const PEDESTRIAN_POOL_SIZE = 20
+const PEDESTRIAN_SPAWN_RATE_MIN = 1.5
+const PEDESTRIAN_SPAWN_RATE_MAX = 3.5
+const PEDESTRIAN_SPAWN_RATE_DECREMENT = 0.05
+
+# Road
+const ROAD_SEGMENT_HEIGHT = 100
+const ROAD_OFFSET_X = 250
+
+# Collision
+const COLLISION_BUFFER = 15
+
+# Scoring
+const BASE_SCORE_DISTANCE = 1.0
+const SCORE_MULTIPLIER_INCREMENT = 1.05
+
+# Difficulty
+const DIFFICULTY_INCREASE_DISTANCE = 500

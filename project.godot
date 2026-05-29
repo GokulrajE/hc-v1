@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="HC-V1"
-run/main_scene="res://scene/main.tscn"
+run/main_scene="uid://clo8qew2yqsoe"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://sprites/icon.svg"
 
@@ -23,6 +23,7 @@ AppDataTrial="*uid://cwearhumprl11"
 DataManager="*uid://ce0keusscitf8"
 Rom="*uid://bd2drnxodjotp"
 HypercubeMechanism="*res://scripts/hypercube_mechanism.gd"
+SCGameManager="*res://scripts/safecrossing/autoloads/sc_game_manager.gd"
 
 [display]
 
