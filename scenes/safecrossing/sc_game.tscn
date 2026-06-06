@@ -1,11 +1,12 @@
-
 [gd_scene format=3 uid="uid://clo8qew2yqsoe"]
 
 [ext_resource type="Script" uid="uid://chsv77r0rq3tf" path="res://scripts/safecrossing/game/sc_game.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://d3wuusvfoimra" path="res://assets/safecrossing/cars/Cars/car_red_2.png" id="3_hbycv"]
 [ext_resource type="PackedScene" uid="uid://cdfvxro6b0y8l" path="res://scenes/safecrossing/sc_car.tscn" id="4"]
 [ext_resource type="PackedScene" path="res://scenes/safecrossing/sc_spawner.tscn" id="5"]
-[ext_resource type="PackedScene" path="res://scenes/safecrossing/sc_ui.tscn" id="6"]
+[ext_resource type="Script" uid="uid://6dbmuxuia6n4" path="res://scripts/safecrossing/entities/sc_car_sprite.gd" id="5_car"]
+[ext_resource type="PackedScene" uid="uid://esfttyyw42sw" path="res://scenes/safecrossing/sc_ui.tscn" id="6"]
+[ext_resource type="Script" uid="uid://bp2vt8fysb1md" path="res://scripts/safecrossing/autoloads/sc_audio_manager.gd" id="7_in26y"]
 
 [node name="Game" type="Node2D" unique_id=827804171]
 script = ExtResource("1")
@@ -21,7 +22,9 @@ position = Vector2(701.58875, 859.69604)
 
 [node name="car" type="Sprite2D" parent="." unique_id=1672758437]
 position = Vector2(837, 944)
+scale = Vector2(1.5, 1.5)
 texture = ExtResource("3_hbycv")
+script = ExtResource("5_car")
 
 [node name="UI" parent="." unique_id=202906429 instance=ExtResource("6")]
 
@@ -29,18 +32,24 @@ texture = ExtResource("3_hbycv")
 visible = false
 
 [node name="PausePanel" type="Panel" parent="PauseMenu" unique_id=696836419]
-offset_left = -150.0
-offset_top = -100.0
-offset_right = 150.0
-offset_bottom = 100.0
+offset_left = 808.0
+offset_top = 430.0
+offset_right = 1108.0
+offset_bottom = 630.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PauseMenu/PausePanel" unique_id=1888258103]
 layout_mode = 1
+anchors_preset = -1
+offset_left = 41.0
+offset_top = 11.0
+offset_right = 268.0
+offset_bottom = 168.0
 alignment = 1
 
 [node name="PauseLabel" type="Label" parent="PauseMenu/PausePanel/VBoxContainer" unique_id=1102163940]
 layout_mode = 2
 text = "PAUSED"
+horizontal_alignment = 1
 
 [node name="ResumeButton" type="Button" parent="PauseMenu/PausePanel/VBoxContainer" unique_id=1195153345]
 layout_mode = 2
@@ -49,6 +58,10 @@ text = "RESUME"
 [node name="MenuButton" type="Button" parent="PauseMenu/PausePanel/VBoxContainer" unique_id=1322855577]
 layout_mode = 2
 text = "MAIN MENU"
+
+[node name="SCAudioManager" type="Node" parent="." unique_id=2121189538]
+script = ExtResource("7_in26y")
+metadata/_custom_type_script = "uid://bp2vt8fysb1md"
 
 [connection signal="pressed" from="PauseMenu/PausePanel/VBoxContainer/ResumeButton" to="." method="resume_game"]
 [connection signal="pressed" from="PauseMenu/PausePanel/VBoxContainer/MenuButton" to="." method="return_to_menu"]

@@ -1,12 +1,11 @@
 [gd_scene format=3 uid="uid://7ydjso3k8uyn"]
 
-[ext_resource type="Script" path="res://scripts/safecrossing/sc_environment.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://ck870kcullkjb" path="res://assets/safecrossing/roads/roadterrainpack/sidewalk1.png" id="2_rvs5a"]
 [ext_resource type="Texture2D" uid="uid://cyfhqi3bmykbb" path="res://assets/safecrossing/roads/roadterrainpack/road.png" id="3_7q82a"]
 [ext_resource type="Texture2D" uid="uid://ndcyqt0sudhk" path="res://assets/safecrossing/roads/roadterrainpack/road1_dblsolidline_ver.png" id="4_nrp81"]
+[ext_resource type="Texture2D" uid="uid://cerr1d5u3lgl4" path="res://assets/safecrossing/roads/assesets.png" id="4_rvs5a"]
 
 [node name="Environment" type="Node2D" unique_id=967188060]
-script = ExtResource("1")
 
 [node name="sidewalk" type="TextureRect" parent="." unique_id=1368052136]
 offset_right = 511.0
@@ -36,3 +35,43 @@ offset_right = 583.0007
 offset_bottom = 1052.0
 texture = ExtResource("4_nrp81")
 stretch_mode = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1802026]
+position = Vector2(204, 216.99998)
+rotation = -6.2831855
+scale = Vector2(1.2970357, 1.488242)
+texture = ExtResource("4_rvs5a")
+region_enabled = true
+region_rect = Rect2(817.9005, 1097.987, 155.89758, 100.49585)
+
+[node name="Sprite2D2" type="Sprite2D" parent="." unique_id=1929122692]
+position = Vector2(223.8216, 286.85352)
+rotation = -6.2831855
+scale = Vector2(1.0254673, 1.6450421)
+texture = ExtResource("4_rvs5a")
+region_enabled = true
+region_rect = Rect2(50.61743, 1097.987, 443.94922, 341.17676)
+
+[node name="Sprite2D4" type="Sprite2D" parent="." unique_id=414647917]
+position = Vector2(1687, 789)
+rotation = -6.2831855
+scale = Vector2(1.0254673, 1.6450421)
+texture = ExtResource("4_rvs5a")
+region_enabled = true
+region_rect = Rect2(50.61743, 1097.987, 443.94922, 341.17676)
+
+[node name="Sprite2D5" type="Sprite2D" parent="." unique_id=262656717]
+position = Vector2(1709, 283)
+rotation = -6.2831855
+scale = Vector2(1.0254673, 1.6450421)
+texture = ExtResource("4_rvs5a")
+region_enabled = true
+region_rect = Rect2(50.61743, 1097.987, 443.94922, 341.17676)
+
+[node name="Sprite2D3" type="Sprite2D" parent="." unique_id=437944995]
+position = Vector2(229, 809)
+rotation = -6.2831855
+scale = Vector2(1.0254673, 1.6450421)
+texture = ExtResource("4_rvs5a")
+region_enabled = true
+region_rect = Rect2(50.61743, 1097.987, 443.94922, 341.17676)

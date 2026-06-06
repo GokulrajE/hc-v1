@@ -10,11 +10,8 @@ var _walking_left: bool = false  # Direction
 var _is_active: bool = false
 
 func _ready() -> void:
+	add_to_group("pedestrian")
 	print("✅ Character _ready() called")
-	print("  Position before: ", position)
-	print("  Scale before: ", scale)
-	print("  Visible: ", visible)
-	print("  SpriteFrames set: ", sprite_frames != null)
 	start_x = position.x
 	if sprite_frames == null:
 		print("❌ ERROR: SpriteFrames not set in editor!")

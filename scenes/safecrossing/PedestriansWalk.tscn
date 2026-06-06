@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://ba2lchlowjox4" path="res://assets/safecrossing/Pedestrians/female_walk2.png" id="9_gs6xk"]
 [ext_resource type="Texture2D" uid="uid://k5k336w0mgam" path="res://assets/safecrossing/Pedestrians/soldier_walk1.png" id="10_2jjoo"]
 [ext_resource type="Texture2D" uid="uid://6pvuk58xyd6w" path="res://assets/safecrossing/Pedestrians/soldier_walk2.png" id="11_fow63"]
+[ext_resource type="Texture2D" uid="uid://cerr1d5u3lgl4" path="res://assets/safecrossing/roads/assesets.png" id="14_iv46p"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_66o4n"]
 resource_local_to_scene = true
@@ -71,10 +72,14 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_iv46p"]
+a = Vector2(1463, 339)
+b = Vector2(466, 343)
+
 [node name="PedestriansWalk" type="Node2D" unique_id=1053774396]
 
 [node name="sidewalk" type="TextureRect" parent="." unique_id=1491110878]
-offset_right = 511.0
+offset_right = 470.0
 offset_bottom = 1100.0
 texture = ExtResource("1_rwsj2")
 stretch_mode = 1
@@ -105,32 +110,76 @@ stretch_mode = 1
 [node name="crossingLine" type="TextureRect" parent="." unique_id=1333878982]
 offset_left = 470.0
 offset_top = 420.0
-offset_right = 1459.0
+offset_right = 1465.0
 offset_bottom = 634.0
 texture = ExtResource("4_jtkbs")
 stretch_mode = 1
 
+[node name="Sprite2D2" type="Sprite2D" parent="." unique_id=391728669]
+position = Vector2(469, 308.99997)
+scale = Vector2(1.6617647, 1.2297298)
+texture = ExtResource("14_iv46p")
+region_enabled = true
+region_rect = Rect2(477.70255, 575.93414, 68.59482, 185.20612)
+
 [node name="character1" type="AnimatedSprite2D" parent="." unique_id=188022156]
-position = Vector2(559, 459)
-scale = Vector2(0.90000015, 1)
+position = Vector2(450, 423.00003)
+scale = Vector2(1, 1.47)
 sprite_frames = SubResource("SpriteFrames_66o4n")
 frame_progress = 0.1660259
 script = ExtResource("7_mwoj4")
 
 [node name="character2" type="AnimatedSprite2D" parent="." unique_id=1323393711]
-position = Vector2(64, 462)
-scale = Vector2(0.90000015, 1)
+position = Vector2(91, 450.05002)
+scale = Vector2(1, 1.631)
 sprite_frames = SubResource("SpriteFrames_2jjoo")
 script = ExtResource("7_mwoj4")
 
 [node name="character3" type="AnimatedSprite2D" parent="." unique_id=1203255796]
-position = Vector2(227, 462)
-scale = Vector2(0.90000015, 1)
+position = Vector2(214, 450.6775)
+scale = Vector2(1, 1.551)
 sprite_frames = SubResource("SpriteFrames_rql1h")
 script = ExtResource("7_mwoj4")
 
 [node name="character4" type="AnimatedSprite2D" parent="." unique_id=1188286359]
-position = Vector2(378, 462)
-scale = Vector2(0.90000015, 1)
+position = Vector2(337, 448.22754)
+scale = Vector2(1, 1.462)
 sprite_frames = SubResource("SpriteFrames_iv46p")
 script = ExtResource("7_mwoj4")
+
+[node name="big2" type="Sprite2D" parent="." unique_id=425007398]
+position = Vector2(1727, 543)
+scale = Vector2(1.5145835, 1.7935703)
+texture = ExtResource("14_iv46p")
+region_enabled = true
+region_rect = Rect2(0, 0, 315.5183, 591.84015)
+
+[node name="big3" type="Sprite2D" parent="." unique_id=284381607]
+position = Vector2(159, 514)
+scale = Vector2(1.4297385, 1.4620507)
+texture = ExtResource("14_iv46p")
+region_enabled = true
+region_rect = Rect2(698.3876, 0.043304443, 306.9077, 751.7014)
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1853055098]
+position = Vector2(449, 99)
+texture = ExtResource("14_iv46p")
+region_enabled = true
+region_rect = Rect2(927.35803, 894.49457, 62.622437, 219.13617)
+
+[node name="Sprite2D4" type="Sprite2D" parent="." unique_id=1248660406]
+position = Vector2(430, 709)
+texture = ExtResource("14_iv46p")
+region_enabled = true
+region_rect = Rect2(927.35803, 894.49457, 62.622437, 219.13617)
+
+[node name="Sprite2D3" type="Sprite2D" parent="." unique_id=2129313266]
+position = Vector2(1485, 24)
+texture = ExtResource("14_iv46p")
+region_enabled = true
+region_rect = Rect2(927.35803, 894.49457, 62.622437, 219.13617)
+
+[node name="collisionline" type="CollisionShape2D" parent="." unique_id=1169622380]
+position = Vector2(960, 430)
+shape = SubResource("SegmentShape2D_iv46p")
+disabled = true

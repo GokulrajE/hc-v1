@@ -526,26 +526,40 @@ func _update_display() -> void:
 					progress_label.add_theme_color_override("font_color", Color(0.2, 1, 0.4, 1))
 
 func _on_save_pressed() -> void:
-	if Appdata.hospital_id == "":
+	if Appdata.user_data.hospital_id == "":
 		push_error("PinchButtonAssessment: Hospital ID not set")
 		return
 
 	# Read existing config
-	var config_data = DataManager.load_config(Appdata.hospital_id)
+	var config_data = Datamanager.load_config(Appdata.user_data.hospital_id)
 
 	# Update with new assessment flags
-	config_data["PinchGrasp1"] = pinch1_step1_complete and pinch1_step2_complete
-	config_data["PinchGrasp2"] = pinch2_step1_complete and pinch2_step2_complete
-	config_data["Buttons"] = buttons_step1_complete and buttons_step2_complete
+	var pinch1_complete = pinch1_step1_complete and pinch1_step2_complete
+	var pinch2_complete = pinch2_step1_complete and pinch2_step2_complete
+	var buttons_complete = buttons_step1_complete and buttons_step2_complete
 
+	config_data["PinchGrasp1"] = pinch1_complete
+	config_data["PinchGrasp2"] = pinch2_complete
+	config_data["Buttons"] = buttons_complete
 
 	# Save updated config
-	if DataManager.save_config(config_data):
+	if Datamanager.save_config(config_data):
+		# Update user_data object with assessment completion status
+		Appdata.user_data.pinch_grasp_1_done = pinch1_complete
+		Appdata.user_data.pinch_grasp_2_done = pinch2_complete
+		Appdata.user_data.buttons_done = buttons_complete
+
 		if status_label:
 			status_label.text = "✓ Assessment saved successfully!"
 		print("PinchButtonAssessment: Assessment saved")
+		print("  - Pinch Grasp 1: %s" % pinch1_complete)
+		print("  - Pinch Grasp 2: %s" % pinch2_complete)
+		print("  - Buttons: %s" % buttons_complete)
+		print("🎮 Navigating to game launcher...")
+		_cleanup()
 		await get_tree().create_timer(1.5).timeout
-		get_tree().change_scene_to_file("res://scene/mechanism.tscn")
+		# Navigate to game launcher after AROM assessment complete
+		get_tree().change_scene_to_file("res://scenes/safecrossing/sc_game.tscn")
 	else:
 		if status_label:
 			status_label.text = "Error: Failed to save assessment"
@@ -596,4 +610,13 @@ func _on_circle_clicked(_viewport: Node, event: InputEvent, _position: Vector2) 
 					print("PinchButtonAssessment: Transitioned to Buttons Step 2")
 
 func _on_back_pressed() -> void:
+	_cleanup()
 	get_tree().change_scene_to_file("res://scene/mechanism.tscn")
+
+func _cleanup() -> void:
+	# Disconnect from signals to prevent errors when re-entering scene
+	if HCcomm and HCcomm.is_connected("new_device_data", Callable(self, "_on_device_data_received")):
+		HCcomm.disconnect("new_device_data", Callable(self, "_on_device_data_received"))
+
+func _exit_tree() -> void:
+	_cleanup()

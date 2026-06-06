@@ -4,27 +4,37 @@ extends Node
 
 const COM_PORT: String = "COM15"
 const BAUD_RATE: int = 115200
+const device_name: String = "HyperCube"
+var current_session_number: int 
+var start_time:String
+var trial_start_time:float
+var trail_stop_time:float
 
-static var hospital_id: String = ""
-static var user_name: String = ""
-static var affected_limb: String = ""
-static var session_number: int = 0
-static var trial_number_day: int = 0
-static var trial_number_session: int = 0
-static var game_name: String = ""
-static var game_time: float = 30.0
-static var reach_speed: float = 1.0
-static var game_parameter: float = 0.0
-static var cumulative_targets: int = 0
-static var cumulative_hits: int = 0
-static var cumulative_misses: int = 0
-static var current_mechanism: String = ""
-static var current_side: String = ""
-static var mechanisms: Dictionary = {}  # Dictionary of HyperCubeMechanism objects by name
+var user_data: HyperCubeUserData
+var selected_mechanism : HyperCubeMechanism
+ 
+func initilize_user(hospital_id: String) -> void:
+	# Initialize user data
+	start_time = Datamanager.get_formatted_datetime()
+	user_data = HyperCubeUserData.new(hospital_id)
+	selected_mechanism = null
 
-var selected_mechanism = null
+	# Update current session number - get last session number from history and increment it
+	if user_data.session_data_table.size() > 0:
+		# Get the last row from session data table
+		var last_row = user_data.session_data_table[-1]
+		var parts = last_row.split(",")
+		# SessionNumber is in parts[0] (first column)
+		var last_session_number = int(parts[0]) if parts.size() > 0 else 0
+		current_session_number = last_session_number + 1
+	else:
+		# No sessions exist, start with session 1
+		current_session_number = 1
 
-static func open_connection(port: String = "") -> void:
+	
+	print("✓ Current session number set to: %d" % current_session_number)
+
+func initialize_connection(port: String = "") -> void:
 	var target_port: String = port if port != "" else COM_PORT
 	if HCcomm == null:
 		push_error("AppData: HCcomm not set")
@@ -36,33 +46,11 @@ static func close_connection() -> void:
 		return
 	HCcomm.disconnect_device()
 
-static func load_user(id: String) -> bool:
-	if DataManager == null:
-		return false
-	var config = DataManager.load_config(id)
-	if config.is_empty():
-		return false
 
-	hospital_id = config.get("HospitalID", "")
-	user_name = config.get("Name", "")
-	affected_limb = config.get("AffectedLimb", "")
-	return true
 
-static func increment_session() -> void:
-	session_number += 1
-	trial_number_day = 1
-	trial_number_session = 1
+func set_mechanism(mech_name: String,) -> void:
+	selected_mechanism = HyperCubeMechanism.new(mech_name,current_session_number)
 
-func set_mechanism(mech_name: String) -> void:
-	selected_mechanism = HyperCubeMechanism.new(mech_name,session_number)
 
-# Get all mechanisms for current session
-static func get_all_mechanisms() -> Array:
-	return mechanisms.values()
 
-# Clear all mechanisms (typically done when switching users)
-static func clear_mechanisms() -> void:
-	mechanisms.clear()
-	current_mechanism = ""
-	current_side = ""
 	

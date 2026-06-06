@@ -1,4 +1,5 @@
-extends Node2D
+extends Node
+class_name Signup
 
 var hospital_id_input: TextEdit
 var name_input: TextEdit
@@ -29,43 +30,44 @@ func _on_save_pressed() -> void:
 	if not _validate_fields():
 		return
 
-	if not DataManager:
+	if not Datamanager:
 		if status_label:
-			status_label.text = "DataManager not available"
+			status_label.text = "Datamanager not available"
 		return
 
 	var hospital_id = hospital_id_input.text.strip_edges()
 
-	if DataManager.user_exists(hospital_id):
+	if Datamanager.user_exists(hospital_id):
 		if status_label:
 			status_label.text = "User already exists!"
 		return
 
-	if not DataManager.create_file_structure(hospital_id):
+	if not Datamanager.create_file_structure(hospital_id):
 		if status_label:
 			status_label.text = "Failed to create file structure"
 		return
 
-	if not DataManager.create_session_file(hospital_id):
+	if not Datamanager.create_session_file(hospital_id):
 		if status_label:
 			status_label.text = "Failed to create session file"
 		return
 
 	var config_data = {
+		"DateTime": Datamanager.get_formatted_datetime(),
 		"HospitalID": hospital_id,
 		"Name": name_input.text.strip_edges(),
 		"Age": age_input.text.strip_edges(),
 		"Location": location_input.text.strip_edges(),
 		"AffectedLimb": limb_input.get_item_text(limb_input.selected) if limb_input else "Unknown",
-		"DateTime": DataManager.get_formatted_datetime()
+		
 	}
 
-	if not DataManager.save_config(config_data):
+	if not Datamanager.save_config(config_data):
 		if status_label:
 			status_label.text = "Failed to save config"
 		return
 
-	if not AppData.load_user(hospital_id):
+	if not Datamanager.user_exists(hospital_id):
 		if status_label:
 			status_label.text = "Failed to load user"
 		return

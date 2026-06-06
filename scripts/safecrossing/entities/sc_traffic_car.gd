@@ -13,6 +13,7 @@ var current_speed: float = 0.0
 var is_active: bool = false
 
 func _ready() -> void:
+	add_to_group("traffic_car")
 	randomize()
 	_initialize_car()
 

@@ -130,10 +130,20 @@ func _on_tripod_grip_pressed() -> void:
 		get_tree().change_scene_to_file("res://scene/tripod_assessment.tscn")
 
 func _on_pinch_button_pressed() -> void:
-	message_label.text = "Starting Pinch & Button assessment...\nPlease perform the pinch and button press tests."
-	await get_tree().create_timer(0.5).timeout
-	get_tree().change_scene_to_file("res://scene/pinch_button_assessment.tscn")
+	Appdata.set_mechanism("Pinch Button")
+	# Check if button assessment is already completed from user_data
+	if Appdata.user_data and Appdata.user_data.buttons_done:
+		message_label.text = "✓ Button Assessment already completed!\nProceeding to Button Game...\nUse device buttons to play the game."
+		print("🎮 Button assessment already done - navigating to button game")
+		await get_tree().create_timer(1.0).timeout
+		# Navigate directly to button game
+		get_tree().change_scene_to_file("res://scenes/safecrossing/sc_game.tscn")
+	else:
+		message_label.text = "Starting Pinch & Button assessment...\nPlease perform the pinch and button press tests."
+		print("📋 Button assessment not yet done - navigating to assessment")
+		await get_tree().create_timer(0.5).timeout
+		get_tree().change_scene_to_file("res://scene/pinch_button_assessment.tscn")
 
 func _on_back_pressed() -> void:
-	AppData.current_mechanism = ""
+	Appdata.selected_mechanism = null
 	get_tree().change_scene_to_file("res://scene/main.tscn")

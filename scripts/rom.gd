@@ -1,4 +1,4 @@
-extends Resource
+extends Node
 class_name ROM
 
 # ROM File header for CSV (HyperCube only stores AROM data)
@@ -31,7 +31,7 @@ func set_arom(min_val: float, max_val: float, reach_time: float = 0.0) -> void:
 	arom_min = min_val
 	arom_max = max_val
 	reaching_time = reach_time
-	datetime = DataManager.get_formatted_datetime()
+	datetime = Datamanager.get_formatted_datetime()
 
 # Set mechanism name
 func set_mechanism(mech: String) -> void:
@@ -55,13 +55,13 @@ func write_to_assessment_file() -> bool:
 		push_error("ROM: Cannot write assessment file without mechanism name")
 		return false
 
-	var rom_file_path = DataManager.get_rom_file_path(mechanism)
+	var rom_file_path = Datamanager.get_rom_file_path(mechanism)
 	if rom_file_path == "":
 		push_error("ROM: Failed to get ROM file path")
 		return false
 
 	# Construct rom directory path
-	var rom_dir = DataManager.get_user_path(AppData.hospital_id) + "rom/"
+	var rom_dir = Datamanager.get_user_path(Appdata.user_data.hospital_id) + "rom/"
 
 	# Create directory if it doesn't exist
 	if not DirAccess.dir_exists_absolute(rom_dir):
@@ -73,9 +73,9 @@ func write_to_assessment_file() -> bool:
 	# Check if file exists, if not create with header
 	if not FileAccess.file_exists(rom_file_path):
 		var preheader = ""
-		preheader += ":Location: %s\n" % AppData.hospital_id
-		preheader += ":Device: HC-V1\n"
-		preheader += ":User: %s\n" % AppData.hospital_id
+		preheader += ":Location: %s\n" % Appdata.user_data.location
+		preheader += ":Device: %s\n" % Appdata.device_name
+		preheader += ":User: %s\n" % Appdata.user_data.hospital_id
 		preheader += ",".join(FILEHEADER) + "\n"
 
 		var rom_file = FileAccess.open(rom_file_path, FileAccess.WRITE)
@@ -102,7 +102,7 @@ func write_to_assessment_file() -> bool:
 
 # Read ROM data from CSV file
 func read_from_file_internal(mechanism_name: String) -> void:
-	var rom_file_path = DataManager.get_rom_file_path(mechanism_name)
+	var rom_file_path = Datamanager.get_rom_file_path(mechanism_name)
 	mechanism = mechanism_name
 
 	# If file doesn't exist, initialize with defaults
@@ -111,7 +111,7 @@ func read_from_file_internal(mechanism_name: String) -> void:
 		return
 
 	# Load CSV file
-	var rom_data = DataManager.load_csv(rom_file_path)
+	var rom_data = Datamanager.load_csv(rom_file_path)
 	if rom_data.is_empty():
 		reset_values()
 		return

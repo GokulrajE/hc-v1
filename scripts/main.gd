@@ -35,15 +35,18 @@ func _ready() -> void:
 	if diagnostics_button:
 		diagnostics_button.text = "Diagnostics"
 		diagnostics_button.pressed.connect(_on_diagnostics_pressed)
-
+	# Initialize AppData and connect to device
+	if HCcomm and not HCcomm.device_is_connected:
+		Appdata.initialize_connection()
+	
 	if HCcomm:
 		HCcomm.device_connected.connect(_on_device_connected)
 		HCcomm.device_disconnected.connect(_on_device_disconnected)
 
 	_update_device_status()
 
-	if HCcomm and not HCcomm.device_is_connected:
-		Appdata.open_connection()
+	
+	
 
 func _on_device_connected() -> void:
 	_update_device_status()
@@ -73,10 +76,7 @@ func _on_login_pressed() -> void:
 			message_label.text = "Hospital ID input not found"
 		return
 
-	if not DataManager:
-		if message_label:
-			message_label.text = "DataManager not available"
-		return
+	
 
 	var hospital_id = hospital_id_input.text.strip_edges()
 	if hospital_id == "":
@@ -84,15 +84,13 @@ func _on_login_pressed() -> void:
 			message_label.text = "Please enter Hospital ID"
 		return
 
-	if not DataManager.user_exists(hospital_id):
+	if not Datamanager.user_exists(hospital_id):
 		if message_label:
 			message_label.text = "User not found"
 		return
 
-	if not AppData.load_user(hospital_id):
-		if message_label:
-			message_label.text = "Failed to load user"
-		return
+	# Initialize user data in AppData
+	Appdata.initilize_user(hospital_id)
 
 	get_tree().change_scene_to_file("res://scene/mechanism.tscn")
 

@@ -382,8 +382,11 @@ func _on_save_pressed() -> void:
 		if status_label:
 			status_label.text = "✓ Success! AROM: %.2f° to %.2f° | Reaches: %d in %d s" % [arom_min, arom_max, reach_count, int(reaching_timer)]
 		print("HandGripAssessment: Assessment saved successfully for Handle - Time: %d s" % int(reaching_timer))
+		print("🎮 Navigating to game launcher...")
+		_cleanup()
 		await get_tree().create_timer(1.5).timeout
-		get_tree().change_scene_to_file("res://scene/mechanism.tscn")
+		# Navigate to game launcher after AROM assessment complete
+		get_tree().change_scene_to_file("res://scenes/safecrossing/sc_game.tscn")
 	else:
 		if status_label:
 			status_label.text = "Error: Failed to save assessment data."

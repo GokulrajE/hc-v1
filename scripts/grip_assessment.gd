@@ -290,8 +290,11 @@ func _on_save_pressed() -> void:
 		if status_label:
 			status_label.text = "✓ Success! Grip Force: 0.0 N to %.1f N (Time: %.2f s)" % [grip_max, reaching_time]
 		print("GripAssessment: Assessment saved successfully for Grip Force (Time: %.2f s)" % reaching_time)
+		print("🎮 Navigating to game launcher...")
+		_cleanup()
 		await get_tree().create_timer(1.5).timeout
-		get_tree().change_scene_to_file("res://scene/mechanism.tscn")
+		# Navigate to game launcher after AROM assessment complete
+		get_tree().change_scene_to_file("res://scenes/safecrossing/sc_game.tscn")
 	else:
 		if status_label:
 			status_label.text = "Error: Failed to save assessment data."

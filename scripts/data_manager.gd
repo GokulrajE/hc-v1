@@ -1,8 +1,9 @@
 extends Node
+class_name DataStructure
 
 const CONFIG_HEADER = ["DateTime", "HospitalID", "Name", "Age", "Location", "AffectedLimb","PinchGrasp1", "PinchGrasp2", "Buttons"]
-const SESSION_HEADER = ["SessionNumber", "DateTime", "TrialNumberDay", "TrialNumberSession", "TrialStartTime", "TrialStopTime", "Movement", "GameName", "ReachSpeed", "GameParameter", "GameDuration", "SuccessRate", "MoveTime", "CurrentTargets", "CurrentHits", "CurrentMisses", "CumulativeTargets", "CumulativeHits", "CumulativeMisses", "RawDataFileName"]
-const RAW_HEADER = ["Timestamp", "PacketNumber", "Force1", "Force2", "Angle1", "Angle2", "Angle3", "Angle4", "Distance1", "Distance2", "Button1", "Button2", "Button3", "Button4", "Button5", "Button6", "Button7"]
+const SESSION_HEADER = ["SessionNumber", "DateTime", "TrialNumberDay", "TrialNumberSession", "TrialStartTime", "TrialStopTime", "Mechanism", "GameName",  "GameParameter", "GameDuration", "SuccessRate","CurrentTargets", "CurrentHits", "CurrentMisses", "CumulativeTargets", "CumulativeHits", "CumulativeMisses", "RawDataFileName"]
+const RAW_HEADER = ["Force1", "Force2", "Angle1", "Angle2", "Angle3", "Angle4", "Distance1", "Distance2", "Button1", "Button2", "Button3", "Button4", "Button5", "Button6", "Button7"]
 
 func get_formatted_datetime() -> String:
 	var dt = Time.get_datetime_dict_from_system()
@@ -20,6 +21,7 @@ func get_user_path(hospital_id: String) -> String:
 func user_exists(hospital_id: String) -> bool:
 	var config_path = get_user_path(hospital_id) + "configdata.csv"
 	return FileAccess.file_exists(config_path)
+	
 
 func create_file_structure(hospital_id: String) -> bool:
 	var base_path = get_user_path(hospital_id)
@@ -71,7 +73,7 @@ func save_config(data: Dictionary) -> bool:
 		return false
 
 	file.store_line(":Location: %s" % data.get("Location", ""))
-	file.store_line(":Device: HC-V1")
+	file.store_line(":Device: %s" % Appdata.device_name)
 	file.store_line(":User: %s" % hospital_id)
 
 	file.store_csv_line(CONFIG_HEADER)
@@ -117,10 +119,10 @@ func get_raw_filename(session: int, trial: int, movement: String) -> String:
 	return "raw-s%02d-t%03d-%s.csv" % [session, trial, movement.to_lower()]
 
 func get_rom_file_path(mechanism: String) -> String:
-	if AppData.hospital_id == "":
+	if Appdata.user_data.hospital_id == "":
 		push_error("DataManager: hospital_id not set in AppData")
 		return ""
-	var rom_dir = get_user_path(AppData.hospital_id) + "rom/"
+	var rom_dir = get_user_path(Appdata.user_data.hospital_id) + "rom/"
 	return rom_dir + mechanism.to_lower().replace(" ", "_") + "_rom.csv"
 
 func append_session_row(hospital_id: String, row: Array) -> bool:
