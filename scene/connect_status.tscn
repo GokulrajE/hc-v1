@@ -7,7 +7,7 @@
 
 [node name="statusSprite" type="Sprite2D" parent="." unique_id=187682115]
 modulate = Color(0.47715318, 0, 0.1424965, 1)
-position = Vector2(1890.0001, 29)
+position = Vector2(1888.0001, 34)
 rotation = -6.2831855
 scale = Vector2(0.15, 0.15)
 texture = ExtResource("1_0qk13")

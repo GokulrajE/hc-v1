@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://clo8qew2yqsoe"]
 
 [ext_resource type="Script" uid="uid://chsv77r0rq3tf" path="res://scripts/safecrossing/game/sc_game.gd" id="1"]
-[ext_resource type="Texture2D" uid="uid://d3wuusvfoimra" path="res://assets/safecrossing/cars/Cars/car_red_2.png" id="3_hbycv"]
 [ext_resource type="PackedScene" uid="uid://cdfvxro6b0y8l" path="res://scenes/safecrossing/sc_car.tscn" id="4"]
+[ext_resource type="Texture2D" uid="uid://1pou2n38leq2" path="res://assets/safecrossing/cars/playerCar.png" id="4_in26y"]
 [ext_resource type="PackedScene" path="res://scenes/safecrossing/sc_spawner.tscn" id="5"]
 [ext_resource type="Script" uid="uid://6dbmuxuia6n4" path="res://scripts/safecrossing/entities/sc_car_sprite.gd" id="5_car"]
 [ext_resource type="PackedScene" uid="uid://esfttyyw42sw" path="res://scenes/safecrossing/sc_ui.tscn" id="6"]
@@ -22,8 +22,8 @@ position = Vector2(701.58875, 859.69604)
 
 [node name="car" type="Sprite2D" parent="." unique_id=1672758437]
 position = Vector2(837, 944)
-scale = Vector2(1.5, 1.5)
-texture = ExtResource("3_hbycv")
+scale = Vector2(0.06, 0.06)
+texture = ExtResource("4_in26y")
 script = ExtResource("5_car")
 
 [node name="UI" parent="." unique_id=202906429 instance=ExtResource("6")]

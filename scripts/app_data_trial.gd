@@ -16,10 +16,10 @@ var arom_packet_number: int = 0
 var arom_mechanism: String = ""
 var arom_knob_type: String = ""
 
-func start_new_trial(session: int, trial: int, movement: String) -> void:
+func start_new_trial() -> void:
 	trial_start_time = Datamanager.get_formatted_datetime()
 	Appdata.selected_mechanism.next_trial()
-	var filename = Datamanager.get_raw_filename(session, trial, movement)
+	var filename = Datamanager.get_raw_filename(Appdata.current_session_number, Appdata.selected_mechanism.trial_number_session, Appdata.selected_mechanism.name)
 	var user_path = Datamanager.get_user_path(Appdata.user_data.hospital_id)
 	var rawdata_dir = user_path + "rawdata/"
 
@@ -89,7 +89,6 @@ func stop_trial(n_targets: int, n_success: int, n_failure: int) -> void:
 		trial_stop_time,
 		Appdata.selected_mechanism.name,
 		"",
-		"%.2f" % 0.0,  # Trial time placeholder (can be calculated if needed)
 		"%.2f" % 0.0,  # Trial time placeholder (can be calculated if needed)
 		"%.2f" % 60.0,
 		"%.1f" % success_rate,

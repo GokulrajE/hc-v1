@@ -1,113 +1,129 @@
 [gd_scene format=3 uid="uid://b7g6avymw81c6"]
 
 [ext_resource type="Script" uid="uid://cqrs6iqn782ce" path="res://scripts/knob_assessment.gd" id="1_qjwtc"]
-[ext_resource type="PackedScene" uid="uid://dpbidut4lns0r" path="res://scene/knob_progress.tscn" id="1_ypp8v"]
 [ext_resource type="PackedScene" uid="uid://ca8b3v7p5hc5" path="res://scene/connect_status.tscn" id="2_4qrfr"]
+[ext_resource type="Texture2D" uid="uid://sal3ip0hwbsd" path="res://assets/ui/Window04.png" id="2_bptnn"]
+[ext_resource type="Texture2D" uid="uid://c0453s7ofl7as" path="res://assets/ui/Window02.png" id="4_mpxt8"]
+[ext_resource type="FontFile" uid="uid://btw3w8gykgilf" path="res://assets/fonts/TiltNeon-Regular-VariableFont_XROT,YROT.ttf" id="4_y33c1"]
+[ext_resource type="Texture2D" uid="uid://c2kvtt4ccy8at" path="res://assets/ui/Btn_V01.png" id="6_v480v"]
+[ext_resource type="Texture2D" uid="uid://daqibh5tqjbfl" path="res://assets/ui/Btn_V05.png" id="7_lqpk4"]
+[ext_resource type="Texture2D" uid="uid://cui1ajpmfoeo8" path="res://assets/ui/Btn_V03.png" id="8_tjtuc"]
+[ext_resource type="Texture2D" uid="uid://dcvu4oconjgk2" path="res://assets/ui/Btn_V04.png" id="9_enuln"]
+[ext_resource type="Texture2D" uid="uid://dhjydje5pkqw2" path="res://assets/ui/Btn_V13.png" id="10_svrn6"]
+[ext_resource type="Texture2D" uid="uid://c4uowtsac3i72" path="res://assets/ui/Btn_V18.png" id="11_uqvqt"]
+[ext_resource type="Texture2D" uid="uid://c7b54u1ko0m6u" path="res://assets/ui/Btn_V02.png" id="12_1sh0x"]
+[ext_resource type="Texture2D" uid="uid://n8eqx2nfw4dc" path="res://assets/ui/Btn_V06.png" id="13_y33c1"]
+[ext_resource type="Script" uid="uid://rlg7s2bcxmd" path="res://scripts/knob_gauge.gd" id="gauge_script"]
 
-[sub_resource type="StyleBoxFlat" id="BackButtonStyle"]
-bg_color = Color(0.4, 0.4, 0.4, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_lqpk4"]
+texture = ExtResource("6_v480v")
 
-[sub_resource type="StyleBoxFlat" id="StartButtonStyle"]
-bg_color = Color(0.2, 0.5, 0.8, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_trdm2"]
+texture = ExtResource("6_v480v")
 
-[sub_resource type="StyleBoxFlat" id="StopButtonStyle"]
-bg_color = Color(0.6, 0.2, 0.8, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tjtuc"]
+texture = ExtResource("7_lqpk4")
 
-[sub_resource type="StyleBoxFlat" id="RedoButtonStyle"]
-bg_color = Color(1, 0.4, 0.2, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_svrn6"]
+texture = ExtResource("8_tjtuc")
 
-[sub_resource type="StyleBoxFlat" id="SaveButtonStyle"]
-bg_color = Color(0.2, 0.7, 0.4, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_uqvqt"]
+texture = ExtResource("8_tjtuc")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1sh0x"]
+texture = ExtResource("9_enuln")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_y33c1"]
+texture = ExtResource("10_svrn6")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6d02q"]
+texture = ExtResource("10_svrn6")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_sfyfd"]
+texture = ExtResource("11_uqvqt")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_rkn75"]
+texture = ExtResource("6_v480v")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0bm8f"]
+texture = ExtResource("6_v480v")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qgnff"]
+texture = ExtResource("7_lqpk4")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_idtou"]
+texture = ExtResource("12_1sh0x")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_uutqh"]
+texture = ExtResource("12_1sh0x")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_iuc0m"]
+texture = ExtResource("13_y33c1")
 
 [node name="KnobAssessment" type="Node2D" unique_id=1393376503]
 script = ExtResource("1_qjwtc")
 
-[node name="bg" type="ColorRect" parent="." unique_id=705555560]
-offset_left = -22.0
-offset_top = 2.0
-offset_right = 1916.0
-offset_bottom = 1104.0
-color = Color(0.12, 0.12, 0.15, 1)
+[node name="bg" type="TextureRect" parent="." unique_id=140423374]
+offset_left = -27.0
+offset_top = -20.0
+offset_right = 1970.0
+offset_bottom = 1117.0
+texture = ExtResource("2_bptnn")
 
 [node name="ConnectStatus" parent="." unique_id=442870427 instance=ExtResource("2_4qrfr")]
 
 [node name="title" type="Label" parent="." unique_id=1359696859]
-offset_left = 50.0
-offset_top = 20.0
-offset_right = 1850.0
-offset_bottom = 100.0
+offset_left = 61.0
+offset_top = 16.0
+offset_right = 1861.0
+offset_bottom = 112.0
 theme_override_colors/font_color = Color(0, 0.8, 1, 1)
+theme_override_fonts/font = ExtResource("4_y33c1")
 theme_override_font_sizes/font_size = 70
-text = "ASSESS KNOB"
-horizontal_alignment = 1
+text = "Knob Assessment.."
 
-[node name="subtitle" type="Label" parent="." unique_id=1498431493]
-offset_left = 50.0
-offset_top = 100.0
-offset_right = 1850.0
-offset_bottom = 150.0
-theme_override_colors/font_color = Color(0.7, 0.7, 0.75, 1)
-theme_override_font_sizes/font_size = 24
-text = "Real-time angle monitoring and range assessment"
-horizontal_alignment = 1
-
-[node name="card_bg" type="ColorRect" parent="." unique_id=1903930885]
-offset_left = 391.0
-offset_top = 176.0
-offset_right = 1511.0
-offset_bottom = 846.0
-color = Color(0.2, 0.2, 0.25, 1)
+[node name="card_bg" type="TextureRect" parent="." unique_id=220971229]
+offset_left = 336.0
+offset_top = 106.0
+offset_right = 1524.9999
+offset_bottom = 861.0
+texture = ExtResource("4_mpxt8")
+expand_mode = 5
 
 [node name="knob_1_title" type="Label" parent="." unique_id=1903930886]
-offset_left = 400.0
-offset_top = 190.0
-offset_right = 1520.0
-offset_bottom = 260.0
+offset_left = 781.0
+offset_top = 215.0
+offset_right = 1121.0
+offset_bottom = 285.0
 theme_override_colors/font_color = Color(0, 0.9, 0.8, 1)
 theme_override_font_sizes/font_size = 48
 horizontal_alignment = 1
 
 [node name="knob_1_angle_label" type="Label" parent="." unique_id=2071436040]
-offset_left = 897.0
-offset_top = 232.0
-offset_right = 1497.0
-offset_bottom = 332.0
+offset_left = 647.0
+offset_top = 105.0
+offset_right = 1247.0
+offset_bottom = 205.0
 theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
 theme_override_font_sizes/font_size = 72
 text = "0.00°"
 horizontal_alignment = 1
 
-[node name="knob_2_progress" parent="." unique_id=2142195604 instance=ExtResource("1_ypp8v")]
-offset_left = 492.0
-offset_top = 226.0
-offset_right = 762.34717
-offset_bottom = 482.0
+[node name="knob_gauge" type="Control" parent="." unique_id=987654321]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 504.0
+offset_top = 296.0
+offset_right = 864.0
+offset_bottom = 656.0
+script = ExtResource("gauge_script")
 
 [node name="min_max_container" type="VBoxContainer" parent="." unique_id=1858876454]
-offset_left = 1121.0
-offset_top = 419.0
-offset_right = 1459.0
-offset_bottom = 649.0
+anchors_preset = -1
+offset_left = 1079.0
+offset_top = 423.0
+offset_right = 1581.3009
+offset_bottom = 644.3473
 theme_override_constants/separation = 20
 
 [node name="min_label" type="Label" parent="min_max_container" unique_id=761930159]
@@ -137,18 +153,18 @@ theme_override_colors/font_color = Color(0.6, 0.8, 1, 1)
 theme_override_font_sizes/font_size = 22
 text = "Device Status: Not Connected"
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="back_button" type="Button" parent="." unique_id=988509043]
-offset_left = 50.0
-offset_top = 950.0
-offset_right = 250.0
-offset_bottom = 1020.0
+offset_left = 58.0
+offset_top = 955.0
+offset_right = 258.0
+offset_bottom = 1025.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 30
-theme_override_styles/normal = SubResource("BackButtonStyle")
-theme_override_styles/pressed = SubResource("BackButtonStyle")
-theme_override_styles/hover = SubResource("BackButtonStyle")
-theme_override_styles/focus = SubResource("BackButtonStyle")
+theme_override_styles/normal = SubResource("StyleBoxTexture_lqpk4")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_trdm2")
+theme_override_styles/hover = SubResource("StyleBoxTexture_tjtuc")
 text = "Back"
 
 [node name="start_button" type="Button" parent="." unique_id=1407606303]
@@ -159,11 +175,11 @@ offset_right = 950.0
 offset_bottom = 940.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = SubResource("StartButtonStyle")
-theme_override_styles/pressed = SubResource("StartButtonStyle")
-theme_override_styles/hover = SubResource("StartButtonStyle")
-theme_override_styles/focus = SubResource("StartButtonStyle")
-text = "START Assessment"
+theme_override_styles/normal = SubResource("StyleBoxTexture_svrn6")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_uqvqt")
+theme_override_styles/hover = SubResource("StyleBoxTexture_1sh0x")
+text = "START ASSESSMENT
+"
 
 [node name="stop_button" type="Button" parent="." unique_id=1450466279]
 visible = false
@@ -173,10 +189,9 @@ offset_right = 1450.0
 offset_bottom = 940.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = SubResource("StopButtonStyle")
-theme_override_styles/pressed = SubResource("StopButtonStyle")
-theme_override_styles/hover = SubResource("StopButtonStyle")
-theme_override_styles/focus = SubResource("StopButtonStyle")
+theme_override_styles/normal = SubResource("StyleBoxTexture_y33c1")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_6d02q")
+theme_override_styles/hover = SubResource("StyleBoxTexture_sfyfd")
 text = "STOP & Continue"
 
 [node name="redo_button" type="Button" parent="." unique_id=497461371]
@@ -187,10 +202,9 @@ offset_right = 950.0
 offset_bottom = 940.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = SubResource("RedoButtonStyle")
-theme_override_styles/pressed = SubResource("RedoButtonStyle")
-theme_override_styles/hover = SubResource("RedoButtonStyle")
-theme_override_styles/focus = SubResource("RedoButtonStyle")
+theme_override_styles/normal = SubResource("StyleBoxTexture_rkn75")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_0bm8f")
+theme_override_styles/hover = SubResource("StyleBoxTexture_qgnff")
 text = "REDO AROM"
 
 [node name="save_button" type="Button" parent="." unique_id=2026612596]
@@ -201,19 +215,7 @@ offset_right = 1450.0
 offset_bottom = 940.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = SubResource("SaveButtonStyle")
-theme_override_styles/pressed = SubResource("SaveButtonStyle")
-theme_override_styles/hover = SubResource("SaveButtonStyle")
-theme_override_styles/focus = SubResource("SaveButtonStyle")
+theme_override_styles/normal = SubResource("StyleBoxTexture_idtou")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_uutqh")
+theme_override_styles/hover = SubResource("StyleBoxTexture_iuc0m")
 text = "Save Assessment"
-
-[node name="reach_count" type="Label" parent="." unique_id=-1186144328]
-visible = false
-offset_left = 1300.0
-offset_top = 330.0
-offset_right = 1510.0
-offset_bottom = 430.0
-theme_override_colors/font_color = Color(0, 0.8, 1, 1)
-theme_override_font_sizes/font_size = 80
-text = "60"
-horizontal_alignment = 1

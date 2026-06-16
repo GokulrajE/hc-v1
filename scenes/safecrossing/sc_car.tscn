@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cdfvxro6b0y8l"]
 
 [ext_resource type="Script" uid="uid://bcmtd4l45ycx6" path="res://scripts/safecrossing/entities/sc_car.gd" id="1"]
-[ext_resource type="Texture2D" uid="uid://0wib48eb87g8" path="res://assets/safecrossing/cars/Cars/car_yellow_1.png" id="2_34g2r"]
+[ext_resource type="Texture2D" uid="uid://1pou2n38leq2" path="res://assets/safecrossing/cars/playerCar.png" id="2_34g2r"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_34g2r"]
 
@@ -10,6 +10,7 @@ script = ExtResource("1")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=110821441]
 position = Vector2(977, 1003)
+scale = Vector2(0.04, 0.04)
 texture = ExtResource("2_34g2r")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=276614154]

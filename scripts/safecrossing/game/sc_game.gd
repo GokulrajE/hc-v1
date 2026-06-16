@@ -18,8 +18,8 @@ var _phase_collided: bool = false
 var _failure_sound_played: bool = false
 var _player_score: int = 0
 var _last_scroll_offset: float = 0.0
-var _crossing_line_y: float = 476.0  # Y position of pedestrian crossing line
-var _traffic_road_y: float = 500.0   # Y position of traffic road area
+# var _crossing_line_y: float = 476.0  # Y position of pedestrian crossing line
+# var _traffic_road_y: float = 500.0   # Y position of traffic road area
 var _has_scored_this_crossing: bool = false
 var _last_pedestrian_line_y: float = -999999.0
 var _last_traffic_line_y: float = -999999.0
@@ -166,7 +166,7 @@ func _process(delta: float) -> void:
 # ============================================================================
 
 func _start_trial() -> void:
-	print("▶️ TRIAL STARTED")
+	
 	_game_state.enter_state(SCGameState.State.START)
 	_reset_trial_stats()
 	_trial_time_left = TRIAL_DURATION
@@ -177,11 +177,7 @@ func _start_trial() -> void:
 		ui.update_timer_display(TRIAL_DURATION)
 
 	# Start new trial data logging with AppDataTrial
-	AppDataTrial.start_new_trial(
-		Appdata.current_session_number,
-		1,  # Trial number in session
-		"SafeCrossing"
-	)
+	AppDataTrial.start_new_trial()
 
 	# Enter playing state
 	_game_state.enter_state(SCGameState.State.PLAYING)
@@ -222,14 +218,11 @@ func _on_crossing_complete(is_success: bool) -> void:
 	if is_success:
 		_trial_successes += 1
 		print("✅ Crossing SUCCESS - Total: %d/%d" % [_trial_successes, _trial_targets])
-		# Write this frame's data to raw data file
-		AppDataTrial.write_frame_data()
+	
 	else:
 		_trial_failures += 1
 		print("❌ Crossing FAILED - Total: %d/%d" % [_trial_failures, _trial_targets])
-		# Write this frame's data to raw data file
-		AppDataTrial.write_frame_data()
-
+		
 
 # ============================================================================
 # GAME STATE HANDLING

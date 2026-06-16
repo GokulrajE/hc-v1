@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="HC-V1"
-run/main_scene="uid://c7pe2ljy6vp86"
+run/main_scene="uid://d3aimcw6cv04v"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://sprites/icon.svg"
 

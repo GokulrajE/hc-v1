@@ -1,16 +1,34 @@
 [gd_scene format=3 uid="uid://c7pe2ljy6vp86"]
 
 [ext_resource type="Script" uid="uid://c1f5q80jclndn" path="res://scripts/main.gd" id="1_itxqv"]
+[ext_resource type="Texture2D" uid="uid://sal3ip0hwbsd" path="res://assets/ui/Window04.png" id="2_smf0o"]
 [ext_resource type="Texture2D" uid="uid://cov80lucdvvvm" path="res://sprites/Circle Filled.png" id="2_v0l8b"]
 [ext_resource type="PackedScene" uid="uid://ca8b3v7p5hc5" path="res://scene/connect_status.tscn" id="2_wp4xf"]
+[ext_resource type="Texture2D" uid="uid://byb243t148ktq" path="res://sprites/hypercube_png1.png" id="2_wscrc"]
 [ext_resource type="Texture2D" uid="uid://c6m7e6mq66428" path="res://assets/ui/InputField.png" id="3_brvut"]
+[ext_resource type="Texture2D" uid="uid://vjdh8uil7u1n" path="res://assets/ui/Card X3.png" id="3_k65ib"]
+[ext_resource type="Texture2D" uid="uid://c7b54u1ko0m6u" path="res://assets/ui/Btn_V02.png" id="4_b5f6u"]
+[ext_resource type="Texture2D" uid="uid://n8eqx2nfw4dc" path="res://assets/ui/Btn_V06.png" id="5_tqoya"]
+[ext_resource type="Texture2D" uid="uid://daqibh5tqjbfl" path="res://assets/ui/Btn_V05.png" id="6_b5f6u"]
+[ext_resource type="Texture2D" uid="uid://c2kvtt4ccy8at" path="res://assets/ui/Btn_V01.png" id="7_tqoya"]
+[ext_resource type="Texture2D" uid="uid://dhjydje5pkqw2" path="res://assets/ui/Btn_V13.png" id="9_smf0o"]
+[ext_resource type="Texture2D" uid="uid://c4uowtsac3i72" path="res://assets/ui/Btn_V18.png" id="10_tv8i1"]
+[ext_resource type="FontFile" uid="uid://btw3w8gykgilf" path="res://assets/fonts/TiltNeon-Regular-VariableFont_XROT,YROT.ttf" id="10_v2gmf"]
+[ext_resource type="Texture2D" uid="uid://bgsiklmlol3xo" path="res://sprites/hypercube_png3.png" id="12_jcbur"]
+[ext_resource type="Texture2D" uid="uid://d14kpuqb5hird" path="res://sprites/hypercube_png2.png" id="12_mswub"]
+[ext_resource type="Script" uid="uid://yqm3sfo6kequ" path="res://scripts/hypercube_animation_controller.gd" id="13_hypercube"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_brvut"]
-bg_color = Color(0.09200642, 0.29279387, 0.42994845, 1)
-corner_radius_top_left = 50
-corner_radius_top_right = 50
-corner_radius_bottom_right = 50
-corner_radius_bottom_left = 50
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tqoya"]
+texture = ExtResource("3_k65ib")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4j5ol"]
+texture = ExtResource("4_b5f6u")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_p1hux"]
+texture = ExtResource("4_b5f6u")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_of57s"]
+texture = ExtResource("5_tqoya")
 
 [sub_resource type="StyleBoxFlat" id="LoginButtonStyle"]
 bg_color = Color(0.2, 0.5, 0.8, 1)
@@ -19,6 +37,15 @@ corner_radius_top_right = 15
 corner_radius_bottom_right = 15
 corner_radius_bottom_left = 15
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_k65ib"]
+texture = ExtResource("6_b5f6u")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wscrc"]
+texture = ExtResource("6_b5f6u")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_mswub"]
+texture = ExtResource("7_tqoya")
+
 [sub_resource type="StyleBoxFlat" id="SignupButtonStyle"]
 bg_color = Color(0.2, 0.7, 0.4, 1)
 corner_radius_top_left = 15
@@ -26,15 +53,34 @@ corner_radius_top_right = 15
 corner_radius_bottom_right = 15
 corner_radius_bottom_left = 15
 
-[sub_resource type="StyleBoxFlat" id="DiagnosticsButtonStyle"]
-bg_color = Color(1, 0.6, 0.2, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hybxs"]
+texture = ExtResource("9_smf0o")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_v2gmf"]
+texture = ExtResource("9_smf0o")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jcbur"]
+texture = ExtResource("10_tv8i1")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0ha60"]
 texture = ExtResource("3_brvut")
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_hybxs"]
+animations = [{
+"frames": [{
+"duration": 5.0,
+"texture": ExtResource("12_jcbur")
+}, {
+"duration": 5.0,
+"texture": ExtResource("2_wscrc")
+}, {
+"duration": 5.0,
+"texture": ExtResource("12_mswub")
+}],
+"loop": true,
+"name": &"default",
+"speed": 1.0
+}]
 
 [node name="Main" type="Control" unique_id=1361795996]
 layout_mode = 3
@@ -51,129 +97,136 @@ offset_left = -10.0
 offset_top = -9.0
 offset_right = 1933.0
 offset_bottom = 1091.0
-color = Color(0.12, 0.12, 0.15, 1)
+color = Color(6.317161e-08, 0.060050197, 0.16735807, 1)
+
+[node name="TextureRect" type="TextureRect" parent="bg" unique_id=466015314]
+modulate = Color(1, 0.4509161, 0.6560772, 1)
+layout_mode = 0
+offset_left = -18.0
+offset_top = -12.0
+offset_right = 1965.0
+offset_bottom = 1116.0
+texture = ExtResource("2_smf0o")
 
 [node name="ConnectStatus" parent="bg" unique_id=442870427 instance=ExtResource("2_wp4xf")]
 
 [node name="Panel" type="Panel" parent="bg" unique_id=1357336293]
 layout_mode = 0
-offset_left = 565.0
-offset_top = 342.0
-offset_right = 1201.0
-offset_bottom = 721.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_brvut")
+offset_left = 1066.0
+offset_top = 276.0
+offset_right = 1759.0
+offset_bottom = 886.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_tqoya")
 
 [node name="login" type="Button" parent="bg" unique_id=2007227419]
 layout_mode = 1
 anchors_preset = -1
-offset_left = 625.0
-offset_top = 591.0
-offset_right = 884.0
-offset_bottom = 669.0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+offset_left = 1151.0
+offset_top = 676.0
+offset_right = 1399.0
+offset_bottom = 758.0
 theme_override_font_sizes/font_size = 44
-theme_override_styles/normal = SubResource("LoginButtonStyle")
-theme_override_styles/pressed = SubResource("LoginButtonStyle")
-theme_override_styles/hover = SubResource("LoginButtonStyle")
+theme_override_styles/normal = SubResource("StyleBoxTexture_4j5ol")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_p1hux")
+theme_override_styles/hover = SubResource("StyleBoxTexture_of57s")
 theme_override_styles/focus = SubResource("LoginButtonStyle")
 text = "GO"
 
 [node name="signup_label" type="Label" parent="bg" unique_id=1234567894]
 layout_mode = 0
-offset_left = 919.0
-offset_top = 551.0
-offset_right = 1062.0
-offset_bottom = 595.0
+offset_left = 1447.0
+offset_top = 614.0
+offset_right = 1590.0
+offset_bottom = 658.0
 theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
 theme_override_font_sizes/font_size = 26
 text = "New User?"
 
 [node name="signup" type="Button" parent="bg" unique_id=1771840276]
 layout_mode = 0
-offset_left = 901.0
-offset_top = 588.0
-offset_right = 1142.0
-offset_bottom = 669.0
+offset_left = 1438.0
+offset_top = 674.0
+offset_right = 1679.0
+offset_bottom = 755.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 44
-theme_override_styles/normal = SubResource("SignupButtonStyle")
-theme_override_styles/pressed = SubResource("SignupButtonStyle")
-theme_override_styles/hover = SubResource("SignupButtonStyle")
+theme_override_styles/normal = SubResource("StyleBoxTexture_k65ib")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_wscrc")
+theme_override_styles/hover = SubResource("StyleBoxTexture_mswub")
 theme_override_styles/focus = SubResource("SignupButtonStyle")
 text = "REGISTER"
 
 [node name="diagnostics" type="Button" parent="bg" unique_id=319754380]
-custom_minimum_size = Vector2(300, 80)
-layout_mode = 0
-offset_left = 100.0
-offset_top = 950.0
-offset_right = 400.0
-offset_bottom = 1030.0
+layout_mode = 1
+anchors_preset = -1
+offset_left = 83.0
+offset_top = 924.0
+offset_right = 396.0
+offset_bottom = 1010.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 36
-theme_override_styles/normal = SubResource("DiagnosticsButtonStyle")
-theme_override_styles/pressed = SubResource("DiagnosticsButtonStyle")
-theme_override_styles/hover = SubResource("DiagnosticsButtonStyle")
-theme_override_styles/focus = SubResource("DiagnosticsButtonStyle")
+theme_override_styles/normal = SubResource("StyleBoxTexture_hybxs")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_v2gmf")
+theme_override_styles/hover = SubResource("StyleBoxTexture_jcbur")
 text = "Diagnostics"
 
 [node name="login_label" type="Label" parent="bg" unique_id=1234567893]
 layout_mode = 0
-offset_left = 813.0
-offset_top = 365.0
-offset_right = 921.0
-offset_bottom = 411.0
+offset_left = 1316.0
+offset_top = 322.0
+offset_right = 1519.0
+offset_bottom = 427.0
 theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
-theme_override_font_sizes/font_size = 28
-text = "LOGIN"
+theme_override_fonts/font = ExtResource("10_v2gmf")
+theme_override_font_sizes/font_size = 81
+text = "Login"
 
 [node name="hospital_id_input" type="LineEdit" parent="bg" unique_id=1234567890]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 661.0
-offset_top = 405.0
-offset_right = -876.0
-offset_bottom = -570.0
+offset_left = 1147.0
+offset_top = 458.0
+offset_right = -280.0
+offset_bottom = -532.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0.007141546, 0.0071415626, 0.0071415957, 1)
 theme_override_colors/font_placeholder_color = Color(0.6, 0.6, 0.65, 1)
-theme_override_colors/caret_color = Color(0, 0.8, 1, 1)
+theme_override_colors/caret_color = Color(0.13464901, 0.13464907, 0.13464946, 1)
 theme_override_font_sizes/font_size = 36
 theme_override_styles/normal = SubResource("StyleBoxTexture_0ha60")
 placeholder_text = "Enter Hospital ID"
 alignment = 1
+selecting_enabled = false
+
+[node name="hyper_cube_annimation" type="AnimatedSprite2D" parent="bg" unique_id=1069330336]
+position = Vector2(507, 579)
+scale = Vector2(1.2, 1.2)
+sprite_frames = SubResource("SpriteFrames_hybxs")
+frame_progress = 0.7033103
+script = ExtResource("13_hypercube")
 
 [node name="title" type="Label" parent="." unique_id=840081165]
 layout_mode = 0
-offset_left = 100.0
-offset_top = 30.0
-offset_right = 1800.0
-offset_bottom = 120.0
-theme_override_colors/font_color = Color(0, 0.8, 1, 1)
-theme_override_font_sizes/font_size = 80
-text = "HYPERCUBE REHABILITATION"
+offset_left = 77.0
+offset_top = 1.0
+offset_right = 980.0
+offset_bottom = 216.0
+theme_override_colors/font_color = Color(0.6243865, 0.75538117, 0.90615606, 1)
+theme_override_fonts/font = ExtResource("10_v2gmf")
+theme_override_font_sizes/font_size = 147
+text = "HyperCube.."
 horizontal_alignment = 1
-
-[node name="subtitle" type="Label" parent="." unique_id=840081166]
-layout_mode = 0
-offset_left = 34.0
-offset_top = 134.0
-offset_right = 1734.0
-offset_bottom = 184.0
-theme_override_colors/font_color = Color(0.7, 0.7, 0.75, 1)
-theme_override_font_sizes/font_size = 26
-text = "Device Communication & Assessment System"
-horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="device_status" type="Label" parent="." unique_id=1234567891]
 layout_mode = 0
-offset_left = 1510.0
-offset_top = 54.0
-offset_right = 1910.0
-offset_bottom = 114.0
+offset_left = 1513.0
+offset_top = 48.0
+offset_right = 1913.0
+offset_bottom = 108.0
 theme_override_colors/font_color = Color(0.6, 0.8, 1, 1)
 theme_override_font_sizes/font_size = 28
 text = "Device: CONNECTING..."
@@ -181,11 +234,11 @@ horizontal_alignment = 2
 
 [node name="message_label" type="Label" parent="." unique_id=1234567892]
 layout_mode = 0
-offset_left = 450.0
-offset_top = 860.0
-offset_right = 1470.0
-offset_bottom = 930.0
-theme_override_colors/font_color = Color(0.2, 1, 0.4, 1)
+offset_left = 1065.0
+offset_top = 921.0
+offset_right = 1729.0
+offset_bottom = 991.0
+theme_override_colors/font_color = Color(1, 0.56362236, 0.31053597, 1)
 theme_override_font_sizes/font_size = 26
 horizontal_alignment = 1
 autowrap_mode = 2

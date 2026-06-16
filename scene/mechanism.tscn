@@ -2,13 +2,54 @@
 
 [ext_resource type="Script" uid="uid://cuqn1lcv2rdpw" path="res://scripts/mechanism.gd" id="1_mechanism"]
 [ext_resource type="PackedScene" uid="uid://ca8b3v7p5hc5" path="res://scene/connect_status.tscn" id="2_divyx"]
+[ext_resource type="Texture2D" uid="uid://sal3ip0hwbsd" path="res://assets/ui/Window04.png" id="2_dk3wa"]
+[ext_resource type="Texture2D" uid="uid://vjdh8uil7u1n" path="res://assets/ui/Card X3.png" id="3_7bxdt"]
+[ext_resource type="Texture2D" uid="uid://bmwg8y55461y8" path="res://assets/ui/Button13.png" id="3_c3ye3"]
+[ext_resource type="Texture2D" uid="uid://cn668kccj0k6y" path="res://assets/ui/Button08.png" id="4_7bxdt"]
+[ext_resource type="FontFile" uid="uid://btw3w8gykgilf" path="res://assets/fonts/TiltNeon-Regular-VariableFont_XROT,YROT.ttf" id="4_nbm4j"]
+[ext_resource type="Texture2D" uid="uid://c2kvtt4ccy8at" path="res://assets/ui/Btn_V01.png" id="6_4wofm"]
+[ext_resource type="Texture2D" uid="uid://bnibau638sf3i" path="res://assets/ui/panels.png" id="6_62t8m"]
+[ext_resource type="Texture2D" uid="uid://daqibh5tqjbfl" path="res://assets/ui/Btn_V05.png" id="7_62t8m"]
+[ext_resource type="Texture2D" uid="uid://b6cbnq1wt0lyd" path="res://assets/ui/Button12.png" id="9_wu2eb"]
+[ext_resource type="Texture2D" uid="uid://bk8nwum2h0jib" path="res://assets/ui/Button09.png" id="10_hapaf"]
+[ext_resource type="Texture2D" uid="uid://cwbmaqajw3i0b" path="res://assets/ui/Button14.png" id="11_5q715"]
+[ext_resource type="Texture2D" uid="uid://hhl1ddacb4j6" path="res://assets/ui/Button07.png" id="12_b5r0i"]
 
-[sub_resource type="StyleBoxFlat" id="GripButtonStyle"]
-bg_color = Color(0.2, 0.5, 0.8, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ici0b"]
+texture = ExtResource("3_c3ye3")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4wofm"]
+texture = ExtResource("3_c3ye3")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_62t8m"]
+texture = ExtResource("4_7bxdt")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_c3ye3"]
+texture = ExtResource("3_c3ye3")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7bxdt"]
+texture = ExtResource("3_c3ye3")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dk3wa"]
+texture = ExtResource("4_7bxdt")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5q715"]
+texture = ExtResource("9_wu2eb")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_b5r0i"]
+texture = ExtResource("9_wu2eb")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_skn3h"]
+texture = ExtResource("10_hapaf")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hapaf"]
+texture = ExtResource("9_wu2eb")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vu3es"]
+texture = ExtResource("9_wu2eb")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_u4eax"]
+texture = ExtResource("10_hapaf")
 
 [sub_resource type="StyleBoxFlat" id="KnobButtonStyle"]
 bg_color = Color(0.6, 0.2, 0.8, 1)
@@ -17,12 +58,41 @@ corner_radius_top_right = 12
 corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
 
-[sub_resource type="StyleBoxFlat" id="PinchButtonStyle"]
-bg_color = Color(1.0, 0.6, 0.2, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_yxrtb"]
+texture = ExtResource("9_wu2eb")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3rnql"]
+texture = ExtResource("9_wu2eb")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_mtq1e"]
+texture = ExtResource("10_hapaf")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wrl23"]
+texture = ExtResource("11_5q715")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3elbn"]
+texture = ExtResource("11_5q715")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dpuc6"]
+texture = ExtResource("12_b5r0i")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_htlci"]
+texture = ExtResource("11_5q715")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hcg54"]
+texture = ExtResource("11_5q715")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_x15oo"]
+texture = ExtResource("12_b5r0i")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nbm4j"]
+texture = ExtResource("6_4wofm")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_mlsri"]
+texture = ExtResource("6_4wofm")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wu2eb"]
+texture = ExtResource("7_62t8m")
 
 [sub_resource type="StyleBoxFlat" id="BackButtonStyle"]
 bg_color = Color(0.4, 0.4, 0.4, 1)
@@ -34,57 +104,63 @@ corner_radius_bottom_left = 10
 [node name="Mechanism" type="Node2D" unique_id=1500000001]
 script = ExtResource("1_mechanism")
 
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1741888370]
+offset_left = -37.0
+offset_top = -27.0
+offset_right = 1969.0
+offset_bottom = 1133.0
+texture = ExtResource("2_dk3wa")
+
 [node name="bg" type="ColorRect" parent="." unique_id=1500000002]
-offset_left = -8.0
-offset_top = -10.0
-offset_right = 1932.0
-offset_bottom = 1092.0
-color = Color(0.12, 0.12, 0.15, 1)
+visible = false
+offset_left = -4.0
+offset_top = -12.0
+offset_right = 1936.0
+offset_bottom = 1090.0
+color = Color(0.11348272, 0.097934835, 0.21125305, 1)
 
 [node name="ConnectStatus" parent="." unique_id=442870427 instance=ExtResource("2_divyx")]
 
 [node name="title" type="Label" parent="." unique_id=1500000003]
-offset_left = 47.0
-offset_top = 20.0
-offset_right = 1847.0
-offset_bottom = 100.0
+offset_left = 67.0
+offset_top = 44.0
+offset_right = 1867.0
+offset_bottom = 134.0
 theme_override_colors/font_color = Color(0, 0.8, 1, 1)
+theme_override_fonts/font = ExtResource("4_nbm4j")
 theme_override_font_sizes/font_size = 70
-text = "Device-Mechanisms"
-horizontal_alignment = 1
+text = "Device Mechanisms.."
 
-[node name="subtitle" type="Label" parent="." unique_id=1500000004]
-offset_left = 50.0
-offset_top = 100.0
-offset_right = 1850.0
-offset_bottom = 150.0
-theme_override_colors/font_color = Color(0.7, 0.7, 0.75, 1)
-theme_override_font_sizes/font_size = 24
-text = "Select an mechanism to begin"
-horizontal_alignment = 1
+[node name="panle_hand_grip" type="TextureRect" parent="." unique_id=423271877]
+offset_left = 56.0
+offset_top = 152.0
+offset_right = 549.0
+offset_bottom = 654.0
+texture = ExtResource("3_7bxdt")
 
 [node name="category_grip" type="Label" parent="." unique_id=1500000012]
 offset_left = 100.0
 offset_top = 180.0
 offset_right = 500.0
 offset_bottom = 230.0
-theme_override_colors/font_color = Color(0, 0.8, 1, 1)
+theme_override_colors/font_color = Color(0.2575982, 0.6795655, 0.5456285, 1)
 theme_override_font_sizes/font_size = 32
 text = "HAND GRIP ASSESSMENTS"
 
 [node name="hand_grip_button" type="Button" parent="." unique_id=1500000005]
 custom_minimum_size = Vector2(350, 120)
-offset_left = 100.0
-offset_top = 250.0
-offset_right = 450.0
-offset_bottom = 370.0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+offset_left = 76.0
+offset_top = 209.0
+offset_right = 540.0
+offset_bottom = 414.0
+theme_override_colors/font_color = Color(0.002136234, 0.002136234, 0.0021362337, 1)
+theme_override_colors/font_pressed_color = Color(0.009317499, 0.009317501, 0.009317499, 1)
+theme_override_colors/font_hover_color = Color(0.014275194, 0.014275219, 0.014275289, 1)
 theme_override_font_sizes/font_size = 40
-theme_override_styles/normal = SubResource("GripButtonStyle")
-theme_override_styles/hover = SubResource("GripButtonStyle")
-theme_override_styles/pressed = SubResource("GripButtonStyle")
-theme_override_styles/focus = SubResource("GripButtonStyle")
-text = "Hand Grip"
+theme_override_styles/normal = SubResource("StyleBoxTexture_ici0b")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_4wofm")
+theme_override_styles/hover = SubResource("StyleBoxTexture_62t8m")
+text = "Handel"
 
 [node name="hand_grip_desc" type="Label" parent="." unique_id=1500000013]
 offset_left = 100.0
@@ -97,16 +173,17 @@ text = "Handle assessment"
 
 [node name="grip_button" type="Button" parent="." unique_id=1500000010]
 custom_minimum_size = Vector2(350, 120)
-offset_left = 100.0
-offset_top = 440.0
-offset_right = 450.0
-offset_bottom = 560.0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+offset_left = 77.0
+offset_top = 385.0
+offset_right = 545.0
+offset_bottom = 597.0
+theme_override_colors/font_color = Color(0.057996348, 0.057996348, 0.05799634, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 40
-theme_override_styles/normal = SubResource("GripButtonStyle")
-theme_override_styles/hover = SubResource("GripButtonStyle")
-theme_override_styles/pressed = SubResource("GripButtonStyle")
-theme_override_styles/focus = SubResource("GripButtonStyle")
+theme_override_styles/normal = SubResource("StyleBoxTexture_c3ye3")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_7bxdt")
+theme_override_styles/hover = SubResource("StyleBoxTexture_dk3wa")
 text = "Grip Force"
 
 [node name="grip_force_desc" type="Label" parent="." unique_id=1500000014]
@@ -117,6 +194,13 @@ offset_bottom = 610.0
 theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
 theme_override_font_sizes/font_size = 18
 text = "Pinching force assessment"
+
+[node name="panel_knob" type="Sprite2D" parent="." unique_id=2008150581]
+position = Vector2(868, 505)
+scale = Vector2(2.2751937, 1.6902655)
+texture = ExtResource("6_62t8m")
+region_enabled = true
+region_rect = Rect2(253.14655, 20.73948, 258.85345, 452.7261)
 
 [node name="category_knob" type="Label" parent="." unique_id=1500000015]
 offset_left = 700.0
@@ -129,16 +213,17 @@ text = "KNOB ASSESSMENTS"
 
 [node name="knob" type="Button" parent="." unique_id=1500000006]
 custom_minimum_size = Vector2(350, 120)
-offset_left = 700.0
-offset_top = 250.0
-offset_right = 1050.0
-offset_bottom = 370.0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+offset_left = 676.0
+offset_top = 201.0
+offset_right = 1074.0
+offset_bottom = 403.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 40
-theme_override_styles/normal = SubResource("KnobButtonStyle")
-theme_override_styles/hover = SubResource("KnobButtonStyle")
-theme_override_styles/pressed = SubResource("KnobButtonStyle")
-theme_override_styles/focus = SubResource("KnobButtonStyle")
+theme_override_styles/normal = SubResource("StyleBoxTexture_5q715")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_b5r0i")
+theme_override_styles/hover = SubResource("StyleBoxTexture_skn3h")
 text = "Knob"
 
 [node name="knob_desc" type="Label" parent="." unique_id=1500000016]
@@ -152,15 +237,17 @@ text = "Standard knob rotation"
 
 [node name="fine_knob" type="Button" parent="." unique_id=1281583165]
 custom_minimum_size = Vector2(350, 120)
-offset_left = 700.0
-offset_top = 440.0
-offset_right = 1050.0
-offset_bottom = 560.0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+offset_left = 680.0
+offset_top = 388.0
+offset_right = 1071.0
+offset_bottom = 593.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 40
-theme_override_styles/normal = SubResource("KnobButtonStyle")
-theme_override_styles/hover = SubResource("KnobButtonStyle")
-theme_override_styles/pressed = SubResource("KnobButtonStyle")
+theme_override_styles/normal = SubResource("StyleBoxTexture_hapaf")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_vu3es")
+theme_override_styles/hover = SubResource("StyleBoxTexture_u4eax")
 theme_override_styles/focus = SubResource("KnobButtonStyle")
 text = "Fine Knob"
 
@@ -175,16 +262,17 @@ text = "Precise fine motor control"
 
 [node name="key_knob" type="Button" parent="." unique_id=1359068104]
 custom_minimum_size = Vector2(350, 120)
-offset_left = 700.0
-offset_top = 630.0
-offset_right = 1050.0
-offset_bottom = 750.0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+offset_left = 681.0
+offset_top = 576.0
+offset_right = 1077.0
+offset_bottom = 768.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 40
-theme_override_styles/normal = SubResource("KnobButtonStyle")
-theme_override_styles/hover = SubResource("KnobButtonStyle")
-theme_override_styles/pressed = SubResource("KnobButtonStyle")
-theme_override_styles/focus = SubResource("KnobButtonStyle")
+theme_override_styles/normal = SubResource("StyleBoxTexture_yxrtb")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_3rnql")
+theme_override_styles/hover = SubResource("StyleBoxTexture_mtq1e")
 text = "Key Knob"
 
 [node name="key_knob_desc" type="Label" parent="." unique_id=1500000018]
@@ -195,6 +283,13 @@ offset_bottom = 800.0
 theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
 theme_override_font_sizes/font_size = 18
 text = "Key-like rotation motion"
+
+[node name="panel_button" type="Sprite2D" parent="." unique_id=423630964]
+position = Vector2(1471.75, 410.5)
+scale = Vector2(2.3365757, 1.2556561)
+texture = ExtResource("6_62t8m")
+region_enabled = true
+region_rect = Rect2(0, 25.711174, 257.7149, 442.43686)
 
 [node name="category_pinch" type="Label" parent="." unique_id=1500000019]
 offset_left = 1300.0
@@ -207,16 +302,17 @@ text = "PINCH & BUTTONS"
 
 [node name="tripod_grip_button" type="Button" parent="." unique_id=1500000007]
 custom_minimum_size = Vector2(350, 120)
-offset_left = 1300.0
-offset_top = 250.0
+offset_left = 1264.0
+offset_top = 193.0
 offset_right = 1650.0
-offset_bottom = 370.0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+offset_bottom = 394.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 40
-theme_override_styles/normal = SubResource("PinchButtonStyle")
-theme_override_styles/hover = SubResource("PinchButtonStyle")
-theme_override_styles/pressed = SubResource("PinchButtonStyle")
-theme_override_styles/focus = SubResource("PinchButtonStyle")
+theme_override_styles/normal = SubResource("StyleBoxTexture_wrl23")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_3elbn")
+theme_override_styles/hover = SubResource("StyleBoxTexture_dpuc6")
 text = "Tripod Grasp"
 
 [node name="tripod_grip_desc" type="Label" parent="." unique_id=1500000020]
@@ -230,16 +326,17 @@ text = "Three-finger  grasp"
 
 [node name="pinch_button_button" type="Button" parent="." unique_id=1500000011]
 custom_minimum_size = Vector2(350, 120)
-offset_left = 1300.0
-offset_top = 440.0
-offset_right = 1650.0
-offset_bottom = 560.0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+offset_left = 1264.0
+offset_top = 373.0
+offset_right = 1662.0
+offset_bottom = 588.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 40
-theme_override_styles/normal = SubResource("PinchButtonStyle")
-theme_override_styles/hover = SubResource("PinchButtonStyle")
-theme_override_styles/pressed = SubResource("PinchButtonStyle")
-theme_override_styles/focus = SubResource("PinchButtonStyle")
+theme_override_styles/normal = SubResource("StyleBoxTexture_htlci")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_hcg54")
+theme_override_styles/hover = SubResource("StyleBoxTexture_x15oo")
 text = "Pinch & Buttons"
 
 [node name="pinch_button_desc" type="Label" parent="." unique_id=1500000021]
@@ -253,9 +350,9 @@ text = "Pinch grasp & button press"
 
 [node name="message_label" type="Label" parent="." unique_id=1500000008]
 offset_left = 100.0
-offset_top = 820.0
+offset_top = 850.0
 offset_right = 1800.0
-offset_bottom = 920.0
+offset_bottom = 950.0
 theme_override_colors/font_color = Color(0.2, 1, 0.4, 1)
 theme_override_font_sizes/font_size = 28
 horizontal_alignment = 1
@@ -268,8 +365,8 @@ offset_right = 250.0
 offset_bottom = 1020.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 30
-theme_override_styles/normal = SubResource("BackButtonStyle")
-theme_override_styles/hover = SubResource("BackButtonStyle")
-theme_override_styles/pressed = SubResource("BackButtonStyle")
+theme_override_styles/normal = SubResource("StyleBoxTexture_nbm4j")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_mlsri")
+theme_override_styles/hover = SubResource("StyleBoxTexture_wu2eb")
 theme_override_styles/focus = SubResource("BackButtonStyle")
 text = "Back"

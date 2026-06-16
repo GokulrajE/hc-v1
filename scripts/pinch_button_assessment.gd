@@ -158,7 +158,7 @@ func _process_pinch1(delta: float) -> void:
 				if status_label:
 					if hold_timer < HOLD_TIME:
 						if timertext and hold_timer <= HOLD_TIME:
-							timertext.text = "%d" % max(1, int(hold_timer + 0.5))
+							timertext.text = "%d" % max(0, int(hold_timer + 0.5))
 						status_label.text = "PINCH 1 - STEP 1: Hold pinch (%.1f / 5.0 seconds)" % hold_timer
 						status_label.add_theme_color_override("font_color", Color(0, 0.9, 0.8, 1))
 						# Circle visible while holding
@@ -176,7 +176,7 @@ func _process_pinch1(delta: float) -> void:
 					pinch1_step1_complete = true
 			else:
 				if pinch1_step1_complete and hold_timer >= HOLD_TIME:
-					# User released after holding for 5 seconds - restore circle visibility
+					# User released after holding for 3 seconds - restore circle visibility
 					if circleIndication:
 						circleIndication.modulate.a = 1.0
 					if status_label:
@@ -197,7 +197,7 @@ func _process_pinch1(delta: float) -> void:
 			hold_timer += delta
 			# Update visual timer display (stop at target time)
 			if timertext and hold_timer <= HOLD_TIME_STEP2:
-				timertext.text = "%d" % max(1, int(hold_timer + 0.5))
+				timertext.text = "%d" % max(0, int(hold_timer + 0.5))
 			if status_label:
 				if hold_timer < HOLD_TIME_STEP2:
 					status_label.text = "PINCH 1 - STEP 2: Hold %d of %d - Time: %.1f / 3.0 sec - Remaining: %.1f sec" % [hold_count + 1, HOLDS_REQUIRED, hold_timer, TIME_LIMIT - timer]
@@ -268,7 +268,7 @@ func _process_pinch2(delta: float) -> void:
 				hold_timer += delta
 				# Update visual timer display (stop at target time)
 				if timertext and hold_timer <= HOLD_TIME:
-					timertext.text = "%d" % max(1, int(hold_timer + 0.5))
+					timertext.text = "%d" % max(0, int(hold_timer + 0.5))
 				if status_label:
 					if hold_timer < HOLD_TIME:
 						status_label.text = "PINCH 2 - STEP 1: Hold pinch (%.1f / 5.0 seconds)" % hold_timer
@@ -309,7 +309,7 @@ func _process_pinch2(delta: float) -> void:
 			hold_timer += delta
 			# Update visual timer display (stop at target time)
 			if timertext and hold_timer <= HOLD_TIME_STEP2:
-				timertext.text = "%d" % max(1, int(hold_timer + 0.5))
+				timertext.text = "%d" % max(0, int(hold_timer + 0.5))
 			if status_label:
 				if hold_timer < HOLD_TIME_STEP2:
 					status_label.text = "PINCH 2 - STEP 2: Hold %d of %d - Time: %.1f / 3.0 sec - Remaining: %.1f sec" % [hold_count + 1, HOLDS_REQUIRED, hold_timer, TIME_LIMIT - timer]
@@ -380,7 +380,7 @@ func _process_buttons(delta: float) -> void:
 				hold_timer += delta
 				# Update visual timer display (stop at target time)
 				if timertext and hold_timer <= HOLD_TIME:
-					timertext.text = "%d" % max(1, int(hold_timer + 0.5))
+					timertext.text = "%d" % max(0, int(hold_timer + 0.5))
 				if status_label:
 					if hold_timer < HOLD_TIME:
 						status_label.text = "BUTTONS - STEP 1: Hold button (%.1f / 5.0 seconds)" % hold_timer
@@ -421,7 +421,7 @@ func _process_buttons(delta: float) -> void:
 			hold_timer += delta
 			# Update visual timer display (stop at target time)
 			if timertext and hold_timer <= HOLD_TIME_STEP2:
-				timertext.text = "%d" % max(1, int(hold_timer + 0.5))
+				timertext.text = "%d" % max(0, int(hold_timer + 0.5))
 			if status_label:
 				if hold_timer < HOLD_TIME_STEP2:
 					status_label.text = "BUTTONS - STEP 2: Hold %d of %d - Time: %.1f / 3.0 sec - Remaining: %.1f sec" % [hold_count + 1, HOLDS_REQUIRED, hold_timer, TIME_LIMIT - timer]
