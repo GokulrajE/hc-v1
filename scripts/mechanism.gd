@@ -51,10 +51,9 @@ func _on_hand_grip_pressed() -> void:
 
 	# Check if AROM assessment is already completed
 	if Appdata.selected_mechanism.old_rom and Appdata.selected_mechanism.old_rom.is_arom_set():
-		message_label.text = "✓ AROM already completed for HANDLE\n(Min: %.2f° | Max: %.2f°)\nSelect another mechanism or go back." % [
-			Appdata.selected_mechanism.old_rom.arom_min,
-			Appdata.selected_mechanism.old_rom.arom_max
-		]
+		message_label.text = "✓ Handle AROM done! Opening Game Selection..."
+		await get_tree().create_timer(0.5).timeout
+		get_tree().change_scene_to_file("res://scene/game_selection.tscn")
 	else:
 		message_label.text = "Starting AROM assessment for Handle...\nPlease squeeze the handle through its full range."
 		await get_tree().create_timer(0.5).timeout
@@ -65,9 +64,9 @@ func _on_grip_pressed() -> void:
 
 	# Check if grip force assessment is already completed
 	if Appdata.selected_mechanism.old_rom and Appdata.selected_mechanism.old_rom.is_arom_set():
-		message_label.text = "✓ Grip assessment already completed\n(Max Force: %.1f N)\nSelect another mechanism or go back." % [
-			Appdata.selected_mechanism.old_rom.arom_max
-		]
+		message_label.text = "✓ Grip AROM done! Opening Game Selection..."
+		await get_tree().create_timer(0.5).timeout
+		get_tree().change_scene_to_file("res://scene/game_selection.tscn")
 	else:
 		message_label.text = "Starting Grip Force assessment...\nPlease squeeze the handle with maximum force."
 		await get_tree().create_timer(0.5).timeout
@@ -78,10 +77,9 @@ func _on_knob_selected() -> void:
 
 	# Check if AROM assessment is already completed
 	if Appdata.selected_mechanism.old_rom and Appdata.selected_mechanism.old_rom.is_arom_set():
-		message_label.text = "✓ AROM already completed for KNOB\n(Min: %.2f° | Max: %.2f°)\nSelect another mechanism or go back." % [
-			Appdata.selected_mechanism.old_rom.arom_min,
-			Appdata.selected_mechanism.old_rom.arom_max
-		]
+		message_label.text = "✓ Knob AROM done! Opening Game Selection..."
+		await get_tree().create_timer(0.5).timeout
+		get_tree().change_scene_to_file("res://scene/game_selection.tscn")
 	else:
 		message_label.text = "Starting AROM assessment for Knob...\nPlease rotate the knob through its full range."
 		await get_tree().create_timer(0.5).timeout  # Small delay before scene change
@@ -92,10 +90,9 @@ func _on_fine_knob_selected() -> void:
 
 	# Check if AROM assessment is already completed
 	if Appdata.selected_mechanism.old_rom and Appdata.selected_mechanism.old_rom.is_arom_set():
-		message_label.text = "✓ AROM already completed for FINE KNOB\n(Min: %.2f° | Max: %.2f°)\nSelect another mechanism or go back." % [
-			Appdata.selected_mechanism.old_rom.arom_min,
-			Appdata.selected_mechanism.old_rom.arom_max
-		]
+		message_label.text = "✓ Fine Knob AROM done! Opening Game Selection..."
+		await get_tree().create_timer(0.5).timeout
+		get_tree().change_scene_to_file("res://scene/game_selection.tscn")
 	else:
 		message_label.text = "Starting AROM assessment for Fine Knob...\nPlease rotate the knob through its full range."
 		await get_tree().create_timer(0.5).timeout  # Small delay before scene change
@@ -106,10 +103,9 @@ func _on_key_knob_selected() -> void:
 
 	# Check if AROM assessment is already completed
 	if Appdata.selected_mechanism.old_rom and Appdata.selected_mechanism.old_rom.is_arom_set():
-		message_label.text = "✓ AROM already completed for KEY KNOB\n(Min: %.2f° | Max: %.2f°)\nSelect another mechanism or go back." % [
-			Appdata.selected_mechanism.old_rom.arom_min,
-			Appdata.selected_mechanism.old_rom.arom_max
-		]
+		message_label.text = "✓ Key Knob AROM done! Opening Game Selection..."
+		await get_tree().create_timer(0.5).timeout
+		get_tree().change_scene_to_file("res://scene/game_selection.tscn")
 	else:
 		message_label.text = "Starting AROM assessment for Key Knob...\nPlease rotate the knob through its full range."
 		await get_tree().create_timer(0.5).timeout  # Small delay before scene change
@@ -118,12 +114,10 @@ func _on_key_knob_selected() -> void:
 func _on_tripod_grip_pressed() -> void:
 	Appdata.set_mechanism("Tripod")
 
-	# Check if assessment is already completed
 	if Appdata.selected_mechanism.old_rom and Appdata.selected_mechanism.old_rom.is_arom_set():
-		message_label.text = "✓ Assessment already completed for TRIPOD\n(Compression: %.2f cm to %.2f cm)\nSelect another mechanism or go back." % [
-			Appdata.selected_mechanism.old_rom.arom_min,
-			Appdata.selected_mechanism.old_rom.arom_max
-		]
+		message_label.text = "✓ Tripod AROM done! Opening Game Selection..."
+		await get_tree().create_timer(0.5).timeout
+		get_tree().change_scene_to_file("res://scene/game_selection.tscn")
 	else:
 		message_label.text = "Starting Tripod Grip assessment...\nPlease squeeze and release the tripod grip."
 		await get_tree().create_timer(0.5).timeout
@@ -131,16 +125,12 @@ func _on_tripod_grip_pressed() -> void:
 
 func _on_pinch_button_pressed() -> void:
 	Appdata.set_mechanism("Pinch Button")
-	# Check if button assessment is already completed from user_data
 	if Appdata.user_data and Appdata.user_data.buttons_done:
-		message_label.text = "✓ Button Assessment already completed!\nProceeding to Button Game...\nUse device buttons to play the game."
-		print("🎮 Button assessment already done - navigating to button game")
-		await get_tree().create_timer(1.0).timeout
-		# Navigate directly to button game
-		get_tree().change_scene_to_file("res://scenes/safecrossing/sc_game.tscn")
+		message_label.text = "✓ Pinch Button Assessment done! Opening Game Selection..."
+		await get_tree().create_timer(0.5).timeout
+		get_tree().change_scene_to_file("res://scene/game_selection.tscn")
 	else:
 		message_label.text = "Starting Pinch & Button assessment...\nPlease perform the pinch and button press tests."
-		print("📋 Button assessment not yet done - navigating to assessment")
 		await get_tree().create_timer(0.5).timeout
 		get_tree().change_scene_to_file("res://scene/pinch_button_assessment.tscn")
 

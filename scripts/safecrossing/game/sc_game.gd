@@ -404,4 +404,4 @@ func resume_game() -> void:
 func return_to_menu() -> void:
 	get_tree().paused = false
 	AppDataTrial.flush_raw_data()  # Save any pending data
-	get_tree().change_scene_to_file("res://scene/main.tscn")
+	get_tree().change_scene_to_file("res://scene/game_selection.tscn")

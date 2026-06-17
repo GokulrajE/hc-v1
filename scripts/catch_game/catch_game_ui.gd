@@ -4,28 +4,36 @@ extends CanvasLayer
 
 @onready var score_label = $Control/ScoreLabel
 @onready var timer_label = $Control/TimerLabel
-@onready var instructions_label = $Control/InstructionsLabel
+@onready var start_board = $Control/StartBoard
 @onready var hands_spread_bar = $Control/HandsSpreadBar
-@onready var game_over_panel = $Control/GameOverPanel
-@onready var game_over_label = $Control/GameOverPanel/GameOverVBox/GameOverLabel
-@onready var results_label = $Control/GameOverPanel/GameOverVBox/ResultsLabel
-@onready var restart_button = $Control/GameOverPanel/GameOverVBox/RestartButton
+@onready var game_over_board = $Control/GameOverBoard
+@onready var game_over_label = $Control/GameOverBoard/ContentVBox/GameOverLabel
+@onready var results_label = $Control/GameOverBoard/ContentVBox/ResultsLabel
+@onready var restart_button = $Control/GameOverBoard/ContentVBox/RestartButton
+@onready var menu_button = $Control/GameOverBoard/ContentVBox/MenuButton
+@onready var exit_button = $Control/ExitButton
 @onready var success_popup = $SuccessPopup
 @onready var failure_popup = $FailurePopup
 
 var _popup_timer: float = 0.0
 const POPUP_DURATION: float = 0.3
 
+signal exit_pressed
+signal restart_pressed
+
 
 func _ready() -> void:
-	game_over_panel.visible = false
+	game_over_board.visible = false
+	exit_button.visible = false
 	success_popup.visible = false
 	failure_popup.visible = false
 
-	# Initial display
 	score_label.text = "Score: 0"
 	timer_label.text = "Time: 60.0s"
-	instructions_label.text = "Press SPACEBAR to Start\n➡️ RIGHT - Move Apart | ⬅️ LEFT - Join"
+
+	restart_button.pressed.connect(func(): restart_pressed.emit())
+	exit_button.pressed.connect(_on_exit_pressed)
+	menu_button.pressed.connect(_on_menu_pressed)
 
 
 func _process(delta: float) -> void:
@@ -50,7 +58,7 @@ func _process(delta: float) -> void:
 
 
 func setup(duration: float) -> void:
-	game_over_panel.visible = false
+	game_over_board.visible = false
 	timer_label.text = "Time: %.1fs" % duration
 
 
@@ -96,19 +104,36 @@ func show_failure() -> void:
 
 
 func show_playing() -> void:
-	instructions_label.visible = false
+	start_board.visible = false
+	game_over_board.visible = false
+	exit_button.visible = true
 
 
-func show_game_over(score: int, caught: int, missed: int, success_rate: float) -> void:
-	game_over_panel.visible = true
+func show_game_over(score: int, caught: int, missed: int, avoided: int, caught_unwanted: int, success_rate: float) -> void:
+	exit_button.visible = false
+	game_over_board.visible = true
 	game_over_label.text = "GAME OVER!"
 
-	var results_text = "Score: %d\nCaught: %d | Missed: %d\nSuccess Rate: %.1f%%" % [score, caught, missed, success_rate]
+	var results_text = (
+		"Score: %d\n" +
+		"✅ Caught: %d  |  ❌ Missed: %d\n" +
+		"🟢 Dodged: %d  |  💥 Wrong: %d\n" +
+		"Success Rate: %.1f%%"
+	) % [score, caught, missed, avoided, caught_unwanted, success_rate]
 
 	results_label.text = results_text
 	restart_button.grab_focus()
 
 	print("✅ Game Over Panel Shown")
 	print("   Score: %d" % score)
-	print("   Caught: %d | Missed: %d" % [caught, missed])
+	print("   Caught wanted: %d | Missed wanted: %d" % [caught, missed])
+	print("   Dodged unwanted: %d | Caught unwanted: %d" % [avoided, caught_unwanted])
 	print("   Success Rate: %.1f%%" % success_rate)
+
+
+func _on_exit_pressed() -> void:
+	exit_pressed.emit()
+
+
+func _on_menu_pressed() -> void:
+	get_tree().change_scene_to_file("res://scene/game_selection.tscn")

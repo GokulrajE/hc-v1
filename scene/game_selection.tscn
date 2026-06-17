@@ -1,0 +1,189 @@
+[gd_scene format=3 uid="uid://c8ucgedqkmayd"]
+
+[ext_resource type="Script" uid="uid://dbru8fk13eqit" path="res://scripts/game_selection.gd" id="1_gsel"]
+[ext_resource type="PackedScene" uid="uid://ca8b3v7p5hc5" path="res://scene/connect_status.tscn" id="2_gsel"]
+[ext_resource type="Texture2D" uid="uid://sal3ip0hwbsd" path="res://assets/ui/Window04.png" id="3_gsel"]
+[ext_resource type="Texture2D" uid="uid://vjdh8uil7u1n" path="res://assets/ui/Card X3.png" id="4_gsel"]
+[ext_resource type="FontFile" uid="uid://btw3w8gykgilf" path="res://assets/fonts/TiltNeon-Regular-VariableFont_XROT,YROT.ttf" id="5_gsel"]
+[ext_resource type="Texture2D" uid="uid://q4jwpvap3uwc" path="res://assets/ui/catchGameIcon.png" id="6_2hyne"]
+[ext_resource type="Texture2D" uid="uid://bmwg8y55461y8" path="res://assets/ui/Button13.png" id="6_gsel"]
+[ext_resource type="Texture2D" uid="uid://cn668kccj0k6y" path="res://assets/ui/Button08.png" id="7_gsel"]
+[ext_resource type="Texture2D" uid="uid://c2kvtt4ccy8at" path="res://assets/ui/Btn_V01.png" id="8_gsel"]
+[ext_resource type="Texture2D" uid="uid://daqibh5tqjbfl" path="res://assets/ui/Btn_V05.png" id="9_gsel"]
+[ext_resource type="Texture2D" uid="uid://b858umewmjyjj" path="res://assets/safecrossing/Pedestrians/player_walk1.png" id="11_gsel"]
+[ext_resource type="Texture2D" uid="uid://cucqmycq1xaei" path="res://assets/safecrossing/cars/Cars/car_blue_1.png" id="12_gsel"]
+
+[sub_resource type="StyleBoxTexture" id="GameBtnNormal"]
+texture = ExtResource("6_gsel")
+
+[sub_resource type="StyleBoxTexture" id="GameBtnPressed"]
+texture = ExtResource("6_gsel")
+
+[sub_resource type="StyleBoxTexture" id="GameBtnHover"]
+texture = ExtResource("7_gsel")
+
+[sub_resource type="StyleBoxTexture" id="BackBtnNormal"]
+texture = ExtResource("8_gsel")
+
+[sub_resource type="StyleBoxTexture" id="BackBtnHover"]
+texture = ExtResource("9_gsel")
+
+[node name="GameSelection" type="Node2D" unique_id=2072691151]
+script = ExtResource("1_gsel")
+
+[node name="bg" type="TextureRect" parent="." unique_id=1112107746]
+offset_left = -37.0
+offset_top = -27.0
+offset_right = 1969.0
+offset_bottom = 1133.0
+texture = ExtResource("3_gsel")
+
+[node name="ConnectStatus" parent="." unique_id=905347685 instance=ExtResource("2_gsel")]
+
+[node name="title" type="Label" parent="." unique_id=325990650]
+offset_left = 54.0
+offset_top = 23.0
+offset_right = 1854.0
+offset_bottom = 113.0
+theme_override_colors/font_color = Color(0, 0.8, 1, 1)
+theme_override_fonts/font = ExtResource("5_gsel")
+theme_override_font_sizes/font_size = 70
+text = "Select Game.."
+
+[node name="card_catch" type="TextureRect" parent="." unique_id=1466021960]
+offset_left = 200.0
+offset_top = 160.0
+offset_right = 900.0
+offset_bottom = 860.0
+texture = ExtResource("4_gsel")
+expand_mode = 1
+
+[node name="category_catch" type="Label" parent="." unique_id=630351080]
+offset_left = 246.0
+offset_top = 208.0
+offset_right = 866.0
+offset_bottom = 258.0
+theme_override_colors/font_color = Color(0.2, 0.95, 0.4, 1)
+theme_override_font_sizes/font_size = 30
+text = "CATCH GAME"
+horizontal_alignment = 1
+
+[node name="icon_catch" type="TextureRect" parent="." unique_id=2095909232]
+offset_left = 279.0
+offset_top = 258.0
+offset_right = 819.0
+offset_bottom = 563.0
+texture = ExtResource("6_2hyne")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="catch_desc" type="Label" parent="." unique_id=2085509128]
+offset_left = 243.0
+offset_top = 595.0
+offset_right = 863.0
+offset_bottom = 685.0
+theme_override_colors/font_color = Color(0.85, 0.85, 0.85, 1)
+theme_override_font_sizes/font_size = 24
+text = "Spread your hands to catch fruits & gems.
+Avoid bombs, knives and scissors!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="catch_game_button" type="Button" parent="." unique_id=1317285311]
+custom_minimum_size = Vector2(400, 100)
+offset_left = 250.0
+offset_top = 700.0
+offset_right = 850.0
+offset_bottom = 810.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 38
+theme_override_styles/normal = SubResource("GameBtnNormal")
+theme_override_styles/pressed = SubResource("GameBtnPressed")
+theme_override_styles/hover = SubResource("GameBtnHover")
+text = "▶  PLAY"
+
+[node name="card_safe" type="TextureRect" parent="." unique_id=1066855714]
+offset_left = 1020.0
+offset_top = 160.0
+offset_right = 1720.0
+offset_bottom = 860.0
+texture = ExtResource("4_gsel")
+expand_mode = 1
+
+[node name="category_safe" type="Label" parent="." unique_id=1701580583]
+offset_left = 1070.0
+offset_top = 210.0
+offset_right = 1690.0
+offset_bottom = 260.0
+theme_override_colors/font_color = Color(1, 0.6, 0, 1)
+theme_override_font_sizes/font_size = 30
+text = "SAFE CROSSING"
+horizontal_alignment = 1
+
+[node name="icon_safe_car" type="TextureRect" parent="." unique_id=1051439135]
+offset_left = 1066.0
+offset_top = 279.0
+offset_right = 1508.0
+offset_bottom = 548.0
+texture = ExtResource("12_gsel")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="icon_safe_player" type="TextureRect" parent="." unique_id=2021323754]
+offset_left = 1386.0
+offset_top = 295.0
+offset_right = 1565.0
+offset_bottom = 531.0
+texture = ExtResource("11_gsel")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="safe_desc" type="Label" parent="." unique_id=2125691382]
+offset_left = 1060.0
+offset_top = 570.0
+offset_right = 1680.0
+offset_bottom = 660.0
+theme_override_colors/font_color = Color(0.85, 0.85, 0.85, 1)
+theme_override_font_sizes/font_size = 24
+text = "Guide pedestrians safely across the road.
+Avoid oncoming traffic!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="safe_crossing_button" type="Button" parent="." unique_id=321114560]
+custom_minimum_size = Vector2(400, 100)
+offset_left = 1070.0
+offset_top = 700.0
+offset_right = 1670.0
+offset_bottom = 810.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 38
+theme_override_styles/normal = SubResource("GameBtnNormal")
+theme_override_styles/pressed = SubResource("GameBtnPressed")
+theme_override_styles/hover = SubResource("GameBtnHover")
+text = "▶  PLAY"
+
+[node name="message_label" type="Label" parent="." unique_id=1086274007]
+offset_left = 100.0
+offset_top = 870.0
+offset_right = 1820.0
+offset_bottom = 930.0
+theme_override_colors/font_color = Color(0.2, 1, 0.4, 1)
+theme_override_font_sizes/font_size = 26
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="back_button" type="Button" parent="." unique_id=1677809248]
+offset_left = 50.0
+offset_top = 950.0
+offset_right = 250.0
+offset_bottom = 1020.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("BackBtnNormal")
+theme_override_styles/hover = SubResource("BackBtnHover")
+text = "Back"

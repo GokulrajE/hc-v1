@@ -324,7 +324,7 @@ func _on_save_pressed() -> void:
 		print("KnobAssessment: saved %s — %.2f° to %.2f°" % [selected_knob, arom_min, arom_max])
 		_cleanup()
 		await get_tree().create_timer(1.5).timeout
-		get_tree().change_scene_to_file("res://scenes/safecrossing/sc_game.tscn")
+		get_tree().change_scene_to_file("res://scene/game_selection.tscn")
 	else:
 		if status_label: status_label.text = "Error: failed to save."
 		push_error("KnobAssessment: save failed for %s" % selected_knob)

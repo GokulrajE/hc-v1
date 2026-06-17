@@ -2,14 +2,67 @@
 
 [ext_resource type="Script" uid="uid://dpqtx56nkcygx" path="res://scripts/catch_game/catch_game_main.gd" id="1_7dxkq"]
 [ext_resource type="Texture2D" uid="uid://b6g732xp5ne1" path="res://assets/catch_game/HANDS.png" id="2_bcbh6"]
+[ext_resource type="Texture2D" uid="uid://cxyba7pusppnn" path="res://assets/catch_game/wall.webp" id="2_f4iou"]
 [ext_resource type="Script" uid="uid://enhhfjjkmns0" path="res://scripts/catch_game/catch_game_ui.gd" id="2_v8y1t"]
 [ext_resource type="Texture2D" uid="uid://db6u6y8ay8le5" path="res://assets/catch_game/catch_game.png" id="2_yjgeo"]
+[ext_resource type="Texture2D" uid="uid://cr740fy0d7vfu" path="res://assets/catch_game/cupboard.png" id="3_f4iou"]
+[ext_resource type="Texture2D" uid="uid://c4rktbvp682kw" path="res://assets/catch_game/flowerpot.png" id="4_542qe"]
+[ext_resource type="Texture2D" uid="uid://mcbsm26ev7vj" path="res://assets/catch_game/jars.png" id="5_an5rh"]
+[ext_resource type="Texture2D" uid="uid://bhg845j6c6h4x" path="res://assets/catch_game/jar.png" id="6_tfmad"]
+[ext_resource type="FontFile" uid="uid://btw3w8gykgilf" path="res://assets/fonts/TiltNeon-Regular-VariableFont_XROT,YROT.ttf" id="10_1y2e5"]
+[ext_resource type="Texture2D" uid="uid://r31gwyaqt755" path="res://assets/catch_game/Scissors.png" id="10_paqr4"]
+[ext_resource type="Texture2D" uid="uid://wxmy8g4do5tf" path="res://assets/catch_game/bomb.png" id="11_hy7by"]
+[ext_resource type="Texture2D" uid="uid://du3kq8bamuiyb" path="res://assets/catch_game/knife.png" id="11_xy2n1"]
+[ext_resource type="Texture2D" uid="uid://kwcjyyaksqc5" path="res://assets/ui/start game board.png" id="20_startboard"]
+[ext_resource type="Texture2D" uid="uid://sk2a0xm7sp3k" path="res://assets/ui/gameover board.png" id="21_gameoverboard"]
+[ext_resource type="Texture2D" uid="uid://bmwg8y55461y8" path="res://assets/ui/Button13.png" id="22_btn13"]
+[ext_resource type="Texture2D" uid="uid://cn668kccj0k6y" path="res://assets/ui/Button08.png" id="23_btn08"]
+[ext_resource type="Texture2D" uid="uid://c2kvtt4ccy8at" path="res://assets/ui/Btn_V01.png" id="24_btnv01"]
+[ext_resource type="Texture2D" uid="uid://daqibh5tqjbfl" path="res://assets/ui/Btn_V05.png" id="25_btnv05"]
+[ext_resource type="Texture2D" uid="uid://cui1ajpmfoeo8" path="res://assets/ui/Btn_V03.png" id="26_btnv03"]
+[ext_resource type="Texture2D" uid="uid://dcvu4oconjgk2" path="res://assets/ui/Btn_V04.png" id="27_btnv04"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_yjgeo"]
-size = Vector2(80, 47)
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_paqr4"]
+radius = 62.0
+height = 210.0
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_bcbh6"]
-size = Vector2(72.961365, 41.201782)
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_xy2n1"]
+radius = 54.07727
+height = 173.37634
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_apple"]
+atlas = ExtResource("2_yjgeo")
+region = Rect2(416.59998, 415.33844, 197.2102, 164.62775)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_diamond"]
+atlas = ExtResource("2_yjgeo")
+region = Rect2(445.5188, 719.4524, 143.69751, 137.0138)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_donut"]
+atlas = ExtResource("2_yjgeo")
+region = Rect2(434.02777, 866.5829, 155.89746, 129.41473)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_goldcoin"]
+atlas = ExtResource("2_yjgeo")
+region = Rect2(405.06177, 565.8208, 217.21704, 177.11548)
+
+[sub_resource type="StyleBoxTexture" id="CG_PlayBtnNormal"]
+texture = ExtResource("22_btn13")
+
+[sub_resource type="StyleBoxTexture" id="CG_PlayBtnHover"]
+texture = ExtResource("23_btn08")
+
+[sub_resource type="StyleBoxTexture" id="CG_MenuBtnNormal"]
+texture = ExtResource("24_btnv01")
+
+[sub_resource type="StyleBoxTexture" id="CG_MenuBtnHover"]
+texture = ExtResource("25_btnv05")
+
+[sub_resource type="StyleBoxTexture" id="CG_ExitBtnNormal"]
+texture = ExtResource("26_btnv03")
+
+[sub_resource type="StyleBoxTexture" id="CG_ExitBtnHover"]
+texture = ExtResource("27_btnv04")
 
 [node name="CatchGame" type="Node2D" unique_id=1684762011]
 script = ExtResource("1_7dxkq")
@@ -20,11 +73,61 @@ offset_top = -10.0
 offset_right = 1928.0
 offset_bottom = 1092.0
 color = Color(0.1, 0.1, 0.15, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=684217555]
+offset_left = -28.0
+offset_top = -26.0
+offset_right = 1960.0
+offset_bottom = 1093.0
+texture = ExtResource("2_f4iou")
+expand_mode = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="TextureRect2" type="TextureRect" parent="." unique_id=1042739801]
+offset_left = -184.0
+offset_top = -830.0
+offset_right = 2110.0
+offset_bottom = 959.0
+texture = ExtResource("3_f4iou")
+expand_mode = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="TextureRect" type="TextureRect" parent="TextureRect2" unique_id=956699085]
+layout_mode = 0
+offset_left = 333.0
+offset_top = 1024.0
+offset_right = 826.0
+offset_bottom = 1367.0
+texture = ExtResource("4_542qe")
+expand_mode = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="TextureRect2" type="TextureRect" parent="TextureRect2" unique_id=1670029501]
+layout_mode = 0
+offset_left = 1426.0
+offset_top = 1137.0
+offset_right = 1802.0
+offset_bottom = 1420.0
+texture = ExtResource("5_an5rh")
+expand_mode = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="TextureRect3" type="TextureRect" parent="TextureRect2" unique_id=163728673]
+layout_mode = 0
+offset_left = 664.0
+offset_top = 1184.0
+offset_right = 900.0
+offset_bottom = 1390.0
+texture = ExtResource("6_tfmad")
+expand_mode = 1
+metadata/_edit_use_anchors_ = true
 
 [node name="Hands" type="Node2D" parent="." unique_id=426354675]
 
 [node name="LeftHand" type="Node2D" parent="Hands" unique_id=1773328079]
-position = Vector2(960, 900)
+position = Vector2(960, 863)
+rotation = -0.23911011
 
 [node name="LeftHandCircle" type="ColorRect" parent="Hands/LeftHand" unique_id=83040329]
 visible = false
@@ -45,23 +148,28 @@ text = "👋"
 vertical_alignment = 1
 
 [node name="Sprite2D" type="Sprite2D" parent="Hands/LeftHand" unique_id=1468192821]
-position = Vector2(-1.9999771, 25.055536)
-scale = Vector2(0.42899394, 0.4719065)
+position = Vector2(-97.357346, 65.81449)
+rotation = 0.21818015
+scale = Vector2(1, 1.1)
 texture = ExtResource("2_bcbh6")
 region_enabled = true
 region_rect = Rect2(-10.1345215, 1.4425049, 319.8103, 352.89417)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hands/LeftHand" unique_id=996844107]
-position = Vector2(-13, 13.5)
-shape = SubResource("RectangleShape2D_yjgeo")
+position = Vector2(-110.194916, 110.0321)
+rotation = 0.6362641
+shape = SubResource("CapsuleShape2D_paqr4")
 
 [node name="RightHand" type="Node2D" parent="Hands" unique_id=1370547462]
-position = Vector2(1020, 900)
+position = Vector2(961, 873)
+rotation = 0.24958208
 
 [node name="Sprite2D2" type="Sprite2D" parent="Hands/RightHand" unique_id=650819111]
-position = Vector2(-1, 27.652744)
-scale = Vector2(0.42899394, 0.46434134)
+position = Vector2(-81.9476, -98.82089)
+rotation = -0.20120196
+scale = Vector2(1, 1.082)
 texture = ExtResource("2_bcbh6")
+centered = false
 region_enabled = true
 region_rect = Rect2(313.3518, 5.118408, 305.10645, 356.5702)
 
@@ -73,9 +181,10 @@ offset_right = 60.0
 offset_bottom = 60.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hands/RightHand" unique_id=1837298729]
-position = Vector2(7.5, 7.000061)
+position = Vector2(109.15621, 108.397095)
+rotation = -0.63253295
 scale = Vector2(1.165, 1.165)
-shape = SubResource("RectangleShape2D_bcbh6")
+shape = SubResource("CapsuleShape2D_xy2n1")
 
 [node name="ObjectSpawner" type="Node2D" parent="." unique_id=1872648359]
 
@@ -87,12 +196,13 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 6.0
-offset_top = -8.0
-offset_right = 6.0
-offset_bottom = -2.0
+offset_left = 5.0
+offset_top = 16.0
+offset_right = 42.000122
+offset_bottom = 25.0
 grow_horizontal = 2
 grow_vertical = 2
+metadata/_edit_use_anchors_ = true
 
 [node name="ScoreLabel" type="Label" parent="CatchGameUI/Control" unique_id=1798291624]
 layout_mode = 0
@@ -103,6 +213,7 @@ offset_bottom = 100.0
 theme_override_colors/font_color = Color(0, 1, 0, 1)
 theme_override_font_sizes/font_size = 48
 text = "Score: 0"
+metadata/_edit_use_anchors_ = true
 
 [node name="TimerLabel" type="Label" parent="CatchGameUI/Control" unique_id=143640948]
 layout_mode = 0
@@ -113,30 +224,147 @@ offset_bottom = 100.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 48
 text = "Time: 60.0s"
+metadata/_edit_use_anchors_ = true
 
-[node name="InstructionsLabel" type="Label" parent="CatchGameUI/Control" unique_id=1671454314]
+[node name="StartBoard" type="TextureRect" parent="CatchGameUI/Control" unique_id=100000001]
 layout_mode = 0
-offset_left = 435.0
-offset_top = 359.0
-offset_right = 1355.0
-offset_bottom = 644.0
-theme_override_font_sizes/font_size = 32
-text = "Press SPACEBAR to Start
+offset_left = 430.0
+offset_top = 130.0
+offset_right = 1490.0
+offset_bottom = 900.0
+texture = ExtResource("20_startboard")
+expand_mode = 1
 
-➡️ RIGHT ARROW - Move Hands Apart
-⬅️ LEFT ARROW - Bring Hands Together
+[node name="ContentVBox" type="VBoxContainer" parent="CatchGameUI/Control/StartBoard" unique_id=100000002]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 51.0
+offset_top = -23.0
+offset_right = -109.0
+offset_bottom = -153.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 22
+alignment = 1
 
-🟢 Green = Catch | 🔴 Red = Avoid"
+[node name="TitleLabel" type="Label" parent="CatchGameUI/Control/StartBoard/ContentVBox" unique_id=100000003]
+layout_mode = 2
+theme_override_colors/font_color = Color(2.466701e-07, 0.17302313, 0.19638371, 1)
+theme_override_fonts/font = ExtResource("10_1y2e5")
+theme_override_font_sizes/font_size = 60
+text = "Catch Game"
+horizontal_alignment = 1
+
+[node name="ControlsLabel" type="Label" parent="CatchGameUI/Control/StartBoard/ContentVBox" unique_id=100000004]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.85, 0.85, 1)
+theme_override_font_sizes/font_size = 28
+text = "← LEFT ARROW: Join Hands          RIGHT ARROW →: Spread Hands"
+horizontal_alignment = 1
+
+[node name="CatchRow" type="HBoxContainer" parent="CatchGameUI/Control/StartBoard/ContentVBox" unique_id=100000010]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="CatchTitle" type="Label" parent="CatchGameUI/Control/StartBoard/ContentVBox/CatchRow" unique_id=100000011]
+custom_minimum_size = Vector2(170, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.95, 0.4, 1)
+theme_override_font_sizes/font_size = 28
+text = "✅  CATCH:"
+vertical_alignment = 1
+
+[node name="AppleIcon" type="TextureRect" parent="CatchGameUI/Control/StartBoard/ContentVBox/CatchRow" unique_id=100000012]
+custom_minimum_size = Vector2(110, 110)
+layout_mode = 2
+size_flags_vertical = 8
+texture = SubResource("AtlasTexture_apple")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="DiamondIcon" type="TextureRect" parent="CatchGameUI/Control/StartBoard/ContentVBox/CatchRow" unique_id=100000013]
+custom_minimum_size = Vector2(110, 110)
+layout_mode = 2
+size_flags_vertical = 8
+texture = SubResource("AtlasTexture_diamond")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="DonutIcon" type="TextureRect" parent="CatchGameUI/Control/StartBoard/ContentVBox/CatchRow" unique_id=100000014]
+custom_minimum_size = Vector2(110, 110)
+layout_mode = 2
+size_flags_vertical = 8
+texture = SubResource("AtlasTexture_donut")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GoldCoinIcon" type="TextureRect" parent="CatchGameUI/Control/StartBoard/ContentVBox/CatchRow" unique_id=100000015]
+custom_minimum_size = Vector2(110, 110)
+layout_mode = 2
+size_flags_vertical = 8
+texture = SubResource("AtlasTexture_goldcoin")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AvoidRow" type="HBoxContainer" parent="CatchGameUI/Control/StartBoard/ContentVBox" unique_id=100000016]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="AvoidTitle" type="Label" parent="CatchGameUI/Control/StartBoard/ContentVBox/AvoidRow" unique_id=100000017]
+custom_minimum_size = Vector2(170, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.3, 0.3, 1)
+theme_override_font_sizes/font_size = 28
+text = "❌  AVOID:"
+vertical_alignment = 1
+
+[node name="BombIcon" type="TextureRect" parent="CatchGameUI/Control/StartBoard/ContentVBox/AvoidRow" unique_id=100000018]
+custom_minimum_size = Vector2(110, 110)
+layout_mode = 2
+size_flags_vertical = 8
+texture = ExtResource("11_hy7by")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ScissorIcon" type="TextureRect" parent="CatchGameUI/Control/StartBoard/ContentVBox/AvoidRow" unique_id=100000019]
+custom_minimum_size = Vector2(110, 110)
+layout_mode = 2
+size_flags_vertical = 8
+texture = ExtResource("10_paqr4")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="KnifeIcon" type="TextureRect" parent="CatchGameUI/Control/StartBoard/ContentVBox/AvoidRow" unique_id=100000020]
+custom_minimum_size = Vector2(110, 110)
+layout_mode = 2
+size_flags_vertical = 8
+texture = ExtResource("11_xy2n1")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="StartPromptLabel" type="Label" parent="CatchGameUI/Control/StartBoard/ContentVBox" unique_id=100000007]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 42
+text = "Press SPACEBAR to Start"
+horizontal_alignment = 1
 
 [node name="HandsSpreadBar" type="ProgressBar" parent="CatchGameUI/Control" unique_id=1018801483]
+visible = false
 layout_mode = 0
 offset_left = 50.0
 offset_top = 1030.0
 offset_right = 300.0
 offset_bottom = 1060.0
 value = 50.0
+metadata/_edit_use_anchors_ = true
 
 [node name="HandsSpreadLabel" type="Label" parent="CatchGameUI/Control" unique_id=478852616]
+visible = false
 layout_mode = 0
 offset_left = 310.0
 offset_top = 1020.0
@@ -144,36 +372,86 @@ offset_right = 450.0
 offset_bottom = 1070.0
 theme_override_font_sizes/font_size = 20
 text = "Hand Spread"
+metadata/_edit_use_anchors_ = true
 
-[node name="GameOverPanel" type="PanelContainer" parent="CatchGameUI/Control" unique_id=1015401826]
+[node name="GameOverBoard" type="TextureRect" parent="CatchGameUI/Control" unique_id=100000008]
 visible = false
 layout_mode = 0
-offset_left = 500.0
-offset_top = 150.0
-offset_right = 1420.0
-offset_bottom = 850.0
+offset_left = 581.0
+offset_top = 183.0
+offset_right = 1263.0
+offset_bottom = 910.0
+texture = ExtResource("21_gameoverboard")
+expand_mode = 1
 
-[node name="GameOverVBox" type="VBoxContainer" parent="CatchGameUI/Control/GameOverPanel" unique_id=1644471175]
-layout_mode = 2
+[node name="ContentVBox" type="VBoxContainer" parent="CatchGameUI/Control/GameOverBoard" unique_id=100000009]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 80.0
+offset_top = 60.0
+offset_right = -80.0
+offset_bottom = -60.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 28
+alignment = 1
 
-[node name="GameOverLabel" type="Label" parent="CatchGameUI/Control/GameOverPanel/GameOverVBox" unique_id=749414581]
+[node name="GameOverLabel" type="Label" parent="CatchGameUI/Control/GameOverBoard/ContentVBox" unique_id=749414581]
 layout_mode = 2
-theme_override_font_sizes/font_size = 64
+theme_override_colors/font_color = Color(1, 0.3, 0.3, 1)
+theme_override_font_sizes/font_size = 72
 text = "GAME OVER!"
+horizontal_alignment = 1
 
-[node name="ResultsLabel" type="Label" parent="CatchGameUI/Control/GameOverPanel/GameOverVBox" unique_id=785958846]
+[node name="ResultsLabel" type="Label" parent="CatchGameUI/Control/GameOverBoard/ContentVBox" unique_id=785958846]
 layout_mode = 2
-theme_override_font_sizes/font_size = 36
-text = "Score: 100
-Caught: 10 | Missed: 2
-Success Rate: 83.3%"
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 34
+text = "Score: 0"
+horizontal_alignment = 1
+autowrap_mode = 2
 
-[node name="RestartButton" type="Button" parent="CatchGameUI/Control/GameOverPanel/GameOverVBox" unique_id=1264804071]
-custom_minimum_size = Vector2(300, 80)
+[node name="RestartButton" type="Button" parent="CatchGameUI/Control/GameOverBoard/ContentVBox" unique_id=1264804071]
+custom_minimum_size = Vector2(340, 75)
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 24
-text = "Play Again (SPACEBAR)"
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("CG_PlayBtnNormal")
+theme_override_styles/hover = SubResource("CG_PlayBtnHover")
+theme_override_styles/pressed = SubResource("CG_PlayBtnNormal")
+text = "▶  Play Again"
+
+[node name="MenuButton" type="Button" parent="CatchGameUI/Control/GameOverBoard/ContentVBox" unique_id=400000001]
+custom_minimum_size = Vector2(340, 75)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("CG_MenuBtnNormal")
+theme_override_styles/hover = SubResource("CG_MenuBtnHover")
+theme_override_styles/pressed = SubResource("CG_MenuBtnNormal")
+text = "Back to Menu"
+
+[node name="ExitButton" type="Button" parent="CatchGameUI/Control" unique_id=400000002]
+visible = false
+layout_mode = 0
+offset_left = 1730.0
+offset_top = 15.0
+offset_right = 1900.0
+offset_bottom = 70.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("CG_ExitBtnNormal")
+theme_override_styles/hover = SubResource("CG_ExitBtnHover")
+theme_override_styles/pressed = SubResource("CG_ExitBtnNormal")
+text = "✕ Exit"
+metadata/_edit_use_anchors_ = true
 
 [node name="SuccessPopup" type="Control" parent="CatchGameUI" unique_id=989214162]
 visible = false
@@ -216,35 +494,47 @@ text = "❌ WRONG!"
 vertical_alignment = 1
 
 [node name="apple" type="Sprite2D" parent="." unique_id=2003897337]
-position = Vector2(-331, -4)
+position = Vector2(-398.99994, 384)
+scale = Vector2(1.5, 1.5)
 texture = ExtResource("2_yjgeo")
 region_enabled = true
 region_rect = Rect2(416.59998, 415.33844, 197.2102, 164.62775)
 
 [node name="diamond" type="Sprite2D" parent="." unique_id=1475329644]
-position = Vector2(-360, 15)
+position = Vector2(-311, 230)
+scale = Vector2(1.5, 1.5)
 texture = ExtResource("2_yjgeo")
 region_enabled = true
 region_rect = Rect2(445.5188, 719.4524, 143.69751, 137.0138)
 
 [node name="goldcoin" type="Sprite2D" parent="." unique_id=1588610386]
-position = Vector2(-335.99997, -14.999999)
-scale = Vector2(1.2626953, 1.2259115)
+position = Vector2(-494, 147)
+scale = Vector2(1.546, 1.5)
 texture = ExtResource("2_yjgeo")
 region_enabled = true
 region_rect = Rect2(405.06177, 565.8208, 217.21704, 177.11548)
 
 [node name="donut" type="Sprite2D" parent="." unique_id=903445754]
-position = Vector2(-350.99997, 3.9999995)
-scale = Vector2(1.2626953, 1.2259115)
+position = Vector2(-627.00006, 460)
+scale = Vector2(1.5, 1.456)
 texture = ExtResource("2_yjgeo")
 region_enabled = true
 region_rect = Rect2(434.02777, 866.5829, 155.89746, 129.41473)
 
-[node name="ground" type="Sprite2D" parent="." unique_id=9582251]
-visible = false
-position = Vector2(962.75, 1080)
-scale = Vector2(1.9225838, 0.69628876)
-texture = ExtResource("2_yjgeo")
-region_enabled = true
-region_rect = Rect2(12.192627, 1217.8348, 1014.5708, 312.4585)
+[node name="scissor" type="Sprite2D" parent="." unique_id=1245329373]
+position = Vector2(-702, 227.99998)
+scale = Vector2(0.07, 0.056)
+texture = ExtResource("10_paqr4")
+region_rect = Rect2(434.02777, 866.5829, 155.89746, 129.41473)
+
+[node name="bomb" type="Sprite2D" parent="." unique_id=1070772539]
+position = Vector2(-932.43, 288.53302)
+scale = Vector2(0.04809669, 0.046913285)
+texture = ExtResource("11_hy7by")
+region_rect = Rect2(434.02777, 866.5829, 155.89746, 129.41473)
+
+[node name="knife" type="Sprite2D" parent="." unique_id=1752939663]
+position = Vector2(-632.00006, 318)
+scale = Vector2(0.07, 0.053)
+texture = ExtResource("11_xy2n1")
+region_rect = Rect2(434.02777, 866.5829, 155.89746, 129.41473)

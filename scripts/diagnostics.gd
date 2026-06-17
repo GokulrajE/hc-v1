@@ -93,9 +93,10 @@ func _update_display() -> void:
 
 	# Update Distances
 	if distances_data:
-		distances_data.text = "Distance 1: %.2f\nDistance 2: %.2f" % [
+		distances_data.text = "Distance 1: %.2f\nDistance 2: %.2f\nDistance In Between: %.2f" %  [
 			HCcomm.distance_1,
-			HCcomm.distance_2
+			HCcomm.distance_2,
+			HCcomm.get_btw_distance()
 		]
 
 	# Update Buttons

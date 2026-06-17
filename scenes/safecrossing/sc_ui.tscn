@@ -1,6 +1,15 @@
 [gd_scene format=3 uid="uid://esfttyyw42sw"]
 
 [ext_resource type="Script" uid="uid://ckoooj0deeyil" path="res://scripts/safecrossing/ui/sc_ui.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://kwcjyyaksqc5" path="res://assets/ui/start game board.png" id="2_startboard"]
+[ext_resource type="Texture2D" uid="uid://sk2a0xm7sp3k" path="res://assets/ui/gameover board.png" id="3_gameoverboard"]
+[ext_resource type="FontFile" uid="uid://btw3w8gykgilf" path="res://assets/fonts/TiltNeon-Regular-VariableFont_XROT,YROT.ttf" id="4_tiltneon"]
+[ext_resource type="Texture2D" uid="uid://bmwg8y55461y8" path="res://assets/ui/Button13.png" id="5_btn13"]
+[ext_resource type="Texture2D" uid="uid://cn668kccj0k6y" path="res://assets/ui/Button08.png" id="6_btn08"]
+[ext_resource type="Texture2D" uid="uid://c2kvtt4ccy8at" path="res://assets/ui/Btn_V01.png" id="7_btnv01"]
+[ext_resource type="Texture2D" uid="uid://daqibh5tqjbfl" path="res://assets/ui/Btn_V05.png" id="8_btnv05"]
+[ext_resource type="Texture2D" uid="uid://cui1ajpmfoeo8" path="res://assets/ui/Btn_V03.png" id="9_btnv03"]
+[ext_resource type="Texture2D" uid="uid://dcvu4oconjgk2" path="res://assets/ui/Btn_V04.png" id="10_btnv04"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0533y"]
 bg_color = Color(1, 1, 1, 1)
@@ -26,6 +35,24 @@ corner_radius_top_right = 40
 corner_radius_bottom_right = 40
 corner_radius_bottom_left = 40
 
+[sub_resource type="StyleBoxTexture" id="PlayBtnNormal"]
+texture = ExtResource("5_btn13")
+
+[sub_resource type="StyleBoxTexture" id="PlayBtnHover"]
+texture = ExtResource("6_btn08")
+
+[sub_resource type="StyleBoxTexture" id="MenuBtnNormal"]
+texture = ExtResource("7_btnv01")
+
+[sub_resource type="StyleBoxTexture" id="MenuBtnHover"]
+texture = ExtResource("8_btnv05")
+
+[sub_resource type="StyleBoxTexture" id="ExitBtnNormal"]
+texture = ExtResource("9_btnv03")
+
+[sub_resource type="StyleBoxTexture" id="ExitBtnHover"]
+texture = ExtResource("10_btnv04")
+
 [node name="UI" type="CanvasLayer" unique_id=1171703322]
 script = ExtResource("1")
 
@@ -36,69 +63,173 @@ layout_mode = 2
 
 [node name="ScoreLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=2054257209]
 layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
 text = "Score: 0"
 
 [node name="DistanceLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1569814903]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 24
 text = "Distance: 0m"
 
 [node name="SpeedLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=492524]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 24
 text = "Speed: 0"
 
 [node name="PhaseLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=491037602]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 22
 text = "Phase: Empty Road (0.0s)"
 
 [node name="SignalLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=31215592]
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 text = "Signal: --"
 
 [node name="TimerLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=331704243]
 layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 26
 text = "Timer : "
 
-[node name="GameOverPanel" type="Panel" parent="." unique_id=1094805539]
+[node name="ExitButton" type="Button" parent="." unique_id=300000007]
 visible = false
-offset_left = 804.0
-offset_top = 427.0
-offset_right = 1104.0
-offset_bottom = 622.0
+offset_left = 1730.0
+offset_top = 15.0
+offset_right = 1900.0
+offset_bottom = 70.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("ExitBtnNormal")
+theme_override_styles/hover = SubResource("ExitBtnHover")
+theme_override_styles/pressed = SubResource("ExitBtnNormal")
+text = "✕ Exit"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="GameOverPanel" unique_id=329409798]
-z_index = 3
-layout_mode = 0
-offset_left = 49.0
-offset_top = 17.0
-offset_right = 262.0
-offset_bottom = 191.0
+[node name="StartBoard" type="TextureRect" parent="." unique_id=300000001]
+offset_left = 430.0
+offset_top = 130.0
+offset_right = 1490.0
+offset_bottom = 900.0
+texture = ExtResource("2_startboard")
+expand_mode = 1
+
+[node name="ContentVBox" type="VBoxContainer" parent="StartBoard" unique_id=300000002]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 51.0
+offset_top = -23.0
+offset_right = -109.0
+offset_bottom = -153.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 22
 alignment = 1
 
-[node name="GameOverLabel" type="Label" parent="GameOverPanel/VBoxContainer" unique_id=1605901153]
+[node name="TitleLabel" type="Label" parent="StartBoard/ContentVBox" unique_id=300000003]
 layout_mode = 2
+theme_override_colors/font_color = Color(2.466701e-07, 0.17302313, 0.19638371, 1)
+theme_override_fonts/font = ExtResource("4_tiltneon")
+theme_override_font_sizes/font_size = 60
+text = "Safe Crossing"
+horizontal_alignment = 1
+
+[node name="ControlsLabel" type="Label" parent="StartBoard/ContentVBox" unique_id=300000004]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.15, 0.15, 0.15, 1)
+theme_override_font_sizes/font_size = 26
+text = "Press & Hold SPACEBAR (or device button) to BRAKE"
+horizontal_alignment = 1
+
+[node name="ObjectivesLabel" type="Label" parent="StartBoard/ContentVBox" unique_id=300000005]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.1, 0.1, 0.1, 1)
+theme_override_font_sizes/font_size = 26
+text = "🟢 GO signal — drive through safely\n🔴 STOP signal — brake to let pedestrians cross"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="StartPromptLabel" type="Label" parent="StartBoard/ContentVBox" unique_id=300000006]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 42
+text = "Press SPACEBAR to Start"
+horizontal_alignment = 1
+
+[node name="GameOverBoard" type="TextureRect" parent="." unique_id=300000010]
+visible = false
+offset_left = 581.0
+offset_top = 183.0
+offset_right = 1263.0
+offset_bottom = 910.0
+texture = ExtResource("3_gameoverboard")
+expand_mode = 1
+
+[node name="ContentVBox" type="VBoxContainer" parent="GameOverBoard" unique_id=300000011]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 80.0
+offset_top = 60.0
+offset_right = -80.0
+offset_bottom = -60.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 28
+alignment = 1
+
+[node name="GameOverLabel" type="Label" parent="GameOverBoard/ContentVBox" unique_id=300000012]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.3, 0.3, 1)
+theme_override_font_sizes/font_size = 72
 text = "GAME OVER!"
 horizontal_alignment = 1
 
-[node name="FinalScoreLabel" type="Label" parent="GameOverPanel/VBoxContainer" unique_id=346590102]
+[node name="FinalScoreLabel" type="Label" parent="GameOverBoard/ContentVBox" unique_id=300000013]
 layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 34
 text = "Score: 0"
 horizontal_alignment = 1
+autowrap_mode = 2
 
-[node name="FinalDistanceLabel" type="Label" parent="GameOverPanel/VBoxContainer" unique_id=1263464115]
+[node name="FinalDistanceLabel" type="Label" parent="GameOverBoard/ContentVBox" unique_id=300000014]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
+theme_override_font_sizes/font_size = 26
 text = "Distance: 0m"
 horizontal_alignment = 1
 
-[node name="RestartButton" type="Button" parent="GameOverPanel/VBoxContainer" unique_id=980816564]
+[node name="RestartButton" type="Button" parent="GameOverBoard/ContentVBox" unique_id=300000015]
+custom_minimum_size = Vector2(340, 75)
 layout_mode = 2
-text = "RESTART"
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("PlayBtnNormal")
+theme_override_styles/hover = SubResource("PlayBtnHover")
+theme_override_styles/pressed = SubResource("PlayBtnNormal")
+text = "▶  Play Again"
 
-[node name="MenuButton" type="Button" parent="GameOverPanel/VBoxContainer" unique_id=387148949]
+[node name="MenuButton" type="Button" parent="GameOverBoard/ContentVBox" unique_id=300000016]
+custom_minimum_size = Vector2(340, 75)
 layout_mode = 2
-text = "MAIN MENU"
-
-[node name="Label" type="Label" parent="GameOverPanel/VBoxContainer" unique_id=1322244923]
-layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("MenuBtnNormal")
+theme_override_styles/hover = SubResource("MenuBtnHover")
+theme_override_styles/pressed = SubResource("MenuBtnNormal")
+text = "Back to Menu"
 
 [node name="SuccessPopup" type="Label" parent="." unique_id=338243539]
 visible = false
