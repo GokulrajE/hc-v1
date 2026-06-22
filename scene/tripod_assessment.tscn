@@ -246,9 +246,9 @@ offset_right = 998.0
 offset_bottom = 566.0
 theme_override_styles/background = SubResource("StyleBoxEmpty_rxyx2")
 theme_override_styles/fill = SubResource("StyleBoxFlat_rxyx2")
-min_value = 3.0
+min_value = 2.0
 max_value = 6.0
-value = 3.0
+value = 2.0
 fill_mode = 1
 show_percentage = false
 
@@ -259,9 +259,9 @@ offset_right = 1294.0
 offset_bottom = 58.0
 theme_override_styles/background = SubResource("StyleBoxEmpty_dagxg")
 theme_override_styles/fill = SubResource("StyleBoxFlat_5qw8s")
-min_value = 3.0
+min_value = 2.0
 max_value = 6.0
-value = 3.0
+value = 2.0
 show_percentage = false
 
 [node name="minProgressBarE-B" type="ProgressBar" parent="." unique_id=899068572]
@@ -271,9 +271,9 @@ offset_right = 997.0
 offset_bottom = 566.0
 theme_override_styles/background = SubResource("StyleBoxEmpty_jpyum")
 theme_override_styles/fill = SubResource("StyleBoxFlat_ledr7")
-min_value = 3.0
+min_value = 2.0
 max_value = 6.0
-value = 3.0
+value = 2.0
 fill_mode = 1
 show_percentage = false
 
@@ -284,9 +284,9 @@ offset_right = 1296.0
 offset_bottom = 58.0
 theme_override_styles/background = SubResource("StyleBoxEmpty_ledr7")
 theme_override_styles/fill = SubResource("StyleBoxFlat_7or70")
-min_value = 3.0
+min_value = 2.0
 max_value = 6.0
-value = 3.0
+value = 2.0
 show_percentage = false
 
 [node name="timer_label" type="Label" parent="." unique_id=-1186144328]

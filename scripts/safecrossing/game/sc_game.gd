@@ -72,9 +72,6 @@ func _ready() -> void:
 	_current_phase = 1
 	_phase_timer = _phase_durations[1]
 	SCGameManager.reset_game()
-	ScAudioManager.load_audio_file("success", "res://assets/safecrossing/sounds/success.ogg")
-	ScAudioManager.load_audio_file("failure", "res://assets/safecrossing/sounds/failure.ogg")
-
 	# Initialize trial statistics
 	_reset_trial_stats()
 
@@ -176,10 +173,9 @@ func _start_trial() -> void:
 	if ui:
 		ui.update_timer_display(TRIAL_DURATION)
 
-	# Start new trial data logging with AppDataTrial
 	AppDataTrial.start_new_trial()
+	ScAudioManager.play_background_music("res://assets/audio/sc_bg.mp3")
 
-	# Enter playing state
 	_game_state.enter_state(SCGameState.State.PLAYING)
 	print("🎮 PLAYING - 60 second trial started")
 
@@ -189,8 +185,9 @@ func _end_trial() -> void:
 	_trial_is_running = false
 	_game_state.enter_state(SCGameState.State.GAME_OVER)
 
-	# Stop trial data logging and save session row
 	AppDataTrial.stop_trial(_trial_targets, _trial_successes, _trial_failures)
+	ScAudioManager.stop_music()
+	ScAudioManager.play_gameover()
 	print("💾 Trial data saved: Targets=%d, Success=%d, Failures=%d" % [
 		_trial_targets, _trial_successes, _trial_failures
 	])
@@ -248,6 +245,7 @@ func _on_car_collision(_pedestrian: Node2D) -> void:
 		_phase_collided = true
 		_failure_sound_played = true
 		print("💥 Collision with pedestrian!")
+		ScAudioManager.play_sc_failure()
 		if ui and ui.has_method("show_failure_popup"):
 			ui.show_failure_popup()
 
@@ -355,6 +353,7 @@ func _check_crossing_lines() -> void:
 func _add_score(points: int, phase_name: String) -> void:
 	_player_score += points
 	print("⭐ %s crossing completed safely! Score: %d" % [phase_name, _player_score])
+	ScAudioManager.play_sc_success()
 	ui.update_score_display(_player_score)
 	_trigger_score_feedback()
 
@@ -364,6 +363,7 @@ func _on_traffic_collision(_traffic_car: Node2D) -> void:
 		_phase_collided = true
 		_failure_sound_played = true
 		print("💥 Collision with traffic car!")
+		ScAudioManager.play_sc_failure()
 		if ui and ui.has_method("show_failure_popup"):
 			ui.show_failure_popup()
 
@@ -403,5 +403,4 @@ func resume_game() -> void:
 
 func return_to_menu() -> void:
 	get_tree().paused = false
-	AppDataTrial.flush_raw_data()  # Save any pending data
 	get_tree().change_scene_to_file("res://scene/game_selection.tscn")

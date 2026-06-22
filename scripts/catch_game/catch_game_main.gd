@@ -52,6 +52,10 @@ var _active_objects: Array = []
 var _spawn_timer: float = 0.0
 var _avoided_objects: int = 0
 var _caught_unwanted: int = 0
+var _last_object_type: String = ""
+var _consecutive_unwanted: int = 0
+var _consecutive_wanted: int = 0
+var _shake_offset: float = 0.0
 
 ## Device control
 const MAX_DEVICE_SPREAD: float = 290.0
@@ -132,9 +136,9 @@ func _physics_process(delta: float) -> void:
 	# Handle hand movement
 	_update_hand_positions(delta)
 
-	# Update hand visuals
-	left_hand.position.x = _left_hand_pos.x
-	right_hand.position.x = _right_hand_pos.x
+	# Update hand visuals (shake offset applied symmetrically outward)
+	left_hand.position.x = _left_hand_pos.x - _shake_offset
+	right_hand.position.x = _right_hand_pos.x + _shake_offset
 
 	# Spawn objects (only if no active objects exist)
 	if _active_objects.size() == 0:
@@ -179,15 +183,31 @@ func _update_hand_positions(delta: float) -> void:
 
 ## Spawn a falling object (wanted or unwanted)
 func _spawn_object() -> void:
-	# Randomly choose wanted (50%) or unwanted (50%)
 	var is_wanted = randf() < 0.5
 
-	# Pick random object type
+	# Enforce max 2 consecutive from the same group
+	if not is_wanted and _consecutive_unwanted >= 2:
+		is_wanted = true
+	elif is_wanted and _consecutive_wanted >= 2:
+		is_wanted = false
+
+	# Pick a type that differs from the last one
 	var object_type = ""
+	var attempts := 0
+	while attempts < 10:
+		var pool = WANTED_OBJECTS if is_wanted else UNWANTED_OBJECTS
+		object_type = pool[randi() % pool.size()]
+		if object_type != _last_object_type:
+			break
+		attempts += 1
+	_last_object_type = object_type
+
 	if is_wanted:
-		object_type = WANTED_OBJECTS[randi() % WANTED_OBJECTS.size()]
+		_consecutive_wanted += 1
+		_consecutive_unwanted = 0
 	else:
-		object_type = UNWANTED_OBJECTS[randi() % UNWANTED_OBJECTS.size()]
+		_consecutive_unwanted += 1
+		_consecutive_wanted = 0
 
 	# Always spawn at center X
 	var spawn_x = _center_x
@@ -267,9 +287,10 @@ func _update_falling_objects(delta: float) -> void:
 		obj["node"].position = obj["position"]
 
 		# Check if caught by hands
-		if _check_hand_collision(obj):
+		var catching_hand = _get_catching_hand(obj)
+		if catching_hand != null:
 			obj["caught"] = true
-			_handle_catch(obj)
+			_handle_catch(obj, catching_hand)
 			objects_to_remove.append(i)
 			continue
 
@@ -286,58 +307,74 @@ func _update_falling_objects(delta: float) -> void:
 		_active_objects.remove_at(i)
 
 
-## Check if object collides with either hand using collision shapes
-func _check_hand_collision(obj: Dictionary) -> bool:
-	# Use half the sprite visual size so the object must reach the hand center
+## Returns the hand node that caught the object, or null if no collision
+func _get_catching_hand(obj: Dictionary):
 	var half := Vector2(25, 25)
 	var obj_rect = Rect2(obj["position"] - half, half * 2)
 
-	# Check left hand — use the collision shape's own global position, not the body root
 	if left_hand_collision and left_hand_collision.shape:
 		var shape_rect = left_hand_collision.shape.get_rect()
 		shape_rect.position += left_hand_collision.global_position
 		if obj_rect.intersects(shape_rect):
-			return true
+			return left_hand
 
-	# Check right hand
 	if right_hand_collision and right_hand_collision.shape:
 		var shape_rect = right_hand_collision.shape.get_rect()
 		shape_rect.position += right_hand_collision.global_position
 		if obj_rect.intersects(shape_rect):
-			return true
+			return right_hand
 
-	return false
+	return null
 
 
-## Spawn a floating score label that drifts upward and fades
+## Spawn a floating score label: pop in → hold → drift up + fade
 func _spawn_score_text(pos: Vector2, text: String, color: Color) -> void:
 	var lbl := Label.new()
 	lbl.text = text
 	lbl.add_theme_color_override("font_color", color)
-	lbl.add_theme_font_size_override("font_size", 52)
-	lbl.position = pos - Vector2(50, 20)
-	lbl.z_index = 20
+	lbl.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+	lbl.add_theme_constant_override("outline_size", 7)
+	lbl.add_theme_font_size_override("font_size", 120)
+	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl.custom_minimum_size = Vector2(520, 0)
+	lbl.position = pos - Vector2(260, 64)
+	lbl.z_index = 30
 	add_child(lbl)
+
 	var tw := create_tween()
-	tw.tween_property(lbl, "position:y", pos.y - 110.0, 0.75)
-	tw.parallel().tween_property(lbl, "modulate:a", 0.0, 0.75)
+	# Pop in: shrink font from 120 → 92 quickly
+	tw.tween_method(
+		func(s: float): lbl.add_theme_font_size_override("font_size", int(s)),
+		120.0, 92.0, 0.15
+	)
+	# Hold fully visible
+	tw.tween_interval(0.55)
+	# Drift up 240 px while fading out
+	tw.tween_property(lbl, "position:y", pos.y - 240.0, 0.55)
+	tw.parallel().tween_property(lbl, "modulate:a", 0.0, 0.55)
 	tw.tween_callback(lbl.queue_free)
 
 
 ## Handle caught object
-func _handle_catch(obj: Dictionary) -> void:
+func _handle_catch(obj: Dictionary, hand: Node2D) -> void:
 	var screen_center := Vector2(_center_x, 480)
+	var flash_color: Color
 	if obj["is_wanted"]:
 		_score += 1
 		_caught_objects += 1
-		_spawn_score_text(screen_center, "+1", Color(0.2, 0.95, 0.4))
+		flash_color = Color(0.2, 0.95, 0.4)
+		ScAudioManager.play_cg_success()
+		_spawn_score_text(screen_center, "+1", flash_color)
 		if ui and ui.has_method("show_success"):
 			ui.show_success()
 	else:
 		_caught_unwanted += 1
-		_spawn_score_text(screen_center, "WRONG!", Color(1.0, 0.3, 0.3))
+		flash_color = Color(1.0, 0.3, 0.3)
+		ScAudioManager.play_cg_wrong()
+		_spawn_score_text(screen_center, "WRONG!", flash_color)
 		if ui and ui.has_method("show_failure"):
 			ui.show_failure()
+	_animate_catch(obj, hand, flash_color)
 
 
 ## Handle missed object
@@ -345,15 +382,78 @@ func _handle_miss(obj: Dictionary) -> void:
 	var screen_center := Vector2(_center_x, 480)
 	if obj["is_wanted"]:
 		_missed_objects += 1
+		ScAudioManager.play_cg_miss()
 		_spawn_score_text(screen_center, "MISS!", Color(1.0, 0.55, 0.1))
+		_animate_miss()
 		if ui and ui.has_method("show_failure"):
 			ui.show_failure()
 	else:
 		_avoided_objects += 1
 		_score += 1
+		ScAudioManager.play_cg_success()
 		_spawn_score_text(screen_center, "DODGE! +1", Color(0.2, 0.95, 0.4))
 		if ui and ui.has_method("show_success"):
 			ui.show_success()
+
+
+## Effects 1+2+3+4: hand punch, color flash, object squash, burst dots
+func _animate_catch(obj: Dictionary, _hand: Node2D, color: Color) -> void:
+	# 3. Object squash-pop before disappearing
+	var sprite = obj["node"]
+	if sprite:
+		var tw_obj := create_tween()
+		tw_obj.tween_property(sprite, "scale", Vector2(1.5, 1.5), 0.06)
+		tw_obj.tween_property(sprite, "scale", Vector2(0.0, 0.0), 0.10)
+		tw_obj.tween_callback(sprite.queue_free)
+		obj["node"] = null  # removal loop skips queue_free since tween owns it
+
+	# 1. Hand punch scale — both hands
+	for h in [left_hand, right_hand]:
+		var tw_scale := create_tween()
+		tw_scale.tween_property(h, "scale", Vector2(1.3, 1.3), 0.10)
+		tw_scale.tween_property(h, "scale", Vector2(1.0, 1.0), 0.15)
+
+	# 2. Hand color flash — both hands
+	left_hand.self_modulate = color
+	right_hand.self_modulate = color
+	var tw_color := create_tween()
+	tw_color.tween_property(left_hand, "self_modulate", Color.WHITE, 0.25)
+	tw_color.parallel().tween_property(right_hand, "self_modulate", Color.WHITE, 0.25)
+
+	# 4. Burst dots at catch position
+	_spawn_burst(obj["position"], color)
+
+
+## Effect 4: colored dots burst outward from catch point
+func _spawn_burst(pos: Vector2, color: Color) -> void:
+	const DOT_COUNT := 8
+	const BURST_DIST := 160.0
+	const DOT_SIZE := 14.0
+
+	for i in DOT_COUNT:
+		var angle := (TAU / DOT_COUNT) * i
+		var target := pos + Vector2(cos(angle), sin(angle)) * BURST_DIST
+
+		var dot := ColorRect.new()
+		dot.size = Vector2(DOT_SIZE, DOT_SIZE)
+		dot.color = color
+		dot.position = pos - Vector2(DOT_SIZE * 0.5, DOT_SIZE * 0.5)
+		dot.z_index = 25
+		add_child(dot)
+
+		var tw := create_tween()
+		tw.tween_property(dot, "position", target - Vector2(DOT_SIZE * 0.5, DOT_SIZE * 0.5), 0.40)
+		tw.parallel().tween_property(dot, "modulate:a", 0.0, 0.40)
+		tw.tween_callback(dot.queue_free)
+
+
+## Effect 5: both hands shake horizontally when a wanted object is missed
+func _animate_miss() -> void:
+	var tw := create_tween()
+	for _i in 3:
+		tw.tween_property(self, "_shake_offset", 14.0, 0.04)
+		tw.tween_property(self, "_shake_offset", -14.0, 0.04)
+	tw.tween_property(self, "_shake_offset", 0.0, 0.03)
 
 
 ## Update UI display
@@ -381,7 +481,16 @@ func _start_game() -> void:
 	_avoided_objects = 0
 	_caught_unwanted = 0
 	_active_objects.clear()
-	_spawn_timer = 0.0  # Spawn first object immediately
+	_spawn_timer = 0.0
+	_last_object_type = ""
+	_consecutive_unwanted = 0
+	_consecutive_wanted = 0
+	_shake_offset = 0.0
+
+	if Appdata.selected_mechanism != null:
+		AppDataTrial.start_new_trial()
+
+	ScAudioManager.play_background_music("res://assets/audio/cg_bg.mp3")
 
 	if ui and ui.has_method("show_playing"):
 		ui.show_playing()
@@ -397,10 +506,16 @@ func _end_game() -> void:
 	print("⏹️ GAME ENDED")
 	_is_playing = false
 
-	# Calculate stats — correct = wanted caught + unwanted avoided
 	var total = _caught_objects + _missed_objects + _caught_unwanted + _avoided_objects
 	var correct = _caught_objects + _avoided_objects
+	var wrong = _missed_objects + _caught_unwanted
 	var success_rate = (correct / float(max(total, 1))) * 100.0
+
+	if Appdata.selected_mechanism != null:
+		AppDataTrial.stop_trial(total, correct, wrong)
+
+	ScAudioManager.stop_music()
+	ScAudioManager.play_gameover()
 
 	print("📊 Final Results:")
 	print("   Score: %d" % _score)
@@ -411,9 +526,7 @@ func _end_game() -> void:
 	if ui and ui.has_method("show_game_over"):
 		ui.show_game_over(_score, _caught_objects, _missed_objects,
 						  _avoided_objects, _caught_unwanted, success_rate)
-		print("Game Over Screen Displayed ✓")
 
-	# Clear objects
 	for obj in _active_objects:
 		if obj["node"]:
 			obj["node"].queue_free()

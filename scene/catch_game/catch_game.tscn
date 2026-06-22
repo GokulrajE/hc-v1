@@ -421,8 +421,8 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = SubResource("CG_PlayBtnNormal")
-theme_override_styles/hover = SubResource("CG_PlayBtnHover")
 theme_override_styles/pressed = SubResource("CG_PlayBtnNormal")
+theme_override_styles/hover = SubResource("CG_PlayBtnHover")
 text = "▶  Play Again"
 
 [node name="MenuButton" type="Button" parent="CatchGameUI/Control/GameOverBoard/ContentVBox" unique_id=400000001]
@@ -433,8 +433,8 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = SubResource("CG_MenuBtnNormal")
-theme_override_styles/hover = SubResource("CG_MenuBtnHover")
 theme_override_styles/pressed = SubResource("CG_MenuBtnNormal")
+theme_override_styles/hover = SubResource("CG_MenuBtnHover")
 text = "Back to Menu"
 
 [node name="ExitButton" type="Button" parent="CatchGameUI/Control" unique_id=400000002]
@@ -448,8 +448,8 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 26
 theme_override_styles/normal = SubResource("CG_ExitBtnNormal")
-theme_override_styles/hover = SubResource("CG_ExitBtnHover")
 theme_override_styles/pressed = SubResource("CG_ExitBtnNormal")
+theme_override_styles/hover = SubResource("CG_ExitBtnHover")
 text = "✕ Exit"
 metadata/_edit_use_anchors_ = true
 

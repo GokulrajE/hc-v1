@@ -92,7 +92,6 @@ func show_success() -> void:
 	success_popup.modulate.a = 1.0
 	success_popup.scale = Vector2(1.0, 1.0)
 	_popup_timer = POPUP_DURATION
-	print("✅ Success popup shown")
 
 
 func show_failure() -> void:
@@ -100,7 +99,6 @@ func show_failure() -> void:
 	failure_popup.modulate.a = 1.0
 	failure_popup.scale = Vector2(1.0, 1.0)
 	_popup_timer = POPUP_DURATION
-	print("❌ Failure popup shown")
 
 
 func show_playing() -> void:

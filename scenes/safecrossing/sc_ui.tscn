@@ -54,6 +54,7 @@ texture = ExtResource("9_btnv03")
 texture = ExtResource("10_btnv04")
 
 [node name="UI" type="CanvasLayer" unique_id=1171703322]
+process_mode = 3
 script = ExtResource("1")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=981621040]
