@@ -1,0 +1,316 @@
+[gd_scene format=3 uid="uid://t1vjn2ehfhn5"]
+
+[ext_resource type="Script" uid="uid://xhoshvvy62do" path="res://scripts/tablewipping/tw_game.gd" id="1_twgame"]
+[ext_resource type="Script" uid="uid://bkmqmke2k4rtm" path="res://scripts/tablewipping/tw_ui.gd" id="2_twui"]
+[ext_resource type="Texture2D" uid="uid://c2rs7vhktxvtx" path="res://assets/tablewipping/bg.jpg" id="3_08o56"]
+[ext_resource type="Texture2D" uid="uid://cjrlm3olh41ac" path="res://assets/tablewipping/bg 1.png" id="3_twbg"]
+[ext_resource type="Texture2D" uid="uid://kwcjyyaksqc5" path="res://assets/ui/start game board.png" id="4_startboard"]
+[ext_resource type="Texture2D" uid="uid://sk2a0xm7sp3k" path="res://assets/ui/gameover board.png" id="5_goboard"]
+[ext_resource type="Texture2D" uid="uid://bmwg8y55461y8" path="res://assets/ui/Button13.png" id="6_btn13"]
+[ext_resource type="Texture2D" uid="uid://cn668kccj0k6y" path="res://assets/ui/Button08.png" id="7_btn08"]
+[ext_resource type="Texture2D" uid="uid://c2kvtt4ccy8at" path="res://assets/ui/Btn_V01.png" id="8_btnv01"]
+[ext_resource type="Texture2D" uid="uid://daqibh5tqjbfl" path="res://assets/ui/Btn_V05.png" id="9_btnv05"]
+[ext_resource type="Texture2D" uid="uid://cui1ajpmfoeo8" path="res://assets/ui/Btn_V03.png" id="10_btnv03"]
+[ext_resource type="Texture2D" uid="uid://dcvu4oconjgk2" path="res://assets/ui/Btn_V04.png" id="11_btnv04"]
+[ext_resource type="FontFile" uid="uid://btw3w8gykgilf" path="res://assets/fonts/TiltNeon-Regular-VariableFont_XROT,YROT.ttf" id="12_font"]
+
+[sub_resource type="StyleBoxFlat" id="WipeBarBg"]
+bg_color = Color(0.2, 0.2, 0.2, 0.8)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="WipeBarFill"]
+bg_color = Color(0.3, 0.85, 0.4, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxTexture" id="TW_ExitBtnNormal"]
+texture = ExtResource("10_btnv03")
+
+[sub_resource type="StyleBoxTexture" id="TW_ExitBtnHover"]
+texture = ExtResource("11_btnv04")
+
+[sub_resource type="StyleBoxTexture" id="TW_PlayBtnNormal"]
+texture = ExtResource("6_btn13")
+
+[sub_resource type="StyleBoxTexture" id="TW_PlayBtnHover"]
+texture = ExtResource("7_btn08")
+
+[sub_resource type="StyleBoxTexture" id="TW_MenuBtnNormal"]
+texture = ExtResource("8_btnv01")
+
+[sub_resource type="StyleBoxTexture" id="TW_MenuBtnHover"]
+texture = ExtResource("9_btnv05")
+
+[sub_resource type="ParticleProcessMaterial" id="SprayMat"]
+direction = Vector3(0, 1, 0)
+spread = 40.0
+initial_velocity_min = 100.0
+initial_velocity_max = 300.0
+gravity = Vector3(0, 400, 0)
+scale_min = 2.0
+scale_max = 6.0
+color = Color(0.78, 0.9, 1, 0.9)
+
+[node name="TWGame" type="Node2D" unique_id=310000001]
+script = ExtResource("1_twgame")
+
+[node name="bg" type="Sprite2D" parent="." unique_id=715442639]
+visible = false
+position = Vector2(971.5, 561.99994)
+scale = Vector2(4.5704546, 4.847736)
+texture = ExtResource("3_twbg")
+region_enabled = true
+region_rect = Rect2(1065.1902, 651.4109, 440.09778, 243.95142)
+
+[node name="Background" type="TextureRect" parent="." unique_id=310000002]
+offset_right = 1920.0
+offset_bottom = 1080.0
+texture = ExtResource("3_08o56")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="TWUI" type="CanvasLayer" parent="." unique_id=310000004]
+script = ExtResource("2_twui")
+
+[node name="Control" type="Control" parent="TWUI" unique_id=310000005]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScoreLabel" type="Label" parent="TWUI/Control" unique_id=310000006]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 30.0
+offset_right = 380.0
+offset_bottom = 90.0
+theme_override_colors/font_color = Color(0.2, 1, 0.4, 1)
+theme_override_font_sizes/font_size = 48
+text = "Score: 0"
+metadata/_edit_use_anchors_ = true
+
+[node name="TimerLabel" type="Label" parent="TWUI/Control" unique_id=310000007]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.022395832
+anchor_top = 0.037962962
+anchor_right = 0.022395832
+anchor_bottom = 0.044444446
+offset_left = 1570.0
+offset_top = 30.0
+offset_right = 1870.0
+offset_bottom = 90.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 48
+text = "Time: 60s"
+metadata/_edit_use_anchors_ = true
+
+[node name="WipeBar" type="ProgressBar" parent="TWUI/Control" unique_id=310000008]
+layout_mode = 0
+offset_left = 680.0
+offset_top = 30.0
+offset_right = 1240.0
+offset_bottom = 72.0
+theme_override_styles/background = SubResource("WipeBarBg")
+theme_override_styles/fill = SubResource("WipeBarFill")
+show_percentage = false
+metadata/_edit_use_anchors_ = true
+
+[node name="WipeLabel" type="Label" parent="TWUI/Control" unique_id=310000009]
+layout_mode = 0
+offset_left = 680.0
+offset_top = 74.0
+offset_right = 1240.0
+offset_bottom = 110.0
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 24
+text = "Wiped: 0%"
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="ExitButton" type="Button" parent="TWUI/Control" unique_id=310000010]
+visible = false
+layout_mode = 0
+offset_left = 1730.0
+offset_top = 15.0
+offset_right = 1900.0
+offset_bottom = 72.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("TW_ExitBtnNormal")
+theme_override_styles/pressed = SubResource("TW_ExitBtnNormal")
+theme_override_styles/hover = SubResource("TW_ExitBtnHover")
+text = "Exit"
+metadata/_edit_use_anchors_ = true
+
+[node name="StartBoard" type="TextureRect" parent="TWUI/Control" unique_id=310000011]
+layout_mode = 0
+offset_left = 430.0
+offset_top = 130.0
+offset_right = 1490.0
+offset_bottom = 900.0
+texture = ExtResource("4_startboard")
+expand_mode = 1
+
+[node name="ContentVBox" type="VBoxContainer" parent="TWUI/Control/StartBoard" unique_id=310000012]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 60.0
+offset_top = 30.0
+offset_right = -60.0
+offset_bottom = -120.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 28
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="TWUI/Control/StartBoard/ContentVBox" unique_id=310000013]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.17, 0.2, 1)
+theme_override_fonts/font = ExtResource("12_font")
+theme_override_font_sizes/font_size = 64
+text = "Table Wiping"
+horizontal_alignment = 1
+
+[node name="EmojiLabel" type="Label" parent="TWUI/Control/StartBoard/ContentVBox" unique_id=310000014]
+layout_mode = 2
+theme_override_font_sizes/font_size = 80
+text = "🧹"
+horizontal_alignment = 1
+
+[node name="DescLabel" type="Label" parent="TWUI/Control/StartBoard/ContentVBox" unique_id=310000015]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
+theme_override_font_sizes/font_size = 30
+text = "Move the cloth over the stain to wipe it clean!
+Use ← → Arrow Keys to sweep left and right."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="StartPromptLabel" type="Label" parent="TWUI/Control/StartBoard/ContentVBox" unique_id=310000016]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.05, 0.05, 0.05, 1)
+theme_override_font_sizes/font_size = 40
+text = "Press SPACEBAR to Start"
+horizontal_alignment = 1
+
+[node name="GameOverBoard" type="TextureRect" parent="TWUI/Control" unique_id=310000017]
+visible = false
+layout_mode = 0
+offset_left = 580.0
+offset_top = 185.0
+offset_right = 1340.0
+offset_bottom = 900.0
+texture = ExtResource("5_goboard")
+expand_mode = 1
+
+[node name="ContentVBox" type="VBoxContainer" parent="TWUI/Control/GameOverBoard" unique_id=310000018]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 80.0
+offset_top = 60.0
+offset_right = -80.0
+offset_bottom = -60.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="GameOverLabel" type="Label" parent="TWUI/Control/GameOverBoard/ContentVBox" unique_id=310000019]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.3, 0.3, 1)
+theme_override_font_sizes/font_size = 68
+text = "GAME OVER!"
+horizontal_alignment = 1
+
+[node name="ResultsLabel" type="Label" parent="TWUI/Control/GameOverBoard/ContentVBox" unique_id=310000020]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.05, 0.05, 0.05, 1)
+theme_override_font_sizes/font_size = 32
+text = "Score: 0"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="RestartButton" type="Button" parent="TWUI/Control/GameOverBoard/ContentVBox" unique_id=310000021]
+custom_minimum_size = Vector2(320, 72)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("TW_PlayBtnNormal")
+theme_override_styles/pressed = SubResource("TW_PlayBtnNormal")
+theme_override_styles/hover = SubResource("TW_PlayBtnHover")
+text = "Play Again"
+
+[node name="MenuButton" type="Button" parent="TWUI/Control/GameOverBoard/ContentVBox" unique_id=310000022]
+custom_minimum_size = Vector2(320, 72)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("TW_MenuBtnNormal")
+theme_override_styles/pressed = SubResource("TW_MenuBtnNormal")
+theme_override_styles/hover = SubResource("TW_MenuBtnHover")
+text = "Back to Menu"
+
+[node name="SuccessPopup" type="Control" parent="TWUI" unique_id=310000023]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 260.0
+offset_bottom = 60.0
+
+[node name="SuccessLabel" type="Label" parent="TWUI/SuccessPopup" unique_id=310000024]
+layout_mode = 0
+offset_right = 260.0
+offset_bottom = 60.0
+theme_override_colors/font_color = Color(0.1, 1, 0.25, 1)
+theme_override_font_sizes/font_size = 46
+text = "✅ CLEANED!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="cloth" type="Sprite2D" parent="." unique_id=1438872927]
+position = Vector2(-481, 256)
+scale = Vector2(0.35, 0.35)
+texture = ExtResource("3_twbg")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(0.89160156, 606.3594, 467.03333, 315.80347)
+region_filter_clip_enabled = true
+
+[node name="cleaner" type="Sprite2D" parent="." unique_id=998600118]
+position = Vector2(1848, 347)
+rotation = -1.1065388
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_twbg")
+region_enabled = true
+region_rect = Rect2(136.3927, 0.48757935, 331.53223, 507.06473)
+region_filter_clip_enabled = true
+
+[node name="Nozzle" type="Marker2D" parent="cleaner" unique_id=1014125661]
+position = Vector2(-96.59194, -199.27063)
+
+[node name="SprayParticles" type="GPUParticles2D" parent="." unique_id=705091539]
+z_index = 2
+emitting = false
+amount = 40
+lifetime = 0.8
+one_shot = true
+explosiveness = 0.2
+randomness = 0.5
+process_material = SubResource("SprayMat")

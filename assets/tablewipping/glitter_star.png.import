@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b8d12k1w4lig0"
-path="res://.godot/imported/Button12.png-b9425746638bc7941f0dec89c1b88067.ctex"
+uid="uid://bgw6fq3bqgmbn"
+path="res://.godot/imported/glitter_star.png-2d8871ea4fef16a71e74650ba025e837.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://scene/Button12.png"
-dest_files=["res://.godot/imported/Button12.png-b9425746638bc7941f0dec89c1b88067.ctex"]
+source_file="res://assets/tablewipping/glitter_star.png"
+dest_files=["res://.godot/imported/glitter_star.png-2d8871ea4fef16a71e74650ba025e837.ctex"]
 
 [params]
 

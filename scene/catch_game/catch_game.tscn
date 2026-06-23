@@ -216,7 +216,12 @@ text = "Score: 0"
 metadata/_edit_use_anchors_ = true
 
 [node name="TimerLabel" type="Label" parent="CatchGameUI/Control" unique_id=143640948]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0480327
+anchor_top = 0.024793388
+anchor_right = 0.0480327
+anchor_bottom = 0.04040404
 offset_left = 1550.0
 offset_top = 50.0
 offset_right = 1870.0

@@ -2,12 +2,14 @@ extends Node2D
 
 var catch_game_button: Button
 var safe_crossing_button: Button
+var tw_game_button: Button
 var back_button: Button
 var message_label: Label
 
 func _ready() -> void:
 	catch_game_button    = get_node_or_null("catch_game_button")
 	safe_crossing_button = get_node_or_null("safe_crossing_button")
+	tw_game_button       = get_node_or_null("tw_game_button")
 	back_button          = get_node_or_null("back_button")
 	message_label        = get_node_or_null("message_label")
 
@@ -15,6 +17,8 @@ func _ready() -> void:
 		catch_game_button.pressed.connect(_on_catch_game_pressed)
 	if safe_crossing_button:
 		safe_crossing_button.pressed.connect(_on_safe_crossing_pressed)
+	if tw_game_button:
+		tw_game_button.pressed.connect(_on_tw_game_pressed)
 	if back_button:
 		back_button.pressed.connect(_on_back_pressed)
 
@@ -41,6 +45,10 @@ func _on_catch_game_pressed() -> void:
 
 func _on_safe_crossing_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/safecrossing/sc_game.tscn")
+
+
+func _on_tw_game_pressed() -> void:
+	get_tree().change_scene_to_file("res://scene/tablewipping/tw_game.tscn")
 
 
 func _on_back_pressed() -> void:

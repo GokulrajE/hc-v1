@@ -13,6 +13,7 @@ const _SOUND_PATHS: Dictionary = {
 	"sc_failure":  "res://assets/audio/failure_sc.mp3",
 	"gameover":    "res://assets/audio/gameover.mp3",
 	"score":       "res://assets/audio/score.mp3",
+	"tw_spray":    "res://assets/audio/spray.mp3",
 }
 
 func _ready() -> void:
@@ -63,6 +64,9 @@ func play_gameover() -> void:
 
 func play_score() -> void:
 	_play("score")
+
+func play_tw_spray() -> void:
+	_play("tw_spray")
 
 
 ## Background music
