@@ -33,6 +33,9 @@ const GAME_DURATION:    float = 60.0
 const GLITTER_COUNT:    int   = 20
 const GLITTER_DURATION: float = 1.6
 
+const STAIN_TIMEOUT: float = 20.0   # seconds per stain before FAILURE
+const RESULT_DELAY:  float = 0.8    # pause after SUCCESS/FAILURE
+
 const STAIN_PATHS: Array = [
 	"res://assets/tablewipping/stainsblue.png",
 	"res://assets/tablewipping/stainsbrown.png",
@@ -55,8 +58,11 @@ var _glitter_star_tex: Texture2D = null
 # ============================================================
 # GAME STATE
 # ============================================================
-enum State { WAITING, PLAYING, GAME_OVER }
-var state: State = State.WAITING
+enum GameState { WAITING, START, SPAWN, MOVE, SUCCESS, FAILURE, STOP, DONE }
+var _game_state: GameState = GameState.WAITING
+var _is_game_started: bool = false
+var _run_once: bool = false
+var _event_delay_timer: float = 0.0
 
 var score:     int = 0
 var n_targets: int = 0
@@ -90,6 +96,13 @@ var stain_world_left:   float = 0.0
 var stain_world_right:  float = 0.0
 var last_stain_center:  Vector2 = Vector2(-9999.0, -9999.0)
 
+var _stain_timer: float = 0.0   # counts down per stain
+
+# ============================================================
+# DEVICE STATE
+# ============================================================
+var _grip_threshold: float = 10.0
+
 
 # ============================================================
 # READY
@@ -100,106 +113,163 @@ func _ready() -> void:
 	cloth.visible   = false
 	cleaner.visible = false
 	_glitter_star_tex = load("res://assets/tablewipping/glitter_star.png")
+	_load_assessment_data()
 	ui.show_start()
+
+
+func _is_handle_mode() -> bool:
+	return Appdata.selected_mechanism != null and Appdata.selected_mechanism.name == "HANDLE"
+
+
+func _load_assessment_data() -> void:
+	if _is_handle_mode():
+		var grip_rom := ROM.new("GRIP", true)
+		if grip_rom.is_arom_set():
+			_grip_threshold = grip_rom.arom_max * 0.1
 
 
 # ============================================================
 # PROCESS — WAITING state input only
 # ============================================================
 func _process(_delta: float) -> void:
-	if state == State.WAITING:
+	if _game_state == GameState.WAITING:
 		if Input.is_action_just_pressed("ui_select"):
-			_start_game()
+			_is_game_started = true
 
 
 # ============================================================
 # PHYSICS — game logic
 # ============================================================
 func _physics_process(delta: float) -> void:
-	if state != State.PLAYING:
-		return
+	if _game_state == GameState.MOVE and not is_animating:
+		# Cloth X movement — knob angle (arrow keys as fallback)
+		var prev_x := cloth_x
+		if HCcomm.device_is_connected and Appdata.selected_mechanism != null:
+			var arom      := Appdata.selected_mechanism.get_current_arom()
+			var a_min: float = arom[0]
+			var a_max: float = arom[1] if arom[1] != arom[0] else arom[0] + 1.0
+			cloth_x = remap(_get_knob_angle(), a_min, a_max,
+				PLAY_LEFT  + CLOTH_WIDTH * 0.5,
+				PLAY_RIGHT - CLOTH_WIDTH * 0.5)
+		else:
+			if Input.is_action_pressed("ui_left"):
+				cloth_x -= CLOTH_SPEED * delta
+			if Input.is_action_pressed("ui_right"):
+				cloth_x += CLOTH_SPEED * delta
+		cloth_x = clamp(cloth_x, PLAY_LEFT + CLOTH_WIDTH * 0.5, PLAY_RIGHT - CLOTH_WIDTH * 0.5)
+		var dx: float = cloth_x - prev_x
 
-	# Timer
-	time_left -= delta
-	if time_left <= 0.0:
-		time_left = 0.0
-		ui.update_timer(0.0)
-		_end_game()
-		return
-	ui.update_timer(time_left)
+		# Sprite2D uses centre position; flip and skew based on movement direction
+		cloth.position = Vector2(cloth_x, cloth_y)
+		if dx > 0.0:
+			cloth.flip_h = false
+		elif dx < 0.0:
+			cloth.flip_h = true
+		var target_skew: float = deg_to_rad(10.0) if dx > 0.0 else (deg_to_rad(-10.0) if dx < 0.0 else 0.0)
+		cloth.skew = lerp(cloth.skew, target_skew, 12.0 * delta)
 
-	if is_animating:
-		return
+		# Erase logic: knob mode = auto-spray on proximity; handle mode = force triggers spray
+		if stain_sprite != null and not stain_done:
+			var dist: float = abs(cloth_x - stain_center.x)
+			if _is_handle_mode():
+				var is_forcing := HCcomm.device_is_connected and HCcomm.get_total_force() >= _grip_threshold
+				if dist <= CENTER_TOUCH_ZONE and is_forcing and not center_touched:
+					center_touched = true
+					_play_cleaner_animation()
+				if center_touched and not is_animating and is_forcing and dist > CENTER_DEAD_ZONE:
+					_try_erase()
+			else:
+				if dist <= CENTER_TOUCH_ZONE and not center_touched:
+					center_touched = true
+					_play_cleaner_animation()
+				if center_touched and not is_animating and dx != 0.0 and dist > CENTER_DEAD_ZONE:
+					_try_erase()
 
-	# Cloth X movement — knob angle (arrow keys as fallback)
-	var prev_x := cloth_x
-	if HCcomm.device_is_connected and Appdata.selected_mechanism != null:
-		var arom      := Appdata.selected_mechanism.get_current_arom()
-		var a_min: float = arom[0]
-		var a_max: float = arom[1] if arom[1] != arom[0] else arom[0] + 1.0
-		cloth_x = remap(_get_knob_angle(), a_min, a_max,
-			PLAY_LEFT  + CLOTH_WIDTH * 0.5,
-			PLAY_RIGHT - CLOTH_WIDTH * 0.5)
-	else:
-		if Input.is_action_pressed("ui_left"):
-			cloth_x -= CLOTH_SPEED * delta
-		if Input.is_action_pressed("ui_right"):
-			cloth_x += CLOTH_SPEED * delta
-	cloth_x = clamp(cloth_x, PLAY_LEFT + CLOTH_WIDTH * 0.5, PLAY_RIGHT - CLOTH_WIDTH * 0.5)
-	var dx: float = cloth_x - prev_x
+		# Stain timeout check
+		if not stain_done:
+			_stain_timer -= delta
+			ui.update_stain_timer(_stain_timer, STAIN_TIMEOUT)
+			if _stain_timer <= 0.0:
+				_on_stain_timeout()
 
-	# Sprite2D uses centre position; flip and skew based on movement direction
-	cloth.position = Vector2(cloth_x, cloth_y)
-	if dx > 0.0:
-		cloth.flip_h = false
-	elif dx < 0.0:
-		cloth.flip_h = true
-	var target_skew: float = deg_to_rad(10.0) if dx > 0.0 else (deg_to_rad(-10.0) if dx < 0.0 else 0.0)
-	cloth.skew = lerp(cloth.skew, target_skew, 12.0 * delta)
+	_run_game_state_machine(delta)
 
-	# Erase logic: must touch centre first (triggers animation), then movement erases
-	if stain_sprite != null and not stain_done:
-		var dist: float = abs(cloth_x - stain_center.x)
-		if dist <= CENTER_TOUCH_ZONE and not center_touched:
-			center_touched = true
-			_play_cleaner_animation()
-		if center_touched and not is_animating and dx != 0.0 and dist > CENTER_DEAD_ZONE:
-			_try_erase()
+
+# ============================================================
+# STATE MACHINE
+# ============================================================
+func _run_game_state_machine(delta: float) -> void:
+	var is_time_up := false
+	if _game_state not in [GameState.WAITING, GameState.STOP, GameState.DONE]:
+		time_left = maxf(time_left - delta, 0.0)
+		ui.update_timer(time_left)
+		is_time_up = time_left <= 0.0
+
+	match _game_state:
+		GameState.WAITING:
+			if _is_game_started:
+				_game_state = GameState.START
+
+		GameState.START:
+			_initialize_game()
+			_game_state = GameState.SPAWN
+
+		GameState.SPAWN:
+			if not _run_once:
+				_spawn_stain()
+				_stain_timer = STAIN_TIMEOUT
+				_run_once = true
+				_game_state = GameState.MOVE
+
+		GameState.MOVE:
+			if is_time_up:
+				_game_state = GameState.STOP
+			# SUCCESS/FAILURE transitions happen via _on_stain_cleared / _on_stain_timeout
+
+		GameState.SUCCESS, GameState.FAILURE:
+			_event_delay_timer -= delta
+			if _event_delay_timer <= 0.0:
+				_run_once = false
+				if is_time_up:
+					_game_state = GameState.STOP
+				else:
+					_game_state = GameState.SPAWN
+
+		GameState.STOP:
+			_end_game()
+			_game_state = GameState.DONE
+
+		GameState.DONE:
+			pass
 
 
 # ============================================================
 # GAME FLOW
 # ============================================================
-func _start_game() -> void:
-	state     = State.PLAYING
+func _initialize_game() -> void:
 	score     = 0
 	n_targets = 0
 	n_success = 0
 	time_left = GAME_DURATION
 	cloth.visible = true
-
+	_run_once = false
+	_event_delay_timer = 0.0
 	ui.update_score(0)
 	ui.update_timer(GAME_DURATION)
 	ui.update_progress(0.0)
 	ui.show_playing()
-
 	AppDataTrial.start_new_trial()
 	ScAudioManager.play_background_music("res://assets/audio/tw_bg.mp3")
-
-	_spawn_stain()
 	print("🧹 TW Game started — 60s trial")
 
 
 func _end_game() -> void:
-	state = State.GAME_OVER
 	_clear_stain()
 	cloth.visible = false
-
 	AppDataTrial.stop_trial(n_targets, n_success, n_targets - n_success)
 	ScAudioManager.stop_music()
 	ScAudioManager.play_gameover()
 	ui.show_game_over(score, n_targets, n_success)
-
 	print("🏁 TW Game Over | Score:%d | %d/%d cleaned" % [score, n_success, n_targets])
 
 
@@ -271,6 +341,8 @@ func _spawn_stain() -> void:
 	last_stain_center = stain_center
 	n_targets   += 1
 	ui.update_progress(0.0)
+	ui.show_stain_timer(true)
+	ui.update_stain_timer(STAIN_TIMEOUT, STAIN_TIMEOUT)
 
 	print("🧹 Stain spawned at (%.0f,%.0f) | opaque pixels: %d" % [sx, sy, total_stain_pixels])
 
@@ -346,22 +418,30 @@ func _on_stain_cleared() -> void:
 	stain_done = true
 	score     += 1
 	n_success += 1
-
-	# Hide stain immediately so the clean table shows
 	if stain_sprite != null:
 		stain_sprite.visible = false
-
 	_show_glitter_stars()
-
 	print("✅ Stain cleared! Score: %d" % score)
 	ScAudioManager.play_sc_success()
 	ui.update_score(score)
+	ui.show_stain_timer(false)
 	var stain_top := Vector2(stain_center.x, stain_center.y - STAIN_H * 0.5)
 	ui.show_success_popup(stain_top)
+	# State machine handles the delay and next spawn
+	_event_delay_timer = GLITTER_DURATION
+	_game_state = GameState.SUCCESS
+	_run_once = false
 
-	await get_tree().create_timer(GLITTER_DURATION).timeout
-	if state == State.PLAYING:
-		_spawn_stain()
+
+func _on_stain_timeout() -> void:
+	if stain_done:
+		return
+	print("⏰ Stain timeout — moving to next stain")
+	ui.show_stain_timer(false)
+	_clear_stain()
+	_event_delay_timer = RESULT_DELAY
+	_game_state = GameState.FAILURE
+	_run_once = false
 
 
 func _show_glitter_stars() -> void:
@@ -458,6 +538,7 @@ func _get_knob_angle() -> float:
 	if Appdata.selected_mechanism == null:
 		return HCcomm.angle_2
 	match Appdata.selected_mechanism.name:
+		"HANDLE":    return HCcomm.angle_1
 		"KEY KNOB":  return HCcomm.angle_3
 		"FINE KNOB": return HCcomm.angle_4
 		_:           return HCcomm.angle_2
@@ -477,5 +558,5 @@ func go_to_menu() -> void:
 
 
 func exit_game() -> void:
-	if state == State.PLAYING:
-		_end_game()
+	if _game_state not in [GameState.WAITING, GameState.DONE]:
+		_game_state = GameState.STOP

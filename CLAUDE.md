@@ -237,7 +237,7 @@ DateTime,AromMin,AromMax
 var rom = ROM.new("Hand Grip", false)  # Create empty ROM
 rom.set_arom(5.0, 80.0)  # Only AROM for HyperCube
 if rom.is_set():
-    rom.write_to_assessment_file()
+	rom.write_to_assessment_file()
 ```
 
 ### **HyperCubeMechanism Class** (`scripts/hypercube_mechanism.gd`)
@@ -283,7 +283,7 @@ Appdata.set_mechanism("Knob")  # Creates new HyperCubeMechanism("KNOB", session_
 var mech = Appdata.selected_mechanism
 mech.set_new_arom_values(5.0, 80.0)  # Set AROM range
 if mech.save_assessment_data():
-    print("ROM saved!")
+	print("ROM saved!")
 ```
 
 ### **Diagnostics Script** (`scripts/diagnostics.gd`)
@@ -356,19 +356,19 @@ Assessment (Node2D) - assessment.gd
 **Knob Selection Flow:**
 ```
 Assessment scene (with current_mechanism = "Knobs")
-    ↓
+	↓
 Shows three buttons:
-    ├─ Knob Button → _on_knob_selected()
-    │       Appdata.set_mechanism("Knob")
-    │       → knob_assessment.tscn
-    │
-    ├─ Fine Knob Button → _on_fine_knob_selected()
-    │       Appdata.set_mechanism("Fine Knob")
-    │       → knob_assessment.tscn
-    │
-    └─ Key Knob Button → _on_key_knob_selected()
-            Appdata.set_mechanism("Key Knob")
-            → knob_assessment.tscn
+	├─ Knob Button → _on_knob_selected()
+	│       Appdata.set_mechanism("Knob")
+	│       → knob_assessment.tscn
+	│
+	├─ Fine Knob Button → _on_fine_knob_selected()
+	│       Appdata.set_mechanism("Fine Knob")
+	│       → knob_assessment.tscn
+	│
+	└─ Key Knob Button → _on_key_knob_selected()
+			Appdata.set_mechanism("Key Knob")
+			→ knob_assessment.tscn
 ```
 
 **Usage Flow (Knob Assessment):**
@@ -421,27 +421,27 @@ Shows three buttons:
    **For Knobs:**
    - Assessment scene shows three knob selection buttons
    - Each button calls Appdata.set_mechanism(knob_name):
-     ```gdscript
-     Appdata.set_mechanism("Knob")
-     # Creates: Appdata.selected_mechanism = HyperCubeMechanism("KNOB", session_number)
-     ```
+	 ```gdscript
+	 Appdata.set_mechanism("Knob")
+	 # Creates: Appdata.selected_mechanism = HyperCubeMechanism("KNOB", session_number)
+	 ```
    - Scene changes to knob_assessment.tscn
 
 5. **Knob AROM Assessment (for Knobs mechanism):**
    - knob_assessment._ready():
-     - Gets reference to Appdata.selected_mechanism
-     - Calls AppDataTrial.start_arom_raw_data_logging()
+	 - Gets reference to Appdata.selected_mechanism
+	 - Calls AppDataTrial.start_arom_raw_data_logging()
    - Real-time monitoring loop (100+ Hz):
-     - HCcomm emits new_device_data signal
-     - knob_assessment._on_device_data_received():
-       * Reads angle from HCcomm (angle_2/3/4)
-       * Updates min/max angle tracking
-       * Updates radial progress displays
+	 - HCcomm emits new_device_data signal
+	 - knob_assessment._on_device_data_received():
+	   * Reads angle from HCcomm (angle_2/3/4)
+	   * Updates min/max angle tracking
+	   * Updates radial progress displays
    - User completes assessment and clicks Save:
-     - AppDataTrial.stop_arom_raw_data_logging() writes arom-{mech}-{time}.csv
-     - Appdata.selected_mechanism.set_new_arom_values(min_angle, max_angle)
-     - Appdata.selected_mechanism.save_assessment_data() writes ROM CSV file
-     - ROM file created at: data/{hospitalID}/rom/{KNOB}.csv
+	 - AppDataTrial.stop_arom_raw_data_logging() writes arom-{mech}-{time}.csv
+	 - Appdata.selected_mechanism.set_new_arom_values(min_angle, max_angle)
+	 - Appdata.selected_mechanism.save_assessment_data() writes ROM CSV file
+	 - ROM file created at: data/{hospitalID}/rom/{KNOB}.csv
    - Back button returns to mechanism scene
 
 6. **Trial Execution (Future):**
@@ -453,15 +453,15 @@ Shows three buttons:
 ### **Mechanism Object System:**
 ```
 User creates mechanism via assessment button click
-    ↓
+	↓
 Appdata.set_mechanism(name)
-    ↓
+	↓
 Creates: Appdata.selected_mechanism = HyperCubeMechanism(name.to_upper(), session_number)
-    ↓
+	↓
 Mechanism stored in: Appdata.mechanisms[name.to_upper()]
-    ↓
+	↓
 Scene can access: Appdata.selected_mechanism.name, .set_new_arom_values(), .save_assessment_data()
-    ↓
+	↓
 Each knob type gets its own mechanism object with separate ROM file
 ```
 
@@ -500,19 +500,19 @@ Mechanism (mechanism.tscn) - MECHANISM SELECTION
 
 Assessment (assessment.tscn) - MECHANISM-SPECIFIC DISPLAY
   If mechanism is "Knobs":
-    ├── Shows three knob selection buttons:
-    │   ├── Knob Button → Appdata.set_mechanism("Knob") → knob_assessment.tscn
-    │   ├── Fine Knob Button → Appdata.set_mechanism("Fine Knob") → knob_assessment.tscn
-    │   └── Key Knob Button → Appdata.set_mechanism("Key Knob") → knob_assessment.tscn
-    └── Back Button → mechanism.tscn
+	├── Shows three knob selection buttons:
+	│   ├── Knob Button → Appdata.set_mechanism("Knob") → knob_assessment.tscn
+	│   ├── Fine Knob Button → Appdata.set_mechanism("Fine Knob") → knob_assessment.tscn
+	│   └── Key Knob Button → Appdata.set_mechanism("Key Knob") → knob_assessment.tscn
+	└── Back Button → mechanism.tscn
   
   If mechanism is other (Hand Grip, Tripod Grip):
-    ├── Title shows: "ASSESS {Mechanism}"
-    ├── Shows user info from Appdata
-    ├── Displays session & trial information
-    ├── Shows cumulative statistics
-    ├── Start Trial button (future)
-    └── Back Button → mechanism.tscn
+	├── Title shows: "ASSESS {Mechanism}"
+	├── Shows user info from Appdata
+	├── Displays session & trial information
+	├── Shows cumulative statistics
+	├── Start Trial button (future)
+	└── Back Button → mechanism.tscn
 
 HandGripAssessment (hand_grip_assessment.tscn) - HAND GRIP AROM ASSESSMENT
   ├── Title: "HAND GRIP"
@@ -634,18 +634,18 @@ func _on_back_pressed() -> void:
    User enters Hospital ID → Clicks Login
    ↓
    main.gd._on_login_pressed():
-     - Validates Hospital ID not empty
-     - Checks DataManager.user_exists(hospital_id)
-     - Calls AppData.load_user(hospital_id)
+	 - Validates Hospital ID not empty
+	 - Checks DataManager.user_exists(hospital_id)
+	 - Calls AppData.load_user(hospital_id)
    ↓
    AppData.load_user(id):
-     - Calls DataManager.load_config(id)
-     - Reads d:\hc-v-1\data\{id}\configdata.csv
-     - Populates all static variables:
-       * hospital_id, user_name, affected_limb
-       * session_number = 1, trial_number_day = 1
-       * cumulative_targets/hits/misses = 0
-     - AppData.clear_mechanisms() resets mechanism list
+	 - Calls DataManager.load_config(id)
+	 - Reads d:\hc-v-1\data\{id}\configdata.csv
+	 - Populates all static variables:
+	   * hospital_id, user_name, affected_limb
+	   * session_number = 1, trial_number_day = 1
+	   * cumulative_targets/hits/misses = 0
+	 - AppData.clear_mechanisms() resets mechanism list
    ↓
    Scene changes to mechanism.tscn
    ```
@@ -655,7 +655,7 @@ func _on_back_pressed() -> void:
    User selects "Knobs" from mechanism.tscn
    ↓
    mechanism.gd._on_knobs_pressed():
-     - AppData.current_mechanism = "Knobs"
+	 - AppData.current_mechanism = "Knobs"
    ↓
    Scene changes to assessment.tscn
    ```
@@ -663,17 +663,17 @@ func _on_back_pressed() -> void:
 3. **Assessment Scene (Knob Selection):**
    ```
    assessment.gd._ready():
-     - Gets references to knob buttons and other nodes
-     - Connects button signals
-     - Calls _update_title() and _update_ui()
+	 - Gets references to knob buttons and other nodes
+	 - Connects button signals
+	 - Calls _update_title() and _update_ui()
    ↓
    _update_title():
-     - Sets title to "ASSESS Knobs"
+	 - Sets title to "ASSESS Knobs"
    ↓
    _update_ui():
-     - Checks if "Knobs" in AppData.current_mechanism
-     - Shows knob_buttons_container (three buttons)
-     - Hides start_button and user_info label
+	 - Checks if "Knobs" in AppData.current_mechanism
+	 - Shows knob_buttons_container (three buttons)
+	 - Hides start_button and user_info label
    ↓
    User sees: Three buttons - Knob, Fine Knob, Key Knob
    ```
@@ -683,12 +683,12 @@ func _on_back_pressed() -> void:
    User clicks "Knob" button
    ↓
    assessment.gd._on_knob_selected():
-     - Appdata.set_mechanism("Knob")
+	 - Appdata.set_mechanism("Knob")
    ↓
    AppData.set_mechanism(name):
-     - selected_mechanism = HyperCubeMechanism.new("Knob", session_number)
-       Creates: HyperCubeMechanism("KNOB", 1)
-     - Mechanism stored in mechanisms dictionary
+	 - selected_mechanism = HyperCubeMechanism.new("Knob", session_number)
+	   Creates: HyperCubeMechanism("KNOB", 1)
+	 - Mechanism stored in mechanisms dictionary
    ↓
    Scene changes to knob_assessment.tscn
    ```
@@ -696,14 +696,14 @@ func _on_back_pressed() -> void:
 5. **Knob Assessment Scene (Real-time Monitoring):**
    ```
    knob_assessment.gd._ready():
-     - Gets node references (labels, progress bars)
-     - Stores selected_knob = Appdata.selected_mechanism.name ("KNOB")
-     - Connects to HCcomm signals: new_device_data, device_connected, device_disconnected
-     - Calls _start_arom_raw_logging()
-       AppDataTrial.start_arom_raw_data_logging()
-       Creates: arom-knob-2026-05-20_10-30-45.csv
-     - Calls _update_title() → Sets title to "KNOB"
-     - Calls _update_status()
+	 - Gets node references (labels, progress bars)
+	 - Stores selected_knob = Appdata.selected_mechanism.name ("KNOB")
+	 - Connects to HCcomm signals: new_device_data, device_connected, device_disconnected
+	 - Calls _start_arom_raw_logging()
+	   AppDataTrial.start_arom_raw_data_logging()
+	   Creates: arom-knob-2026-05-20_10-30-45.csv
+	 - Calls _update_title() → Sets title to "KNOB"
+	 - Calls _update_status()
    ↓
    Device connection established, AROM logging active
    ```
@@ -715,21 +715,21 @@ func _on_back_pressed() -> void:
    HCcomm emits new_device_data signal
    ↓
    knob_assessment._on_device_data_received():
-     - current_angle = _get_current_angle()
-       match selected_knob "KNOB":
-         return HCcomm.angle_2  (≈12.45°)
+	 - current_angle = _get_current_angle()
+	   match selected_knob "KNOB":
+		 return HCcomm.angle_2  (≈12.45°)
    ↓
-     - Update knob_1_angle_label.text = "12.45°"
-     - Update current_label.text = "Current: 12.45°"
+	 - Update knob_1_angle_label.text = "12.45°"
+	 - Update current_label.text = "Current: 12.45°"
    ↓
-     - _update_min_max():
-       if current_angle < min_angle: min_angle = current_angle
-       if current_angle > max_angle: max_angle = current_angle
-       Update min_label and max_label
+	 - _update_min_max():
+	   if current_angle < min_angle: min_angle = current_angle
+	   if current_angle > max_angle: max_angle = current_angle
+	   Update min_label and max_label
    ↓
-     - _update_knob_progress():
-       knob_progress_cw.radial_fill_degrees = max_angle
-       knob_progress_ccw.radial_fill_degrees = abs(min_angle)
+	 - _update_knob_progress():
+	   knob_progress_cw.radial_fill_degrees = max_angle
+	   knob_progress_ccw.radial_fill_degrees = abs(min_angle)
    ↓
    User sees real-time angle display + min/max tracking + visual progress bars
    ```
@@ -740,22 +740,22 @@ func _on_back_pressed() -> void:
    User clicks Save button
    ↓
    knob_assessment._on_save_pressed():
-     - Validates measurements exist
-     - AppDataTrial.stop_arom_raw_data_logging()
-       Disconnects from HCcomm signal
-       Writes buffered data to arom-knob-2026-05-20_10-30-45.csv (4523 packets)
+	 - Validates measurements exist
+	 - AppDataTrial.stop_arom_raw_data_logging()
+	   Disconnects from HCcomm signal
+	   Writes buffered data to arom-knob-2026-05-20_10-30-45.csv (4523 packets)
    ↓
-     - Appdata.selected_mechanism.set_new_arom_values(-25.0, 45.0)
-       Sets new_rom.arom_min = -25.0
-       Sets new_rom.arom_max = 45.0
-       Sets arom_completed = true
+	 - Appdata.selected_mechanism.set_new_arom_values(-25.0, 45.0)
+	   Sets new_rom.arom_min = -25.0
+	   Sets new_rom.arom_max = 45.0
+	   Sets arom_completed = true
    ↓
-     - Appdata.selected_mechanism.save_assessment_data()
-       Calls new_rom.write_to_assessment_file()
-       Creates/Updates: data/H001/rom/KNOB.csv
-       Appends: 20-05-2026 10:30:45,-25.0,45.0
+	 - Appdata.selected_mechanism.save_assessment_data()
+	   Calls new_rom.write_to_assessment_file()
+	   Creates/Updates: data/H001/rom/KNOB.csv
+	   Appends: 20-05-2026 10:30:45,-25.0,45.0
    ↓
-     - status_label.text = "Success: Assessment saved! AROM: -25.00° to 45.00°"
+	 - status_label.text = "Success: Assessment saved! AROM: -25.00° to 45.00°"
    ```
 
 8. **Return to Mechanism Selection:**
@@ -763,9 +763,9 @@ func _on_back_pressed() -> void:
    User clicks Back button
    ↓
    knob_assessment._on_back_pressed():
-     - Scene changes to mechanism.tscn
-     - Appdata.selected_mechanism preserved (stays in memory)
-     - AppDataTrial internal state reset (files closed)
+	 - Scene changes to mechanism.tscn
+	 - Appdata.selected_mechanism preserved (stays in memory)
+	 - AppDataTrial internal state reset (files closed)
    ↓
    User can select different knob or different mechanism
    ```
@@ -774,20 +774,20 @@ func _on_back_pressed() -> void:
 ```
 CSV User File → DataManager → AppData static vars → Mechanism Selection
 data/{id}/configdata.csv    load_config()        hospital_id, session_number
-                            
-                                                 ↓
-                                                 
+							
+												 ↓
+												 
 Mechanism Selection → Assessment → Knob Selection → HyperCubeMechanism Object
 "Knobs"               Button          "Knob"      selected_mechanism
-                                                 
-                                                 ↓
-                                                 
+												 
+												 ↓
+												 
 Real-time Sensor Loop → Min/Max Tracking → Save Assessment → ROM CSV File
 HCcomm signals        min_angle=-25°      save_assessment()  data/{id}/rom/KNOB.csv
-                      max_angle=45°                         -25.0,45.0
-                      
-                                                 ↓
-                                                 
+					  max_angle=45°                         -25.0,45.0
+					  
+												 ↓
+												 
 Raw Sensor Data File → AROM CSV
 arom-knob-{time}.csv  4523 packets logged during assessment
 ```
@@ -829,8 +829,8 @@ arom-knob-{time}.csv  4523 packets logged during assessment
 === Available COM Ports ===
 Found 1 port(s):
   Port: COM15
-    Type: USB Device
-    Device: HyperCube Device
+	Type: USB Device
+	Device: HyperCube Device
 ===========================
 
 HCComm _ready() starting...
@@ -919,64 +919,64 @@ Check the console output for specific error message.
 ```gdscript
 # In any script
 func _ready():
-    # Connect to device
-    AppData.open_connection()
-    
-    # Listen for device events
-    HCcomm.device_connected.connect(_on_connected)
-    HCcomm.new_device_data.connect(_on_data_received)
+	# Connect to device
+	AppData.open_connection()
+	
+	# Listen for device events
+	HCcomm.device_connected.connect(_on_connected)
+	HCcomm.new_device_data.connect(_on_data_received)
 
 func _on_data_received():
-    # Access sensor data directly
-    print("Force total: ", HCcomm.get_total_force())
-    print("Angle 1: ", HCcomm.angle_1)
-    print("Button 1: ", HCcomm.button_1)
+	# Access sensor data directly
+	print("Force total: ", HCcomm.get_total_force())
+	print("Angle 1: ", HCcomm.angle_1)
+	print("Button 1: ", HCcomm.button_1)
 
 func _on_connected():
-    print("Device is ready!")
-    AppData.close_connection()
+	print("Device is ready!")
+	AppData.close_connection()
 ```
 
 ### **Mechanism & AROM Assessment:**
 ```gdscript
 # Create a mechanism (typically called from assessment button)
 func _on_knob_selected():
-    Appdata.set_mechanism("Knob")  # Creates HyperCubeMechanism("KNOB", session_number)
+	Appdata.set_mechanism("Knob")  # Creates HyperCubeMechanism("KNOB", session_number)
 
 # Access the current mechanism
 func _ready():
-    var mech = Appdata.selected_mechanism
-    print("Current mechanism: ", mech.name)  # Output: "KNOB", "FINE KNOB", etc.
+	var mech = Appdata.selected_mechanism
+	print("Current mechanism: ", mech.name)  # Output: "KNOB", "FINE KNOB", etc.
 
 # Start AROM assessment
 func start_assessment():
-    AppDataTrial.start_arom_raw_data_logging()  # Begin recording sensor data
+	AppDataTrial.start_arom_raw_data_logging()  # Begin recording sensor data
 
 # Set AROM values (min/max angles)
 func set_arom_values(min_val: float, max_val: float):
-    var mech = Appdata.selected_mechanism
-    mech.set_new_arom_values(min_val, max_val)  # Set AROM range
-    if mech.save_assessment_data():
-        print("ROM saved successfully!")
+	var mech = Appdata.selected_mechanism
+	mech.set_new_arom_values(min_val, max_val)  # Set AROM range
+	if mech.save_assessment_data():
+		print("ROM saved successfully!")
 
 # Stop AROM assessment and write files
 func stop_assessment():
-    AppDataTrial.stop_arom_raw_data_logging()  # Write arom-{mech}-{time}.csv
+	AppDataTrial.stop_arom_raw_data_logging()  # Write arom-{mech}-{time}.csv
 ```
 
 ### **User Management:**
 ```gdscript
 # Load user (called at login)
 func login_user(hospital_id: String):
-    if AppData.load_user(hospital_id):
-        print("User loaded: ", AppData.user_name)
-    else:
-        print("User not found")
+	if AppData.load_user(hospital_id):
+		print("User loaded: ", AppData.user_name)
+	else:
+		print("User not found")
 
 # Switch to new user
 func switch_user(new_hospital_id: String):
-    AppData.clear_mechanisms()  # Clear all mechanisms from previous user
-    AppData.load_user(new_hospital_id)
+	AppData.clear_mechanisms()  # Clear all mechanisms from previous user
+	AppData.load_user(new_hospital_id)
 ```
 
 ## Architecture Benefits
@@ -1166,7 +1166,7 @@ func _on_tripod_grip_pressed() -> void:
 ### **Scene Flow:**
 ```
 Main (Login) → Mechanism Selection → Assessment → Diagnostics
-              [Hand Grip/Knobs/Tripod] [Shows ASSESS {Mechanism}]
+			  [Hand Grip/Knobs/Tripod] [Shows ASSESS {Mechanism}]
 ```
 
 ### **Data Flow:**
@@ -1205,8 +1205,8 @@ When "Knobs" mechanism is selected from mechanism scene, assessment displays thr
 Button handlers call `Appdata.set_mechanism()`:
 ```gdscript
 func _on_knob_selected() -> void:
-    Appdata.set_mechanism("Knob")
-    get_tree().change_scene_to_file("res://scene/knob_assessment.tscn")
+	Appdata.set_mechanism("Knob")
+	get_tree().change_scene_to_file("res://scene/knob_assessment.tscn")
 ```
 
 This creates: `Appdata.selected_mechanism = HyperCubeMechanism("KNOB", session_number)`
@@ -1224,8 +1224,8 @@ Flexible scene that displays the selected knob type with real-time angle monitor
 Uses TextureProgressBar with radial_fill_degrees based on angle sign:
 ```gdscript
 func _update_knob_progress() -> void:
-    knob_progress_cw.radial_fill_degrees = max_angle      # Clockwise max fill
-    knob_progress_ccw.radial_fill_degrees = abs(min_angle) # CCW min fill (absolute)
+	knob_progress_cw.radial_fill_degrees = max_angle      # Clockwise max fill
+	knob_progress_ccw.radial_fill_degrees = abs(min_angle) # CCW min fill (absolute)
 ```
 
 #### **4. Angle Tracking & AROM Measurement:**
@@ -1236,10 +1236,10 @@ var max_angle = 0.0  # Highest angle reached
 var current_angle = 0.0  # Real-time value
 
 func _update_min_max() -> void:
-    if current_angle < min_angle:
-        min_angle = current_angle
-    if current_angle > max_angle:
-        max_angle = current_angle
+	if current_angle < min_angle:
+		min_angle = current_angle
+	if current_angle > max_angle:
+		max_angle = current_angle
 ```
 
 These min/max values become the AROM assessment result when saved.
@@ -1284,14 +1284,14 @@ var current_mechanism  # Reference to Appdata.selected_mechanism
 **Real-time Data Flow:**
 ```
 HCcomm.new_device_data signal (100+ packets/sec)
-    ↓
+	↓
 _on_device_data_received():
-    ├─ current_angle = _get_current_angle() [reads angle_2/3/4]
-    ├─ Update knob_1_angle_label ("12.45°")
-    ├─ Update current_label ("Current: 12.45°")
-    ├─ _update_min_max() [tracks min/max]
-    └─ _update_knob_progress() [updates CW/CCW fills]
-    
+	├─ current_angle = _get_current_angle() [reads angle_2/3/4]
+	├─ Update knob_1_angle_label ("12.45°")
+	├─ Update current_label ("Current: 12.45°")
+	├─ _update_min_max() [tracks min/max]
+	└─ _update_knob_progress() [updates CW/CCW fills]
+	
 User sees real-time angle display + min/max tracking
 ```
 
@@ -1299,15 +1299,15 @@ User sees real-time angle display + min/max tracking
 When user clicks Save:
 ```gdscript
 func _on_save_pressed() -> void:
-    # Stop AROM raw data logging
-    AppDataTrial.stop_arom_raw_data_logging()
-    
-    # Set AROM values (min/max from tracking)
-    Appdata.selected_mechanism.set_new_arom_values(min_angle, max_angle)
-    
-    # Save to ROM assessment file
-    if Appdata.selected_mechanism.save_assessment_data():
-        status_label.text = "Success: Assessment data saved! AROM: %.2f° to %.2f°" % [min_angle, max_angle]
+	# Stop AROM raw data logging
+	AppDataTrial.stop_arom_raw_data_logging()
+	
+	# Set AROM values (min/max from tracking)
+	Appdata.selected_mechanism.set_new_arom_values(min_angle, max_angle)
+	
+	# Save to ROM assessment file
+	if Appdata.selected_mechanism.save_assessment_data():
+		status_label.text = "Success: Assessment data saved! AROM: %.2f° to %.2f°" % [min_angle, max_angle]
 ```
 
 **Output Files Created:**
@@ -1329,19 +1329,19 @@ func _on_save_pressed() -> void:
 #### **9. Navigation Flow:**
 ```
 Mechanism Scene (Click "Knobs")
-    ↓
+	↓
 Assessment Scene (Shows three knob buttons)
-    ├─ Click "Knob"
-    ├─ Click "Fine Knob"  ─→ Appdata.set_mechanism(name)
-    └─ Click "Key Knob"       ↓
-                         knob_assessment.tscn
-                         ↓
-                    Real-time AROM Assessment
-                    (min/max angle tracking)
-                         ↓ (Click Save)
-                    ROM data persisted to CSV
-                         ↓ (Click Back)
-                    Returns to mechanism.tscn
+	├─ Click "Knob"
+	├─ Click "Fine Knob"  ─→ Appdata.set_mechanism(name)
+	└─ Click "Key Knob"       ↓
+						 knob_assessment.tscn
+						 ↓
+					Real-time AROM Assessment
+					(min/max angle tracking)
+						 ↓ (Click Save)
+					ROM data persisted to CSV
+						 ↓ (Click Back)
+					Returns to mechanism.tscn
 ```
 
 #### **Implementation Status: ✅ COMPLETE**
@@ -1361,23 +1361,23 @@ Assessment Scene (Shows three knob buttons)
 **Data Flow Summary:**
 ```
 Assessment Scene
-    ↓
+	↓
 Appdata.set_mechanism("Knob")
-    ↓ Creates HyperCubeMechanism object
+	↓ Creates HyperCubeMechanism object
 knob_assessment.tscn loaded
-    ↓
+	↓
 Appdata.selected_mechanism.name = "KNOB"
 AppDataTrial.start_arom_raw_data_logging()
-    ↓ Starts sensor packet recording
+	↓ Starts sensor packet recording
 Real-time monitoring: min/max angle tracking
-    ↓ User rotates knob, sees angle updates
+	↓ User rotates knob, sees angle updates
 Click Save button
-    ↓
+	↓
 Appdata.selected_mechanism.set_new_arom_values(min_angle, max_angle)
 Appdata.selected_mechanism.save_assessment_data()
-    ↓ Writes ROM file
+	↓ Writes ROM file
 AppDataTrial.stop_arom_raw_data_logging()
-    ↓ Writes AROM raw data file
+	↓ Writes AROM raw data file
 Assessment saved and files persisted
 ```
 
@@ -1442,13 +1442,13 @@ When "Hand Grip" button selected in mechanism.tscn:
 #### **4. Real-time Data Flow:**
 ```
 HCcomm.new_device_data signal (100+ packets/sec)
-    ↓
+	↓
 _on_device_data_received():
-    ├─ current_angle = HCcomm.angle_1
-    ├─ Update angle display (e.g., "45.67°")
-    ├─ Track min/max values
-    ├─ Update progress bars (CW/CCW fills)
-    └─ Update needle rotation
+	├─ current_angle = HCcomm.angle_1
+	├─ Update angle display (e.g., "45.67°")
+	├─ Track min/max values
+	├─ Update progress bars (CW/CCW fills)
+	└─ Update needle rotation
 
 User sees real-time grip angle + visual feedback
 ```

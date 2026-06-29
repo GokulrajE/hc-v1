@@ -1,0 +1,310 @@
+[gd_scene format=3 uid="uid://b64xwepr2k5dy"]
+
+[ext_resource type="Script" uid="uid://b46iahenrlumk" path="res://scripts/rainandrise/rnr_game.gd" id="1_rnrg"]
+[ext_resource type="Script" uid="uid://xa50siwtfcu8" path="res://scripts/rainandrise/rnr_ui.gd" id="2_rnrui"]
+[ext_resource type="Texture2D" uid="uid://cgreswuet21xq" path="res://assets/hattrick/SkySprite.png" id="2_stj35"]
+[ext_resource type="Texture2D" uid="uid://blvhwv0d31tqo" path="res://assets/rainandrise/Background/GrassSprite.png" id="4_grass"]
+[ext_resource type="Texture2D" uid="uid://dbv7qnrke6we8" path="res://assets/rainandrise/CloudEmotions/tile000.png" id="5_cloud"]
+[ext_resource type="Texture2D" uid="uid://kwcjyyaksqc5" path="res://assets/ui/start game board.png" id="6_startboard"]
+[ext_resource type="Texture2D" uid="uid://sk2a0xm7sp3k" path="res://assets/ui/gameover board.png" id="7_goboard"]
+[ext_resource type="Texture2D" uid="uid://bmwg8y55461y8" path="res://assets/ui/Button13.png" id="8_btn13"]
+[ext_resource type="Texture2D" uid="uid://cn668kccj0k6y" path="res://assets/ui/Button08.png" id="9_btn08"]
+[ext_resource type="Texture2D" uid="uid://c2kvtt4ccy8at" path="res://assets/ui/Btn_V01.png" id="10_btnv01"]
+[ext_resource type="Texture2D" uid="uid://daqibh5tqjbfl" path="res://assets/ui/Btn_V05.png" id="11_btnv05"]
+[ext_resource type="Texture2D" uid="uid://cui1ajpmfoeo8" path="res://assets/ui/Btn_V03.png" id="12_btnv03"]
+[ext_resource type="Texture2D" uid="uid://dcvu4oconjgk2" path="res://assets/ui/Btn_V04.png" id="13_btnv04"]
+[ext_resource type="FontFile" uid="uid://btw3w8gykgilf" path="res://assets/fonts/TiltNeon-Regular-VariableFont_XROT,YROT.ttf" id="14_font"]
+
+[sub_resource type="StyleBoxTexture" id="RNR_ExitNormal"]
+texture = ExtResource("12_btnv03")
+
+[sub_resource type="StyleBoxTexture" id="RNR_ExitHover"]
+texture = ExtResource("13_btnv04")
+
+[sub_resource type="StyleBoxTexture" id="RNR_PlayNormal"]
+texture = ExtResource("8_btn13")
+
+[sub_resource type="StyleBoxTexture" id="RNR_PlayHover"]
+texture = ExtResource("9_btn08")
+
+[sub_resource type="StyleBoxTexture" id="RNR_MenuNormal"]
+texture = ExtResource("10_btnv01")
+
+[sub_resource type="StyleBoxTexture" id="RNR_MenuHover"]
+texture = ExtResource("11_btnv05")
+
+[node name="RNRGame" type="Node2D" unique_id=500000001]
+script = ExtResource("1_rnrg")
+
+[node name="Background" type="TextureRect" parent="." unique_id=500000002]
+modulate = Color(0.4630682, 0.4630682, 0.4630682, 1)
+offset_right = 1920.0
+offset_bottom = 1080.0
+texture = ExtResource("2_stj35")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Grass" type="Sprite2D" parent="." unique_id=500000003]
+z_index = 3
+position = Vector2(962, 909)
+scale = Vector2(2.1, 0.45)
+texture = ExtResource("4_grass")
+
+[node name="SeedContainer" type="Node2D" parent="." unique_id=500000004]
+
+[node name="CloudSprite" type="Sprite2D" parent="." unique_id=500000005]
+position = Vector2(102, 140)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("5_cloud")
+
+[node name="RainContainer" type="Node2D" parent="CloudSprite" unique_id=500000006]
+
+[node name="RNRUI" type="CanvasLayer" parent="." unique_id=500000007]
+script = ExtResource("2_rnrui")
+
+[node name="Control" type="Control" parent="RNRUI" unique_id=500000008]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScoreLabel" type="Label" parent="RNRUI/Control" unique_id=500000009]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 30.0
+offset_right = 450.0
+offset_bottom = 90.0
+theme_override_colors/font_color = Color(0.2, 1, 0.4, 1)
+theme_override_font_sizes/font_size = 48
+text = "Score: 0"
+
+[node name="TimerLabel" type="Label" parent="RNRUI/Control" unique_id=500000010]
+layout_mode = 0
+offset_left = 1540.0
+offset_top = 30.0
+offset_right = 1870.0
+offset_bottom = 90.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 48
+text = "⏱️ Time: 60s"
+
+[node name="ExitButton" type="Button" parent="RNRUI/Control" unique_id=500000011]
+visible = false
+layout_mode = 0
+offset_left = 1730.0
+offset_top = 15.0
+offset_right = 1900.0
+offset_bottom = 72.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("RNR_ExitNormal")
+theme_override_styles/pressed = SubResource("RNR_ExitNormal")
+theme_override_styles/hover = SubResource("RNR_ExitHover")
+text = "Exit"
+
+[node name="RainHint" type="Label" parent="RNRUI/Control" unique_id=500000012]
+visible = false
+layout_mode = 0
+offset_left = 580.0
+offset_top = 30.0
+offset_right = 1340.0
+offset_bottom = 80.0
+theme_override_colors/font_color = Color(0.5, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 28
+text = "Hold [R] to Rain  •  ← → Move Cloud"
+horizontal_alignment = 1
+
+[node name="RainBarBg" type="ColorRect" parent="RNRUI/Control" unique_id=500000013]
+visible = false
+layout_mode = 0
+offset_left = 760.0
+offset_top = 1032.0
+offset_right = 1160.0
+offset_bottom = 1060.0
+color = Color(0.18, 0.18, 0.28, 0.85)
+
+[node name="RainBarFill" type="ColorRect" parent="RNRUI/Control/RainBarBg" unique_id=500000014]
+visible = false
+layout_mode = 0
+offset_bottom = 28.0
+color = Color(0.3, 0.7, 1, 1)
+
+[node name="RainBarLabel" type="Label" parent="RNRUI/Control/RainBarBg" unique_id=500000015]
+layout_mode = 0
+offset_top = -26.0
+offset_right = 400.0
+theme_override_colors/font_color = Color(0.65, 0.92, 1, 1)
+theme_override_font_sizes/font_size = 20
+text = "💧 Rain Progress"
+horizontal_alignment = 1
+
+[node name="StartBoard" type="TextureRect" parent="RNRUI/Control" unique_id=500000016]
+layout_mode = 0
+offset_left = 430.0
+offset_top = 130.0
+offset_right = 1490.0
+offset_bottom = 900.0
+texture = ExtResource("6_startboard")
+expand_mode = 1
+
+[node name="ContentVBox" type="VBoxContainer" parent="RNRUI/Control/StartBoard" unique_id=500000017]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 60.0
+offset_top = 30.0
+offset_right = -60.0
+offset_bottom = -120.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="RNRUI/Control/StartBoard/ContentVBox" unique_id=500000018]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.17, 0.2, 1)
+theme_override_fonts/font = ExtResource("14_font")
+theme_override_font_sizes/font_size = 64
+text = "Rain & Rise"
+horizontal_alignment = 1
+
+[node name="EmojiLabel" type="Label" parent="RNRUI/Control/StartBoard/ContentVBox" unique_id=500000019]
+layout_mode = 2
+theme_override_font_sizes/font_size = 72
+text = "☁️  🌧️  🌱"
+horizontal_alignment = 1
+
+[node name="DescLabel" type="Label" parent="RNRUI/Control/StartBoard/ContentVBox" unique_id=500000020]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.15, 0.15, 0.15, 1)
+theme_override_font_sizes/font_size = 28
+text = "Move the cloud with ← →
+Hold [R] to rain on the glowing seed and grow it!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="StartPromptLabel" type="Label" parent="RNRUI/Control/StartBoard/ContentVBox" unique_id=500000021]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.05, 0.05, 0.05, 1)
+theme_override_font_sizes/font_size = 40
+text = "Press SPACEBAR to Start"
+horizontal_alignment = 1
+
+[node name="GameOverBoard" type="TextureRect" parent="RNRUI/Control" unique_id=500000022]
+visible = false
+layout_mode = 0
+offset_left = 580.0
+offset_top = 185.0
+offset_right = 1340.0
+offset_bottom = 900.0
+texture = ExtResource("7_goboard")
+expand_mode = 1
+
+[node name="ContentVBox" type="VBoxContainer" parent="RNRUI/Control/GameOverBoard" unique_id=500000023]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 80.0
+offset_top = 60.0
+offset_right = -80.0
+offset_bottom = -60.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 26
+alignment = 1
+
+[node name="GameOverLabel" type="Label" parent="RNRUI/Control/GameOverBoard/ContentVBox" unique_id=500000024]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.3, 0.3, 1)
+theme_override_font_sizes/font_size = 68
+text = "GAME OVER!"
+horizontal_alignment = 1
+
+[node name="ResultsLabel" type="Label" parent="RNRUI/Control/GameOverBoard/ContentVBox" unique_id=500000025]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.05, 0.05, 0.05, 1)
+theme_override_font_sizes/font_size = 30
+text = "Score: 0"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="RestartButton" type="Button" parent="RNRUI/Control/GameOverBoard/ContentVBox" unique_id=500000026]
+custom_minimum_size = Vector2(320, 72)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("RNR_PlayNormal")
+theme_override_styles/pressed = SubResource("RNR_PlayNormal")
+theme_override_styles/hover = SubResource("RNR_PlayHover")
+text = "Play Again"
+
+[node name="MenuButton" type="Button" parent="RNRUI/Control/GameOverBoard/ContentVBox" unique_id=500000027]
+custom_minimum_size = Vector2(320, 72)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("RNR_MenuNormal")
+theme_override_styles/pressed = SubResource("RNR_MenuNormal")
+theme_override_styles/hover = SubResource("RNR_MenuHover")
+text = "Back to Menu"
+
+[node name="SuccessPopup" type="Control" parent="RNRUI" unique_id=500000028]
+visible = false
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -180.0
+offset_top = -45.0
+offset_right = 180.0
+offset_bottom = 45.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SuccessLabel" type="Label" parent="RNRUI/SuccessPopup" unique_id=500000029]
+layout_mode = 0
+offset_left = -180.0
+offset_right = 180.0
+offset_bottom = 90.0
+theme_override_colors/font_color = Color(0.1, 1, 0.25, 1)
+theme_override_font_sizes/font_size = 52
+text = "🌱 GREW!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="FailurePopup" type="Control" parent="RNRUI" unique_id=500000030]
+visible = false
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -180.0
+offset_top = -45.0
+offset_right = 180.0
+offset_bottom = 45.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FailureLabel" type="Label" parent="RNRUI/FailurePopup" unique_id=500000031]
+layout_mode = 0
+offset_left = -180.0
+offset_right = 180.0
+offset_bottom = 90.0
+theme_override_colors/font_color = Color(1, 0.5, 0.2, 1)
+theme_override_font_sizes/font_size = 52
+text = "⏰ MISSED!"
+horizontal_alignment = 1
+vertical_alignment = 1

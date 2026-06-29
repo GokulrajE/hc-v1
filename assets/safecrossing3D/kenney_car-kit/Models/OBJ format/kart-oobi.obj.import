@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://bi5qrmwkbvp8h"
+path="res://.godot/imported/kart-oobi.obj-043a3ae82c1e83c6cea2c1db78f9e108.mesh"
+
+[deps]
+
+files=["res://.godot/imported/kart-oobi.obj-043a3ae82c1e83c6cea2c1db78f9e108.mesh"]
+
+source_file="res://assets/safecrossing3D/kenney_car-kit/Models/OBJ format/kart-oobi.obj"
+dest_files=["res://.godot/imported/kart-oobi.obj-043a3ae82c1e83c6cea2c1db78f9e108.mesh", "res://.godot/imported/kart-oobi.obj-043a3ae82c1e83c6cea2c1db78f9e108.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

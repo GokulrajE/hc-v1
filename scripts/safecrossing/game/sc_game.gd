@@ -7,7 +7,13 @@ extends Node2D
 @onready var ui = $UI
 @onready var pause_menu = $PauseMenu
 
-var _game_state: SCGameState
+enum GameState { WAITING, START, CARMOVING, CARSTOP, SUCCESS, FAILURE, PAUSED, STOP, DONE }
+var _game_state: GameState = GameState.WAITING
+var _is_game_started: bool = false
+var _event_delay_timer: float = 0.0
+
+const RESULT_DELAY: float = 0.8
+
 var _scroll_manager: Node
 var _traffic_signal
 var _distance_traveled: float = 0.0
@@ -27,7 +33,6 @@ var _last_traffic_line_y: float = -999999.0
 # Trial duration and timing (60 seconds)
 const TRIAL_DURATION: float = 60.0
 var _trial_time_left: float = TRIAL_DURATION
-var _trial_is_running: bool = false
 
 # Trial statistics
 var _trial_targets: int = 0      # Total crossings attempted
@@ -42,8 +47,7 @@ const BRAKE_DECELERATION: float = 500.0
 const BRAKE_ACCELERATION: float = 300.0
 
 func _ready() -> void:
-	_game_state = SCGameState.new()
-	_game_state.enter_state(SCGameState.State.WAITING)
+	SCGameManager.change_state("waiting")
 
 	# Create scroll manager
 	_scroll_manager = load("res://scripts/safecrossing/game/sc_scroll_manager.gd").new()
@@ -76,123 +80,148 @@ func _ready() -> void:
 	_reset_trial_stats()
 
 
-func _physics_process(delta: float) -> void:
-	# Only run game logic if in PLAYING state (not WAITING, PAUSED, GAME_OVER, etc)
-	if not _game_state.is_state(SCGameState.State.PLAYING):
+func _process(delta: float) -> void:
+	if _game_state == GameState.WAITING:
+		if Input.is_action_just_pressed("ui_select"):
+			_is_game_started = true
 		return
 
-	# Update trial timer
-	if _trial_is_running:
-		_trial_time_left -= delta
-		if _trial_time_left <= 0:
-			_end_trial()
-
-		# Update UI timer display
-		if ui:
-			ui.update_timer_display(_trial_time_left)
-
-	_distance_traveled += SCGameManager.game_speed * delta
-	SCGameManager.set_distance(_distance_traveled)
-
-	_scroll_manager.update_scroll(delta, SCGameManager.game_speed)
-	_check_crossing_lines()
-
-	if int(Engine.get_physics_frames()) % 30 == 0:
-		print("⏱️ Trial: %.1f/%.0fs | 🔍 SCROLL: %.0f | PHASE: %d | COLLIDED: %s | SCORE: %d | SUCCESS: %d | FAIL: %d" % [
-			TRIAL_DURATION - _trial_time_left, TRIAL_DURATION, _scroll_manager.scroll_offset,
-			_current_phase, _phase_collided, _player_score, _trial_successes, _trial_failures
-		])
-
-	var new_phase = _scroll_manager.get_current_phase()
-	if new_phase != _current_phase:
-		_on_phase_changed(new_phase)
-
-	_phase_timer -= delta
-	if _phase_timer <= 0:
-		_phase_timer = _phase_durations[_current_phase]
-
-	spawner.spawn_rate = SCGameManager.spawn_rate
-	_update_phase_display()
-
-
-func _process(delta: float) -> void:
-	# Handle START button - user clicks to start game
-	if _game_state.is_state(SCGameState.State.WAITING):
-		if Input.is_action_just_pressed("ui_select"):  # Spacebar to start
-			_start_trial()
-			return
-
-	# Handle braking during gameplay
-	var device_button_pressed = false
-
+	# Detect brake input
+	var device_button_pressed := false
 	if HCcomm and (HCcomm.button_1 == 0 or HCcomm.button_2 == 0 or HCcomm.button_3 == 0 or
 		HCcomm.button_4 == 0 or HCcomm.button_5 == 0 or HCcomm.button_6 == 0 or HCcomm.button_7 == 0):
 		device_button_pressed = true
-
 	if not device_button_pressed and Input.is_action_pressed("ui_select"):
 		device_button_pressed = true
 
-	# Only allow braking if game is playing
-	if _game_state.is_state(SCGameState.State.PLAYING):
-		if device_button_pressed and not _is_braking:
-			_is_braking = true
-			_target_speed = 0.0
-			print("🛑 Car braking")
-		elif not device_button_pressed and _is_braking:
-			_is_braking = false
-			_target_speed = _base_speed
-			print("▶️ Car resuming")
+	# State-based brake transitions
+	if _game_state == GameState.CARMOVING and device_button_pressed:
+		_is_braking = true
+		_target_speed = 0.0
+		_game_state = GameState.CARSTOP
+		print("🛑 Car braking")
+	elif _game_state == GameState.CARSTOP and not device_button_pressed:
+		_is_braking = false
+		_target_speed = _base_speed
+		_game_state = GameState.CARMOVING
+		print("▶️ Car resuming")
 
-	# Smoothly transition to target speed
+	# Smooth speed transition
 	if SCGameManager.game_speed != _target_speed:
-		var speed_diff = _target_speed - SCGameManager.game_speed
-		var decel_rate = BRAKE_DECELERATION if _is_braking else BRAKE_ACCELERATION
-
+		var speed_diff := _target_speed - SCGameManager.game_speed
+		var decel_rate := BRAKE_DECELERATION if _is_braking else BRAKE_ACCELERATION
 		if abs(speed_diff) < decel_rate * delta:
 			SCGameManager.game_speed = _target_speed
 		else:
 			SCGameManager.game_speed += sign(speed_diff) * decel_rate * delta
 
-	# Pause/Resume
-	if Input.is_action_just_pressed("ui_cancel") and _game_state.is_state(SCGameState.State.PLAYING):
+	# Pause toggle
+	if Input.is_action_just_pressed("ui_cancel") and _game_state in [GameState.CARMOVING, GameState.CARSTOP]:
 		_toggle_pause()
+
+
+func _physics_process(delta: float) -> void:
+	if _game_state == GameState.CARMOVING or _game_state == GameState.CARSTOP \
+			or _game_state == GameState.SUCCESS or _game_state == GameState.FAILURE:
+		_distance_traveled += SCGameManager.game_speed * delta
+		SCGameManager.set_distance(_distance_traveled)
+		_scroll_manager.update_scroll(delta, SCGameManager.game_speed)
+		_check_crossing_lines()
+
+		if int(Engine.get_physics_frames()) % 30 == 0:
+			print("⏱️ Trial: %.1f/%.0fs | 🔍 SCROLL: %.0f | PHASE: %d | COLLIDED: %s | SCORE: %d | SUCCESS: %d | FAIL: %d" % [
+				TRIAL_DURATION - _trial_time_left, TRIAL_DURATION, _scroll_manager.scroll_offset,
+				_current_phase, _phase_collided, _player_score, _trial_successes, _trial_failures
+			])
+
+		var new_phase: int = _scroll_manager.get_current_phase()
+		if new_phase != _current_phase:
+			_on_phase_changed(new_phase)
+		_phase_timer -= delta
+		if _phase_timer <= 0:
+			_phase_timer = _phase_durations[_current_phase]
+		spawner.spawn_rate = SCGameManager.spawn_rate
+		_update_phase_display()
+
+	_run_game_state_machine(delta)
+
+
+# ============================================================================
+# STATE MACHINE
+# ============================================================================
+
+func _run_game_state_machine(delta: float) -> void:
+	var is_time_up := false
+	if _game_state not in [GameState.WAITING, GameState.PAUSED, GameState.STOP, GameState.DONE]:
+		_trial_time_left = maxf(_trial_time_left - delta, 0.0)
+		if ui:
+			ui.update_timer_display(_trial_time_left)
+		is_time_up = _trial_time_left <= 0.0
+
+	match _game_state:
+		GameState.WAITING:
+			if _is_game_started:
+				_game_state = GameState.START
+
+		GameState.START:
+			_initialize_game()
+			_game_state = GameState.CARMOVING
+
+		GameState.CARMOVING:
+			if is_time_up:
+				_game_state = GameState.STOP
+
+		GameState.CARSTOP:
+			if is_time_up:
+				_game_state = GameState.STOP
+
+		GameState.SUCCESS, GameState.FAILURE:
+			_event_delay_timer -= delta
+			if _event_delay_timer <= 0.0:
+				# Reset braking and return to CARMOVING
+				_is_braking = false
+				_target_speed = _base_speed
+				if is_time_up:
+					_game_state = GameState.STOP
+				else:
+					_game_state = GameState.CARMOVING
+
+		GameState.PAUSED:
+			pass
+
+		GameState.STOP:
+			_end_trial()
+			_game_state = GameState.DONE
+
+		GameState.DONE:
+			pass
 
 
 # ============================================================================
 # TRIAL MANAGEMENT FUNCTIONS
 # ============================================================================
 
-func _start_trial() -> void:
-	
-	_game_state.enter_state(SCGameState.State.START)
+func _initialize_game() -> void:
+	SCGameManager.change_state("start")
 	_reset_trial_stats()
 	_trial_time_left = TRIAL_DURATION
-	_trial_is_running = true
-
-	# Update UI timer to show initial time
 	if ui:
 		ui.update_timer_display(TRIAL_DURATION)
-
 	AppDataTrial.start_new_trial()
 	ScAudioManager.play_background_music("res://assets/audio/sc_bg.mp3")
-
-	_game_state.enter_state(SCGameState.State.PLAYING)
+	SCGameManager.change_state("playing")
 	print("🎮 PLAYING - 60 second trial started")
 
 
 func _end_trial() -> void:
 	print("⏹️ TRIAL ENDED - Time's Up!")
-	_trial_is_running = false
-	_game_state.enter_state(SCGameState.State.GAME_OVER)
-
+	SCGameManager.change_state("game_over")
 	AppDataTrial.stop_trial(_trial_targets, _trial_successes, _trial_failures)
 	ScAudioManager.stop_music()
 	ScAudioManager.play_gameover()
 	print("💾 Trial data saved: Targets=%d, Success=%d, Failures=%d" % [
 		_trial_targets, _trial_successes, _trial_failures
 	])
-
-	# Display game over UI
 	_show_game_over_screen()
 
 
@@ -215,33 +244,37 @@ func _on_crossing_complete(is_success: bool) -> void:
 	if is_success:
 		_trial_successes += 1
 		print("✅ Crossing SUCCESS - Total: %d/%d" % [_trial_successes, _trial_targets])
-	
+
 	else:
 		_trial_failures += 1
 		print("❌ Crossing FAILED - Total: %d/%d" % [_trial_failures, _trial_targets])
-		
+
 
 # ============================================================================
 # GAME STATE HANDLING
 # ============================================================================
 
 func _toggle_pause() -> void:
-	if _game_state.is_state(SCGameState.State.PLAYING):
-		_game_state.enter_state(SCGameState.State.PAUSED)
+	if _game_state == GameState.CARMOVING or _game_state == GameState.CARSTOP:
+		_game_state = GameState.PAUSED
 		SCGameManager.toggle_pause()
+		SCGameManager.change_state("paused")
 		get_tree().paused = true
 		pause_menu.visible = true
 		print("⏸️ PAUSED")
-	elif _game_state.is_state(SCGameState.State.PAUSED):
-		_game_state.enter_state(SCGameState.State.PLAYING)
+	elif _game_state == GameState.PAUSED:
+		_game_state = GameState.CARMOVING
+		_is_braking = false
+		_target_speed = _base_speed
 		SCGameManager.toggle_pause()
+		SCGameManager.change_state("playing")
 		get_tree().paused = false
 		pause_menu.visible = false
 		print("▶️ RESUMED")
 
 
 func _on_car_collision(_pedestrian: Node2D) -> void:
-	if not _failure_sound_played and _game_state.is_state(SCGameState.State.PLAYING):
+	if not _failure_sound_played and (_game_state == GameState.CARMOVING or _game_state == GameState.CARSTOP):
 		_phase_collided = true
 		_failure_sound_played = true
 		print("💥 Collision with pedestrian!")
@@ -319,10 +352,16 @@ func _check_crossing_lines() -> void:
 					if not _phase_collided:
 						_add_score(1, "Pedestrians")
 						_on_crossing_complete(true)
+						_game_state = GameState.SUCCESS
 					else:
 						_on_crossing_complete(false)
 						print("❌ Hit pedestrian - no points")
+						_game_state = GameState.FAILURE
 					_has_scored_this_crossing = true
+					_event_delay_timer = RESULT_DELAY
+					_is_braking = false
+					_target_speed = _base_speed
+					SCGameManager.game_speed = _base_speed
 
 				_last_pedestrian_line_y = line_y
 
@@ -342,10 +381,16 @@ func _check_crossing_lines() -> void:
 					if not _phase_collided:
 						_add_score(1, "Traffic")
 						_on_crossing_complete(true)
+						_game_state = GameState.SUCCESS
 					else:
 						_on_crossing_complete(false)
 						print("❌ Hit traffic car - no points")
+						_game_state = GameState.FAILURE
 					_has_scored_this_crossing = true
+					_event_delay_timer = RESULT_DELAY
+					_is_braking = false
+					_target_speed = _base_speed
+					SCGameManager.game_speed = _base_speed
 
 				_last_traffic_line_y = line_y
 
@@ -359,7 +404,7 @@ func _add_score(points: int, phase_name: String) -> void:
 
 
 func _on_traffic_collision(_traffic_car: Node2D) -> void:
-	if not _failure_sound_played and _game_state.is_state(SCGameState.State.PLAYING):
+	if not _failure_sound_played and (_game_state == GameState.CARMOVING or _game_state == GameState.CARSTOP):
 		_phase_collided = true
 		_failure_sound_played = true
 		print("💥 Collision with traffic car!")
@@ -397,10 +442,21 @@ func _show_game_over_screen() -> void:
 
 
 func resume_game() -> void:
-	if _game_state.is_state(SCGameState.State.PAUSED):
+	if _game_state == GameState.PAUSED:
 		_toggle_pause()
 
 
 func return_to_menu() -> void:
 	get_tree().paused = false
 	get_tree().change_scene_to_file("res://scene/game_selection.tscn")
+
+
+func restart_game() -> void:
+	get_tree().paused = false
+	get_tree().reload_current_scene()
+
+
+func exit_game() -> void:
+	if _game_state not in [GameState.WAITING, GameState.DONE]:
+		get_tree().paused = false
+		_game_state = GameState.STOP

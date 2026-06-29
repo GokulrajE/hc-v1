@@ -11,6 +11,24 @@
 [ext_resource type="Texture2D" uid="uid://cui1ajpmfoeo8" path="res://assets/ui/Btn_V03.png" id="9_btnv03"]
 [ext_resource type="Texture2D" uid="uid://dcvu4oconjgk2" path="res://assets/ui/Btn_V04.png" id="10_btnv04"]
 
+[sub_resource type="StyleBoxTexture" id="ExitBtnNormal"]
+texture = ExtResource("9_btnv03")
+
+[sub_resource type="StyleBoxTexture" id="ExitBtnHover"]
+texture = ExtResource("10_btnv04")
+
+[sub_resource type="StyleBoxTexture" id="PlayBtnNormal"]
+texture = ExtResource("5_btn13")
+
+[sub_resource type="StyleBoxTexture" id="PlayBtnHover"]
+texture = ExtResource("6_btn08")
+
+[sub_resource type="StyleBoxTexture" id="MenuBtnNormal"]
+texture = ExtResource("7_btnv01")
+
+[sub_resource type="StyleBoxTexture" id="MenuBtnHover"]
+texture = ExtResource("8_btnv05")
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0533y"]
 bg_color = Color(1, 1, 1, 1)
 border_width_left = 11
@@ -34,24 +52,6 @@ corner_radius_top_left = 40
 corner_radius_top_right = 40
 corner_radius_bottom_right = 40
 corner_radius_bottom_left = 40
-
-[sub_resource type="StyleBoxTexture" id="PlayBtnNormal"]
-texture = ExtResource("5_btn13")
-
-[sub_resource type="StyleBoxTexture" id="PlayBtnHover"]
-texture = ExtResource("6_btn08")
-
-[sub_resource type="StyleBoxTexture" id="MenuBtnNormal"]
-texture = ExtResource("7_btnv01")
-
-[sub_resource type="StyleBoxTexture" id="MenuBtnHover"]
-texture = ExtResource("8_btnv05")
-
-[sub_resource type="StyleBoxTexture" id="ExitBtnNormal"]
-texture = ExtResource("9_btnv03")
-
-[sub_resource type="StyleBoxTexture" id="ExitBtnHover"]
-texture = ExtResource("10_btnv04")
 
 [node name="UI" type="CanvasLayer" unique_id=1171703322]
 process_mode = 3
@@ -107,8 +107,8 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 26
 theme_override_styles/normal = SubResource("ExitBtnNormal")
-theme_override_styles/hover = SubResource("ExitBtnHover")
 theme_override_styles/pressed = SubResource("ExitBtnNormal")
+theme_override_styles/hover = SubResource("ExitBtnHover")
 text = "✕ Exit"
 
 [node name="StartBoard" type="TextureRect" parent="." unique_id=300000001]
@@ -124,10 +124,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 51.0
-offset_top = -23.0
-offset_right = -109.0
-offset_bottom = -153.0
+offset_left = 87.0
+offset_top = 62.0
+offset_right = -73.0
+offset_bottom = -68.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 22
@@ -152,7 +152,8 @@ horizontal_alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0.1, 0.1, 0.1, 1)
 theme_override_font_sizes/font_size = 26
-text = "🟢 GO signal — drive through safely\n🔴 STOP signal — brake to let pedestrians cross"
+text = " drive through safely
+brake to let pedestrians cross"
 horizontal_alignment = 1
 autowrap_mode = 2
 
@@ -216,8 +217,8 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = SubResource("PlayBtnNormal")
-theme_override_styles/hover = SubResource("PlayBtnHover")
 theme_override_styles/pressed = SubResource("PlayBtnNormal")
+theme_override_styles/hover = SubResource("PlayBtnHover")
 text = "▶  Play Again"
 
 [node name="MenuButton" type="Button" parent="GameOverBoard/ContentVBox" unique_id=300000016]
@@ -228,8 +229,8 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = SubResource("MenuBtnNormal")
-theme_override_styles/hover = SubResource("MenuBtnHover")
 theme_override_styles/pressed = SubResource("MenuBtnNormal")
+theme_override_styles/hover = SubResource("MenuBtnHover")
 text = "Back to Menu"
 
 [node name="SuccessPopup" type="Label" parent="." unique_id=338243539]

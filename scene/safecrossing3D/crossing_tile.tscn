@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://cx3dtilesc3gm"]
+
+[ext_resource type="PackedScene" uid="uid://8o022u7w3q51" path="res://assets/safecrossing3D/kenney_city-kit-roads/Models/GLB format/road-crossing.glb" id="1_crossing"]
+
+[node name="CrossingTile" type="Node3D"]
+
+[node name="road-crossing" parent="." instance=ExtResource("1_crossing")]
+transform = Transform3D(0, 0, 15, 0, 15, 0, -15, 0, 0, 0, 0, 0)

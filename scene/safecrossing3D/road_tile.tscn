@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://wxn8xrjxuf5g"]
+
+[ext_resource type="PackedScene" uid="uid://b0lh7h7vav86r" path="res://assets/safecrossing3D/kenney_city-kit-roads/Models/GLB format/road-straight.glb" id="1_road"]
+
+[node name="RoadTile" type="Node3D"]
+
+[node name="road-straight" parent="." instance=ExtResource("1_road")]
+transform = Transform3D(0, 0, 15, 0, 15, 0, -15, 0, 0, 0, 0, 0)

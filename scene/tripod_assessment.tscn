@@ -2,248 +2,107 @@
 
 [ext_resource type="Script" uid="uid://bpave163x8l2o" path="res://scripts/tripod_assessment.gd" id="1_tripod_script"]
 [ext_resource type="PackedScene" uid="uid://ca8b3v7p5hc5" path="res://scene/connect_status.tscn" id="2_rxyx2"]
-
-[sub_resource type="StyleBoxFlat" id="BackButtonStyle"]
-bg_color = Color(0.4, 0.4, 0.4, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-
-[sub_resource type="StyleBoxFlat" id="StartButtonStyle"]
-bg_color = Color(0.2, 0.5, 0.8, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
-
-[sub_resource type="StyleBoxFlat" id="StopButtonStyle"]
-bg_color = Color(0.6, 0.2, 0.8, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
-
-[sub_resource type="StyleBoxFlat" id="RedoButtonStyle"]
-bg_color = Color(1, 0.4, 0.2, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
-
-[sub_resource type="StyleBoxFlat" id="SaveButtonStyle"]
-bg_color = Color(0.2, 0.7, 0.4, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
+[ext_resource type="Texture2D" uid="uid://sal3ip0hwbsd" path="res://assets/ui/Window04.png" id="3_win04"]
+[ext_resource type="Texture2D" uid="uid://c0453s7ofl7as" path="res://assets/ui/Window02.png" id="4_win02"]
+[ext_resource type="FontFile" uid="uid://btw3w8gykgilf" path="res://assets/fonts/TiltNeon-Regular-VariableFont_XROT,YROT.ttf" id="5_font"]
+[ext_resource type="Texture2D" uid="uid://c2kvtt4ccy8at" path="res://assets/ui/Btn_V01.png" id="6_btn01"]
+[ext_resource type="Texture2D" uid="uid://daqibh5tqjbfl" path="res://assets/ui/Btn_V05.png" id="7_btn05"]
+[ext_resource type="Texture2D" uid="uid://cui1ajpmfoeo8" path="res://assets/ui/Btn_V03.png" id="8_btn03"]
+[ext_resource type="Texture2D" uid="uid://dcvu4oconjgk2" path="res://assets/ui/Btn_V04.png" id="9_btn04"]
+[ext_resource type="Texture2D" uid="uid://dhjydje5pkqw2" path="res://assets/ui/Btn_V13.png" id="10_btn13"]
+[ext_resource type="Texture2D" uid="uid://c4uowtsac3i72" path="res://assets/ui/Btn_V18.png" id="11_btn18"]
+[ext_resource type="Texture2D" uid="uid://c7b54u1ko0m6u" path="res://assets/ui/Btn_V02.png" id="12_btn02"]
+[ext_resource type="Texture2D" uid="uid://n8eqx2nfw4dc" path="res://assets/ui/Btn_V06.png" id="13_btn06"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rxyx2"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rxyx2"]
-bg_color = Color(0.2, 0.4, 0.6, 1)
+bg_color = Color(1, 0.55, 0.1, 1)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dagxg"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5qw8s"]
-bg_color = Color(0.2, 0.4, 0.6, 1)
+bg_color = Color(1, 0.55, 0.1, 1)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jpyum"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ledr7"]
-bg_color = Color(0, 0.6, 0.5, 1)
+bg_color = Color(0.85, 0.28, 0.05, 1)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ledr7"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7or70"]
-bg_color = Color(0, 0.6, 0.5, 1)
+bg_color = Color(0.85, 0.28, 0.05, 1)
+
+[sub_resource type="StyleBoxTexture" id="Back_Normal"]
+texture = ExtResource("6_btn01")
+
+[sub_resource type="StyleBoxTexture" id="Back_Hover"]
+texture = ExtResource("7_btn05")
+
+[sub_resource type="StyleBoxTexture" id="Action_Normal"]
+texture = ExtResource("8_btn03")
+
+[sub_resource type="StyleBoxTexture" id="Action_Hover"]
+texture = ExtResource("9_btn04")
+
+[sub_resource type="StyleBoxTexture" id="Start_Normal"]
+texture = ExtResource("10_btn13")
+
+[sub_resource type="StyleBoxTexture" id="Start_Hover"]
+texture = ExtResource("11_btn18")
+
+[sub_resource type="StyleBoxTexture" id="Save_Normal"]
+texture = ExtResource("12_btn02")
+
+[sub_resource type="StyleBoxTexture" id="Save_Hover"]
+texture = ExtResource("13_btn06")
 
 [node name="TripodAssessment" type="Node2D" unique_id=269487739]
 script = ExtResource("1_tripod_script")
 
-[node name="bg" type="ColorRect" parent="." unique_id=2025287765]
-z_index = -1
-offset_left = -22.0
-offset_top = 2.0
-offset_right = 1916.0
-offset_bottom = 1104.0
-color = Color(0.95, 0.95, 0.95, 1)
+[node name="bg" type="TextureRect" parent="." unique_id=2025287765]
+offset_left = -27.0
+offset_top = -20.0
+offset_right = 1970.0
+offset_bottom = 1117.0
+texture = ExtResource("3_win04")
 
 [node name="ConnectStatus" parent="." unique_id=442870427 instance=ExtResource("2_rxyx2")]
 
+[node name="card_bg" type="TextureRect" parent="." unique_id=937018190]
+offset_left = 303.0
+offset_top = 109.0
+offset_right = 1693.0
+offset_bottom = 864.0
+texture = ExtResource("4_win02")
+expand_mode = 5
+
 [node name="title" type="Label" parent="." unique_id=1917235158]
 offset_left = 50.0
-offset_top = 20.0
+offset_top = 16.0
 offset_right = 1850.0
-offset_bottom = 100.0
-theme_override_colors/font_color = Color(0.2, 0.4, 0.6, 1)
+offset_bottom = 108.0
+theme_override_colors/font_color = Color(1, 0.65, 0, 1)
+theme_override_fonts/font = ExtResource("5_font")
 theme_override_font_sizes/font_size = 70
-text = "TRIPOD GRASP ASSESSMENT"
-horizontal_alignment = 1
-
-[node name="subtitle" type="Label" parent="." unique_id=937018189]
-offset_left = 50.0
-offset_top = 100.0
-offset_right = 1850.0
-offset_bottom = 150.0
-theme_override_colors/font_color = Color(0.4, 0.4, 0.4, 1)
-theme_override_font_sizes/font_size = 24
-text = "Real-time distance compression monitoring and assessment"
-horizontal_alignment = 1
-
-[node name="card_bg" type="ColorRect" parent="." unique_id=937018190]
-offset_left = 143.0
-offset_top = 180.0
-offset_right = 1767.0
-offset_bottom = 850.0
-
-[node name="min_max_container" type="VBoxContainer" parent="." unique_id=936523402]
-visible = false
-offset_left = 800.0
-offset_top = 420.0
-offset_right = 1400.0
-offset_bottom = 650.0
-theme_override_constants/separation = 20
-
-[node name="min_label" type="Label" parent="min_max_container" unique_id=1460335510]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
-theme_override_font_sizes/font_size = 28
-text = "Min: 0.00 cm"
-
-[node name="max_label" type="Label" parent="min_max_container" unique_id=488380506]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
-theme_override_font_sizes/font_size = 28
-text = "Max: 0.00 cm"
-
-[node name="current_label" type="Label" parent="min_max_container" unique_id=523822066]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
-theme_override_font_sizes/font_size = 28
-text = "Current: 0.00 cm"
+text = "Tripod Assessment"
 
 [node name="distance_label" type="Label" parent="." unique_id=1196699945]
-offset_left = 619.0
-offset_top = 280.0
-offset_right = 1219.0
-offset_bottom = 380.0
-theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
+offset_left = 724.0
+offset_top = 107.0
+offset_right = 1324.0
+offset_bottom = 207.0
+theme_override_colors/font_color = Color(1, 0.75, 0.2, 1)
 theme_override_font_sizes/font_size = 72
 text = "0.00 cm"
 horizontal_alignment = 1
 
-[node name="status_label" type="Label" parent="." unique_id=1196699946]
-offset_left = 400.0
-offset_top = 740.0
-offset_right = 1520.0
-offset_bottom = 800.0
-theme_override_colors/font_color = Color(0.2, 0.4, 0.6, 1)
-theme_override_font_sizes/font_size = 22
-text = "Device Status: Not Connected"
-horizontal_alignment = 1
-
-[node name="back_button" type="Button" parent="." unique_id=946906280]
-offset_left = 50.0
-offset_top = 950.0
-offset_right = 250.0
-offset_bottom = 1020.0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 30
-theme_override_styles/normal = SubResource("BackButtonStyle")
-theme_override_styles/pressed = SubResource("BackButtonStyle")
-theme_override_styles/hover = SubResource("BackButtonStyle")
-theme_override_styles/focus = SubResource("BackButtonStyle")
-text = "Back"
-
-[node name="start_button" type="Button" parent="." unique_id=1521686282]
-visible = false
-offset_left = 500.0
-offset_top = 870.0
-offset_right = 950.0
-offset_bottom = 940.0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = SubResource("StartButtonStyle")
-theme_override_styles/pressed = SubResource("StartButtonStyle")
-theme_override_styles/hover = SubResource("StartButtonStyle")
-theme_override_styles/focus = SubResource("StartButtonStyle")
-text = "START Assessment"
-
-[node name="stop_button" type="Button" parent="." unique_id=1635736114]
-visible = false
-offset_left = 1000.0
-offset_top = 870.0
-offset_right = 1450.0
-offset_bottom = 940.0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = SubResource("StopButtonStyle")
-theme_override_styles/pressed = SubResource("StopButtonStyle")
-theme_override_styles/hover = SubResource("StopButtonStyle")
-theme_override_styles/focus = SubResource("StopButtonStyle")
-text = "STOP & Continue"
-
-[node name="redo_button" type="Button" parent="." unique_id=1969793171]
-visible = false
-offset_left = 500.0
-offset_top = 870.0
-offset_right = 950.0
-offset_bottom = 940.0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = SubResource("RedoButtonStyle")
-theme_override_styles/pressed = SubResource("RedoButtonStyle")
-theme_override_styles/hover = SubResource("RedoButtonStyle")
-theme_override_styles/focus = SubResource("RedoButtonStyle")
-text = "REDO AROM"
-
-[node name="setmax_button" type="Button" parent="." unique_id=1063475868]
-offset_left = 500.0
-offset_top = 870.0
-offset_right = 950.0
-offset_bottom = 940.0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = SubResource("StartButtonStyle")
-theme_override_styles/pressed = SubResource("StartButtonStyle")
-theme_override_styles/hover = SubResource("StartButtonStyle")
-theme_override_styles/focus = SubResource("StartButtonStyle")
-text = "Set Max"
-
-[node name="setmin_button" type="Button" parent="." unique_id=1063475867]
-visible = false
-offset_left = 1000.0
-offset_top = 870.0
-offset_right = 1450.0
-offset_bottom = 940.0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = SubResource("StartButtonStyle")
-theme_override_styles/pressed = SubResource("StartButtonStyle")
-theme_override_styles/hover = SubResource("StartButtonStyle")
-theme_override_styles/focus = SubResource("StartButtonStyle")
-text = "Set Min"
-
-[node name="save_button" type="Button" parent="." unique_id=1063475869]
-visible = false
-offset_left = 500.0
-offset_top = 870.0
-offset_right = 950.0
-offset_bottom = 940.0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = SubResource("SaveButtonStyle")
-theme_override_styles/pressed = SubResource("SaveButtonStyle")
-theme_override_styles/hover = SubResource("SaveButtonStyle")
-theme_override_styles/focus = SubResource("SaveButtonStyle")
-text = "Save Assessment"
-
 [node name="maxProgressBarE-B2" type="ProgressBar" parent="." unique_id=1583511817]
 offset_left = 351.0
-offset_top = 508.0
+offset_top = 420.0
 offset_right = 998.0
-offset_bottom = 566.0
+offset_bottom = 478.0
 theme_override_styles/background = SubResource("StyleBoxEmpty_rxyx2")
 theme_override_styles/fill = SubResource("StyleBoxFlat_rxyx2")
 min_value = 2.0
@@ -265,10 +124,10 @@ value = 2.0
 show_percentage = false
 
 [node name="minProgressBarE-B" type="ProgressBar" parent="." unique_id=899068572]
-offset_left = 350.0
-offset_top = 508.0
-offset_right = 997.0
-offset_bottom = 566.0
+offset_left = 351.0
+offset_top = 420.0
+offset_right = 998.0
+offset_bottom = 478.0
 theme_override_styles/background = SubResource("StyleBoxEmpty_jpyum")
 theme_override_styles/fill = SubResource("StyleBoxFlat_ledr7")
 min_value = 2.0
@@ -289,13 +148,138 @@ max_value = 6.0
 value = 2.0
 show_percentage = false
 
+[node name="min_max_container" type="VBoxContainer" parent="." unique_id=936523402]
+visible = false
+offset_left = 1421.0
+offset_top = 242.0
+offset_right = 1664.0
+offset_bottom = 442.0
+theme_override_constants/separation = 16
+
+[node name="min_label" type="Label" parent="min_max_container" unique_id=1460335510]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.28, 0.05, 1)
+theme_override_font_sizes/font_size = 28
+text = "Min: 0.00 cm"
+
+[node name="max_label" type="Label" parent="min_max_container" unique_id=488380506]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.55, 0.1, 1)
+theme_override_font_sizes/font_size = 28
+text = "Max: 0.00 cm"
+
+[node name="current_label" type="Label" parent="min_max_container" unique_id=523822066]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.5, 1)
+theme_override_font_sizes/font_size = 28
+text = "Current: 0.00 cm"
+
+[node name="status_label" type="Label" parent="." unique_id=1196699946]
+offset_left = 490.0
+offset_top = 766.0
+offset_right = 1610.0
+offset_bottom = 826.0
+theme_override_colors/font_color = Color(1, 0.8, 0.45, 1)
+theme_override_font_sizes/font_size = 22
+text = "Device Status: Not Connected"
+horizontal_alignment = 1
+
 [node name="timer_label" type="Label" parent="." unique_id=-1186144328]
 visible = false
-offset_left = 1300.0
-offset_top = 330.0
-offset_right = 1510.0
-offset_bottom = 430.0
-theme_override_colors/font_color = Color(0, 0.8, 1, 1)
+offset_left = 912.0
+offset_top = 199.0
+offset_right = 1122.0
+offset_bottom = 309.0
+theme_override_colors/font_color = Color(1, 0.65, 0, 1)
 theme_override_font_sizes/font_size = 80
 text = "1"
 horizontal_alignment = 1
+
+[node name="back_button" type="Button" parent="." unique_id=946906280]
+offset_left = 58.0
+offset_top = 955.0
+offset_right = 258.0
+offset_bottom = 1025.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("Back_Normal")
+theme_override_styles/pressed = SubResource("Back_Normal")
+theme_override_styles/hover = SubResource("Back_Hover")
+text = "Back"
+
+[node name="setmax_button" type="Button" parent="." unique_id=1063475868]
+offset_left = 500.0
+offset_top = 870.0
+offset_right = 950.0
+offset_bottom = 940.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("Action_Normal")
+theme_override_styles/pressed = SubResource("Action_Normal")
+theme_override_styles/hover = SubResource("Action_Hover")
+text = "Set Max"
+
+[node name="setmin_button" type="Button" parent="." unique_id=1063475867]
+visible = false
+offset_left = 1000.0
+offset_top = 870.0
+offset_right = 1450.0
+offset_bottom = 940.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("Action_Normal")
+theme_override_styles/pressed = SubResource("Action_Normal")
+theme_override_styles/hover = SubResource("Action_Hover")
+text = "Set Min"
+
+[node name="start_button" type="Button" parent="." unique_id=1521686282]
+visible = false
+offset_left = 500.0
+offset_top = 870.0
+offset_right = 950.0
+offset_bottom = 940.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("Start_Normal")
+theme_override_styles/pressed = SubResource("Start_Normal")
+theme_override_styles/hover = SubResource("Start_Hover")
+text = "START Assessment"
+
+[node name="stop_button" type="Button" parent="." unique_id=1635736114]
+visible = false
+offset_left = 1000.0
+offset_top = 870.0
+offset_right = 1450.0
+offset_bottom = 940.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("Action_Normal")
+theme_override_styles/pressed = SubResource("Action_Normal")
+theme_override_styles/hover = SubResource("Action_Hover")
+text = "STOP & Continue"
+
+[node name="redo_button" type="Button" parent="." unique_id=1969793171]
+visible = false
+offset_left = 500.0
+offset_top = 870.0
+offset_right = 950.0
+offset_bottom = 940.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("Action_Normal")
+theme_override_styles/pressed = SubResource("Action_Normal")
+theme_override_styles/hover = SubResource("Action_Hover")
+text = "REDO AROM"
+
+[node name="save_button" type="Button" parent="." unique_id=1063475869]
+visible = false
+offset_left = 706.0
+offset_top = 870.0
+offset_right = 1156.0
+offset_bottom = 940.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("Save_Normal")
+theme_override_styles/pressed = SubResource("Save_Normal")
+theme_override_styles/hover = SubResource("Save_Hover")
+text = "Save Assessment"

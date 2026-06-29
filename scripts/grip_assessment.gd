@@ -224,7 +224,7 @@ func _update_progress() -> void:
 		_transition_to_validation()
 
 func _transition_to_validation() -> void:
-	grip_threshold = grip_max * 0.1
+	grip_threshold = grip_max * 0.4
 	current_step = AssessmentStep.validate_threshold
 	threshold_reach_count = 0
 	released = true
@@ -292,9 +292,9 @@ func _on_save_pressed() -> void:
 		print("GripAssessment: Assessment saved successfully for Grip Force (Time: %.2f s)" % reaching_time)
 		print("🎮 Navigating to game launcher...")
 		_cleanup()
-		await get_tree().create_timer(1.5).timeout
+		# await get_tree().create_timer(1.5).timeout
 		# Navigate to game launcher after AROM assessment complete
-		get_tree().change_scene_to_file("res://scenes/safecrossing/sc_game.tscn")
+		get_tree().change_scene_to_file("res://scenes/game_selection.tscn")
 	else:
 		if status_label:
 			status_label.text = "Error: Failed to save assessment data."

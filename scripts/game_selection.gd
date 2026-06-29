@@ -3,6 +3,9 @@ extends Node2D
 var catch_game_button: Button
 var safe_crossing_button: Button
 var tw_game_button: Button
+var ht_game_button: Button
+var rnr_game_button: Button
+var sc3d_button: Button
 var back_button: Button
 var message_label: Label
 
@@ -10,6 +13,9 @@ func _ready() -> void:
 	catch_game_button    = get_node_or_null("catch_game_button")
 	safe_crossing_button = get_node_or_null("safe_crossing_button")
 	tw_game_button       = get_node_or_null("tw_game_button")
+	ht_game_button       = get_node_or_null("ht_game_button")
+	rnr_game_button      = get_node_or_null("rnr_game_button")
+	sc3d_button          = get_node_or_null("sc3d_button")
 	back_button          = get_node_or_null("back_button")
 	message_label        = get_node_or_null("message_label")
 
@@ -19,10 +25,46 @@ func _ready() -> void:
 		safe_crossing_button.pressed.connect(_on_safe_crossing_pressed)
 	if tw_game_button:
 		tw_game_button.pressed.connect(_on_tw_game_pressed)
+	if ht_game_button:
+		ht_game_button.pressed.connect(_on_ht_game_pressed)
+	if rnr_game_button:
+		rnr_game_button.pressed.connect(_on_rnr_game_pressed)
+	if sc3d_button:
+		sc3d_button.pressed.connect(_on_sc3d_pressed)
 	if back_button:
 		back_button.pressed.connect(_on_back_pressed)
 
 	_update_info()
+	_update_game_visibility()
+
+
+func _update_game_visibility() -> void:
+	var show_rnr := false
+	var show_tw  := false
+	var show_ht  := false
+	var show_cg  := false
+	var show_sc  := false
+
+	if Appdata.selected_mechanism != null:
+		match Appdata.selected_mechanism.name:
+			"KNOB", "FINE KNOB", "KEY KNOB":
+				show_ht = true; show_tw = true; show_rnr = true
+			"HANDLE", "GRIP":
+				show_rnr = true; show_tw = true
+			"TRIPOD":
+				show_cg = true; show_ht = true
+			"PINCH BUTTON":
+				show_rnr = true; show_sc = true; show_cg = true
+			_:
+				show_rnr = true; show_tw = true; show_ht = true
+				show_cg  = true; show_sc  = true
+
+	if rnr_game_button:      rnr_game_button.visible      = show_rnr
+	if tw_game_button:       tw_game_button.visible       = show_tw
+	if ht_game_button:       ht_game_button.visible       = show_ht
+	if catch_game_button:    catch_game_button.visible    = show_cg
+	if safe_crossing_button: safe_crossing_button.visible = show_sc
+	if sc3d_button:          sc3d_button.visible          = false
 
 
 func _update_info() -> void:
@@ -49,6 +91,18 @@ func _on_safe_crossing_pressed() -> void:
 
 func _on_tw_game_pressed() -> void:
 	get_tree().change_scene_to_file("res://scene/tablewipping/tw_game.tscn")
+
+
+func _on_ht_game_pressed() -> void:
+	get_tree().change_scene_to_file("res://scene/hattrick/ht_game.tscn")
+
+
+func _on_rnr_game_pressed() -> void:
+	get_tree().change_scene_to_file("res://scene/rainandrise/rnr_game.tscn")
+
+
+func _on_sc3d_pressed() -> void:
+	get_tree().change_scene_to_file("res://scene/safecrossing3D/sc3d_game.tscn")
 
 
 func _on_back_pressed() -> void:

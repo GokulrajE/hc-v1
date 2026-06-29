@@ -1,0 +1,318 @@
+[gd_scene format=3 uid="uid://dsm4denqtxg2i"]
+
+[ext_resource type="Script" uid="uid://bdden5wbcf8d" path="res://scripts/hattrick/ht_game.gd" id="1_htgame"]
+[ext_resource type="Script" uid="uid://i0scsp6njufm" path="res://scripts/hattrick/ht_ui.gd" id="2_htui"]
+[ext_resource type="Texture2D" uid="uid://cgreswuet21xq" path="res://assets/hattrick/SkySprite.png" id="3_sky"]
+[ext_resource type="Texture2D" uid="uid://b8ydh2msam5sa" path="res://assets/hattrick/HatFrontSprite.png" id="4_hatfront"]
+[ext_resource type="Texture2D" uid="uid://cbyab4r58kgee" path="res://assets/hattrick/HatBackSprite.png" id="4_sk48j"]
+[ext_resource type="Texture2D" uid="uid://c6q7uqt43ovsl" path="res://assets/hattrick/GrassSprite.png" id="5_1rp6y"]
+[ext_resource type="Texture2D" uid="uid://blopvc3qgkrl8" path="res://assets/hattrick/BowlingBallSprite.png" id="6_ball"]
+[ext_resource type="Texture2D" uid="uid://dmygvdtwe0pwh" path="res://assets/hattrick/BombSprite.png" id="7_bomb"]
+[ext_resource type="Texture2D" uid="uid://kwcjyyaksqc5" path="res://assets/ui/start game board.png" id="8_startboard"]
+[ext_resource type="Texture2D" uid="uid://sk2a0xm7sp3k" path="res://assets/ui/gameover board.png" id="9_goboard"]
+[ext_resource type="Texture2D" uid="uid://bmwg8y55461y8" path="res://assets/ui/Button13.png" id="10_btn13"]
+[ext_resource type="Texture2D" uid="uid://cn668kccj0k6y" path="res://assets/ui/Button08.png" id="11_btn08"]
+[ext_resource type="Texture2D" uid="uid://c2kvtt4ccy8at" path="res://assets/ui/Btn_V01.png" id="12_btnv01"]
+[ext_resource type="Texture2D" uid="uid://daqibh5tqjbfl" path="res://assets/ui/Btn_V05.png" id="13_btnv05"]
+[ext_resource type="Texture2D" uid="uid://cui1ajpmfoeo8" path="res://assets/ui/Btn_V03.png" id="14_btnv03"]
+[ext_resource type="Texture2D" uid="uid://dcvu4oconjgk2" path="res://assets/ui/Btn_V04.png" id="15_btnv04"]
+[ext_resource type="FontFile" uid="uid://btw3w8gykgilf" path="res://assets/fonts/TiltNeon-Regular-VariableFont_XROT,YROT.ttf" id="16_font"]
+
+[sub_resource type="StyleBoxTexture" id="HT_ExitBtnNormal"]
+texture = ExtResource("14_btnv03")
+
+[sub_resource type="StyleBoxTexture" id="HT_ExitBtnHover"]
+texture = ExtResource("15_btnv04")
+
+[sub_resource type="StyleBoxTexture" id="HT_PlayBtnNormal"]
+texture = ExtResource("10_btn13")
+
+[sub_resource type="StyleBoxTexture" id="HT_PlayBtnHover"]
+texture = ExtResource("11_btn08")
+
+[sub_resource type="StyleBoxTexture" id="HT_MenuBtnNormal"]
+texture = ExtResource("12_btnv01")
+
+[sub_resource type="StyleBoxTexture" id="HT_MenuBtnHover"]
+texture = ExtResource("13_btnv05")
+
+[node name="HTGame" type="Node2D" unique_id=400000001]
+script = ExtResource("1_htgame")
+
+[node name="Background" type="TextureRect" parent="." unique_id=400000002]
+offset_left = -8.0
+offset_right = 1942.0
+offset_bottom = 1080.0
+texture = ExtResource("3_sky")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="grassGround" type="Sprite2D" parent="." unique_id=1478752508]
+z_index = 3
+position = Vector2(968.50006, 860)
+scale = Vector2(1.9091798, 0.5)
+texture = ExtResource("5_1rp6y")
+
+[node name="HatSprite" type="Sprite2D" parent="." unique_id=400000003]
+z_index = 3
+position = Vector2(960, 860)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("4_hatfront")
+
+[node name="HatSprite2" type="Sprite2D" parent="HatSprite" unique_id=917943459]
+z_index = 3
+texture = ExtResource("4_sk48j")
+
+[node name="HTUI" type="CanvasLayer" parent="." unique_id=400000004]
+script = ExtResource("2_htui")
+
+[node name="Control" type="Control" parent="HTUI" unique_id=400000005]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScoreLabel" type="Label" parent="HTUI/Control" unique_id=400000006]
+modulate = Color(0.09923177, 0.09923177, 0.09923177, 1)
+layout_mode = 0
+offset_left = 50.0
+offset_top = 30.0
+offset_right = 400.0
+offset_bottom = 90.0
+theme_override_colors/font_color = Color(0.2, 1, 0.4, 1)
+theme_override_font_sizes/font_size = 48
+text = "Score: 0"
+
+[node name="TimerLabel" type="Label" parent="HTUI/Control" unique_id=400000007]
+layout_mode = 0
+offset_left = 1572.0
+offset_top = 82.0
+offset_right = 1902.0
+offset_bottom = 149.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 48
+text = "⏱️ Time: 60s"
+
+[node name="ExitButton" type="Button" parent="HTUI/Control" unique_id=400000008]
+layout_mode = 0
+offset_left = 1730.0
+offset_top = 15.0
+offset_right = 1900.0
+offset_bottom = 72.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("HT_ExitBtnNormal")
+theme_override_styles/pressed = SubResource("HT_ExitBtnNormal")
+theme_override_styles/hover = SubResource("HT_ExitBtnHover")
+text = "Exit"
+
+[node name="StartBoard" type="TextureRect" parent="HTUI/Control" unique_id=400000009]
+visible = false
+layout_mode = 0
+offset_left = 430.0
+offset_top = 130.0
+offset_right = 1490.0
+offset_bottom = 900.0
+texture = ExtResource("8_startboard")
+expand_mode = 1
+
+[node name="ContentVBox" type="VBoxContainer" parent="HTUI/Control/StartBoard" unique_id=400000010]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 60.0
+offset_top = 30.0
+offset_right = -60.0
+offset_bottom = -120.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="HTUI/Control/StartBoard/ContentVBox" unique_id=400000011]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.17, 0.2, 1)
+theme_override_fonts/font = ExtResource("16_font")
+theme_override_font_sizes/font_size = 64
+text = "Hat Trick"
+horizontal_alignment = 1
+
+[node name="EmojiLabel" type="Label" parent="HTUI/Control/StartBoard/ContentVBox" unique_id=400000012]
+layout_mode = 2
+theme_override_font_sizes/font_size = 80
+text = "🎩"
+horizontal_alignment = 1
+
+[node name="IconRow" type="HBoxContainer" parent="HTUI/Control/StartBoard/ContentVBox" unique_id=400000016]
+layout_mode = 2
+theme_override_constants/separation = 40
+alignment = 1
+
+[node name="BallPreview" type="TextureRect" parent="HTUI/Control/StartBoard/ContentVBox/IconRow" unique_id=400000017]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+texture = ExtResource("6_ball")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CatchLabel" type="Label" parent="HTUI/Control/StartBoard/ContentVBox/IconRow" unique_id=400000018]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 1, 0.3, 1)
+theme_override_font_sizes/font_size = 24
+text = "Catch!"
+vertical_alignment = 1
+
+[node name="Sep" type="Label" parent="HTUI/Control/StartBoard/ContentVBox/IconRow" unique_id=400000022]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "   |   "
+vertical_alignment = 1
+
+[node name="BombPreview" type="TextureRect" parent="HTUI/Control/StartBoard/ContentVBox/IconRow" unique_id=400000019]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+texture = ExtResource("7_bomb")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AvoidLabel" type="Label" parent="HTUI/Control/StartBoard/ContentVBox/IconRow" unique_id=400000020]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.3, 0.3, 1)
+theme_override_font_sizes/font_size = 24
+text = "Avoid!"
+vertical_alignment = 1
+
+[node name="DescLabel" type="Label" parent="HTUI/Control/StartBoard/ContentVBox" unique_id=400000013]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
+theme_override_font_sizes/font_size = 30
+text = "Move the hat to catch bowling balls.
+Avoid the bombs — they cost you!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="StartPromptLabel" type="Label" parent="HTUI/Control/StartBoard/ContentVBox" unique_id=400000014]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.05, 0.05, 0.05, 1)
+theme_override_font_sizes/font_size = 40
+text = "Press SPACEBAR to Start"
+horizontal_alignment = 1
+
+[node name="GameOverBoard" type="TextureRect" parent="HTUI/Control" unique_id=400000015]
+visible = false
+layout_mode = 0
+offset_left = 580.0
+offset_top = 185.0
+offset_right = 1340.0
+offset_bottom = 900.0
+texture = ExtResource("9_goboard")
+expand_mode = 1
+
+[node name="ContentVBox" type="VBoxContainer" parent="HTUI/Control/GameOverBoard" unique_id=400000021]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 80.0
+offset_top = 60.0
+offset_right = -80.0
+offset_bottom = -60.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="GameOverLabel" type="Label" parent="HTUI/Control/GameOverBoard/ContentVBox" unique_id=400000023]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.3, 0.3, 1)
+theme_override_font_sizes/font_size = 68
+text = "GAME OVER!"
+horizontal_alignment = 1
+
+[node name="ResultsLabel" type="Label" parent="HTUI/Control/GameOverBoard/ContentVBox" unique_id=400000024]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.05, 0.05, 0.05, 1)
+theme_override_font_sizes/font_size = 32
+text = "Score: 0"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="RestartButton" type="Button" parent="HTUI/Control/GameOverBoard/ContentVBox" unique_id=400000025]
+custom_minimum_size = Vector2(320, 72)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("HT_PlayBtnNormal")
+theme_override_styles/pressed = SubResource("HT_PlayBtnNormal")
+theme_override_styles/hover = SubResource("HT_PlayBtnHover")
+text = "Play Again"
+
+[node name="MenuButton" type="Button" parent="HTUI/Control/GameOverBoard/ContentVBox" unique_id=400000026]
+custom_minimum_size = Vector2(320, 72)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("HT_MenuBtnNormal")
+theme_override_styles/pressed = SubResource("HT_MenuBtnNormal")
+theme_override_styles/hover = SubResource("HT_MenuBtnHover")
+text = "Back to Menu"
+
+[node name="SuccessPopup" type="Control" parent="HTUI" unique_id=400000027]
+visible = false
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -45.0
+offset_right = 160.0
+offset_bottom = 45.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SuccessLabel" type="Label" parent="HTUI/SuccessPopup" unique_id=400000028]
+layout_mode = 0
+offset_left = -160.0
+offset_right = 160.0
+offset_bottom = 90.0
+theme_override_colors/font_color = Color(0.1, 1, 0.25, 1)
+theme_override_font_sizes/font_size = 52
+text = "🎩 CAUGHT!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="FailurePopup" type="Control" parent="HTUI" unique_id=400000029]
+visible = false
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -45.0
+offset_right = 160.0
+offset_bottom = 45.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FailureLabel" type="Label" parent="HTUI/FailurePopup" unique_id=400000030]
+layout_mode = 0
+offset_left = -160.0
+offset_right = 160.0
+offset_bottom = 90.0
+theme_override_colors/font_color = Color(1, 0.3, 0.2, 1)
+theme_override_font_sizes/font_size = 52
+text = "💣 MISSED!"
+horizontal_alignment = 1
+vertical_alignment = 1
