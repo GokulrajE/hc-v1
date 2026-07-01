@@ -101,7 +101,10 @@ var _stain_timer: float = 0.0   # counts down per stain
 # ============================================================
 # DEVICE STATE
 # ============================================================
-var _grip_threshold: float = 10.0
+var _angle_min:       float = 0.0
+var _angle_max:       float = 110.0
+var _grip_threshold:  float = 10.0
+var _waiting_release: bool  = false
 
 
 # ============================================================
@@ -121,11 +124,25 @@ func _is_handle_mode() -> bool:
 	return Appdata.selected_mechanism != null and Appdata.selected_mechanism.name == "HANDLE"
 
 
+func _is_grip_mode() -> bool:
+	return Appdata.selected_mechanism != null and Appdata.selected_mechanism.name == "GRIP"
+
+
 func _load_assessment_data() -> void:
-	if _is_handle_mode():
+	if _is_handle_mode() or _is_grip_mode():
+		# Load HANDLE ROM for angle range, GRIP ROM for squeeze threshold (same as RNR)
+		var handle_rom := ROM.new("HANDLE", true)
+		if handle_rom.is_arom_set():
+			_angle_min = handle_rom.arom_min
+			_angle_max = handle_rom.arom_max
 		var grip_rom := ROM.new("GRIP", true)
 		if grip_rom.is_arom_set():
 			_grip_threshold = grip_rom.arom_max * 0.1
+	elif Appdata.selected_mechanism != null:
+		var arom := Appdata.selected_mechanism.get_current_arom()
+		if arom[1] > arom[0]:
+			_angle_min = arom[0]
+			_angle_max = arom[1]
 
 
 # ============================================================
@@ -141,14 +158,21 @@ func _process(_delta: float) -> void:
 # PHYSICS — game logic
 # ============================================================
 func _physics_process(delta: float) -> void:
+	if _waiting_release and _game_state == GameState.MOVE:
+		if (_is_handle_mode() or _is_grip_mode()) and HCcomm.device_is_connected:
+			if HCcomm.get_total_force() < _grip_threshold:
+				_waiting_release = false
+			else:
+				_run_game_state_machine(delta)
+				return
+		else:
+			_waiting_release = false
 	if _game_state == GameState.MOVE and not is_animating:
 		# Cloth X movement — knob angle (arrow keys as fallback)
 		var prev_x := cloth_x
 		if HCcomm.device_is_connected and Appdata.selected_mechanism != null:
-			var arom      := Appdata.selected_mechanism.get_current_arom()
-			var a_min: float = arom[0]
-			var a_max: float = arom[1] if arom[1] != arom[0] else arom[0] + 1.0
-			cloth_x = remap(_get_knob_angle(), a_min, a_max,
+			var a_max: float = _angle_max if _angle_max != _angle_min else _angle_min + 1.0
+			cloth_x = remap(_get_knob_angle(), _angle_min, a_max,
 				PLAY_LEFT  + CLOTH_WIDTH * 0.5,
 				PLAY_RIGHT - CLOTH_WIDTH * 0.5)
 		else:
@@ -171,7 +195,7 @@ func _physics_process(delta: float) -> void:
 		# Erase logic: knob mode = auto-spray on proximity; handle mode = force triggers spray
 		if stain_sprite != null and not stain_done:
 			var dist: float = abs(cloth_x - stain_center.x)
-			if _is_handle_mode():
+			if _is_handle_mode() or _is_grip_mode():
 				var is_forcing := HCcomm.device_is_connected and HCcomm.get_total_force() >= _grip_threshold
 				if dist <= CENTER_TOUCH_ZONE and is_forcing and not center_touched:
 					center_touched = true
@@ -253,6 +277,7 @@ func _initialize_game() -> void:
 	time_left = GAME_DURATION
 	cloth.visible = true
 	_run_once = false
+	_waiting_release = false
 	_event_delay_timer = 0.0
 	ui.update_score(0)
 	ui.update_timer(GAME_DURATION)
@@ -340,6 +365,8 @@ func _spawn_stain() -> void:
 
 	last_stain_center = stain_center
 	n_targets   += 1
+	if (_is_handle_mode() or _is_grip_mode()) and HCcomm.device_is_connected:
+		_waiting_release = true
 	ui.update_progress(0.0)
 	ui.show_stain_timer(true)
 	ui.update_stain_timer(STAIN_TIMEOUT, STAIN_TIMEOUT)
@@ -538,10 +565,10 @@ func _get_knob_angle() -> float:
 	if Appdata.selected_mechanism == null:
 		return HCcomm.angle_2
 	match Appdata.selected_mechanism.name:
-		"HANDLE":    return HCcomm.angle_1
-		"KEY KNOB":  return HCcomm.angle_3
-		"FINE KNOB": return HCcomm.angle_4
-		_:           return HCcomm.angle_2
+		"HANDLE", "GRIP": return HCcomm.angle_1
+		"KEY KNOB":       return HCcomm.angle_3
+		"FINE KNOB":      return HCcomm.angle_4
+		_:                return HCcomm.angle_2
 
 
 # ============================================================
@@ -558,5 +585,7 @@ func go_to_menu() -> void:
 
 
 func exit_game() -> void:
-	if _game_state not in [GameState.WAITING, GameState.DONE]:
+	if _game_state in [GameState.WAITING, GameState.DONE]:
+		get_tree().change_scene_to_file("res://scene/game_selection.tscn")
+	else:
 		_game_state = GameState.STOP

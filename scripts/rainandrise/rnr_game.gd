@@ -69,11 +69,12 @@ var _is_raining:    bool  = false
 # ============================================================
 # DEVICE STATE
 # ============================================================
-var _angle_min:      float = 0.0
-var _angle_max:      float = 110.0
-var _max_force:      float = 100.0
-var _rain_threshold: float = 10.0
-var _cloud_water:    float = 1.0
+var _angle_min:       float = 0.0
+var _angle_max:       float = 110.0
+var _max_force:       float = 100.0
+var _rain_threshold:  float = 10.0
+var _cloud_water:     float = 1.0
+var _waiting_release: bool  = false
 
 # ============================================================
 # SEEDS
@@ -286,6 +287,18 @@ func _physics_process(delta: float) -> void:
 func _update_cloud(delta: float) -> void:
 	var squeezing := false
 
+	if _waiting_release and not _is_knob_mode() and not _is_pinch_mode():
+		if HCcomm and HCcomm.device_is_connected:
+			if HCcomm.get_total_force() < _rain_threshold:
+				_waiting_release = false
+			else:
+				cloud_x = clamp(cloud_x, PLAY_LEFT + CLOUD_HALF_W, PLAY_RIGHT - CLOUD_HALF_W)
+				_cloud_sprite.position.x = cloud_x
+				_cloud_sprite.modulate.a = lerp(0.3, 1.0, _cloud_water)
+				return
+		else:
+			_waiting_release = false
+
 	if HCcomm and HCcomm.device_is_connected:
 		if _is_pinch_mode():
 			# Cloud auto-targets the highlighted seed; any button triggers rain
@@ -454,6 +467,7 @@ func _initialize_game() -> void:
 	_rain_timer      = 0.0
 	_is_raining      = false
 	_cloud_water     = 1.0
+	_waiting_release = false
 	_run_once        = false
 	_event_delay_timer = 0.0
 
@@ -499,6 +513,8 @@ func _highlight_next_seed() -> void:
 	glow.visible  = true
 	rays.rotation = 0.0
 	rays.visible  = true
+	if not _is_knob_mode() and not _is_pinch_mode():
+		_waiting_release = true
 
 
 func _on_success() -> void:
@@ -552,5 +568,7 @@ func go_to_menu() -> void:
 
 
 func exit_game() -> void:
-	if _game_state not in [GameState.WAITING, GameState.DONE]:
+	if _game_state in [GameState.WAITING, GameState.DONE]:
+		get_tree().change_scene_to_file("res://scene/game_selection.tscn")
+	else:
 		_game_state = GameState.STOP

@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://clp72ik5rljf"]
+
+[ext_resource type="Script" path="res://scripts/juicer/Glass.gd" id="1_xdmlr"]
+
+[node name="Glass" type="Node2D"]
+script = ExtResource("1_xdmlr")

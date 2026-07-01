@@ -17,7 +17,7 @@ extends CanvasLayer
 
 func _ready() -> void:
 	game_over_board.visible   = false
-	exit_button.visible       = false
+	exit_button.visible       = true
 	success_popup.visible     = false
 	stain_timer_bar.visible   = false
 	stain_timer_label.visible = false
@@ -33,7 +33,7 @@ func _ready() -> void:
 func show_start() -> void:
 	start_board.visible     = true
 	game_over_board.visible = false
-	exit_button.visible     = false
+	exit_button.visible     = true
 
 
 func show_playing() -> void:

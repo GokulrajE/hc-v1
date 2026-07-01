@@ -1,17 +1,16 @@
-class_name HTUI
+class_name JuicerUI
 extends CanvasLayer
 
-@onready var score_label:     Label       = $Control/ScoreLabel
-@onready var timer_label:     Label       = $Control/TimerLabel
-@onready var exit_button:     Button      = $Control/ExitButton
+@onready var score_label:     Label     = $Control/ScoreLabel
+@onready var timer_label:     Label     = $Control/TimerLabel
+@onready var exit_button:     Button    = $Control/ExitButton
 @onready var start_board:     TextureRect = $Control/StartBoard
 @onready var game_over_board: TextureRect = $Control/GameOverBoard
-@onready var results_label:   Label       = $Control/GameOverBoard/ContentVBox/ResultsLabel
-@onready var restart_button:  Button      = $Control/GameOverBoard/ContentVBox/RestartButton
-@onready var menu_button:     Button      = $Control/GameOverBoard/ContentVBox/MenuButton
-@onready var success_popup:   Control     = $SuccessPopup
-@onready var failure_popup:   Control     = $FailurePopup
-
+@onready var results_label:   Label     = $Control/GameOverBoard/ContentVBox/ResultsLabel
+@onready var restart_button:  Button    = $Control/GameOverBoard/ContentVBox/RestartButton
+@onready var menu_button:     Button    = $Control/GameOverBoard/ContentVBox/MenuButton
+@onready var success_popup:   Control   = $SuccessPopup
+@onready var failure_popup:   Control   = $FailurePopup
 
 func _ready() -> void:
 	game_over_board.visible = false
@@ -39,13 +38,13 @@ func show_playing() -> void:
 	exit_button.visible     = true
 
 
-func show_game_over(score: int, targets: int, success: int, failure: int) -> void:
+func show_game_over(score: int, targets: int, success: int, _failure: int) -> void:
 	exit_button.visible     = false
 	game_over_board.visible = true
 	var rate := (float(success) / float(targets) * 100.0) if targets > 0 else 0.0
 	results_label.text = (
 		"Score: %d\n" +
-		"Balls Caught: %d / %d\n" +
+		"Fruits Juiced: %d / %d\n" +
 		"Success Rate: %.1f%%"
 	) % [score, success, targets, rate]
 	restart_button.grab_focus()
@@ -59,7 +58,7 @@ func update_score(new_score: int) -> void:
 
 
 func update_timer(time_left: float) -> void:
-	timer_label.text = "⏱️ Time: %.0fs" % maxf(time_left, 0.0)
+	timer_label.text = "⏱️ %.0fs" % maxf(time_left, 0.0)
 	if time_left <= 10.0:
 		timer_label.self_modulate = Color.RED
 	elif time_left < 30.0:

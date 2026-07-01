@@ -46,31 +46,59 @@ func _ready() -> void:
 	if back_button:
 		back_button.pressed.connect(_on_back_pressed)
 
-func _on_hand_grip_pressed() -> void:
-	Appdata.set_mechanism("Handle")
+	_check_handle_grip_status()
 
-	# Check if AROM assessment is already completed
-	if Appdata.selected_mechanism.old_rom and Appdata.selected_mechanism.old_rom.is_arom_set():
-		message_label.text = "✓ Handle AROM done! Opening Game Selection..."
-		await get_tree().create_timer(0.5).timeout
-		get_tree().change_scene_to_file("res://scene/game_selection.tscn")
-	else:
-		message_label.text = "Starting AROM assessment for Handle...\nPlease squeeze the handle through its full range."
-		await get_tree().create_timer(0.5).timeout
-		get_tree().change_scene_to_file("res://scene/handle_assessment.tscn")
+
+func _check_handle_grip_status() -> void:
+	if message_label == null:
+		return
+	var handle_done := ROM.new("HANDLE", true).is_arom_set()
+	var grip_done   := ROM.new("GRIP", true).is_arom_set()
+	if handle_done and not grip_done:
+		message_label.text = "Handle done — finish the Grip assessment to explore with games."
+	elif grip_done and not handle_done:
+		message_label.text = "Grip done — finish the Handle assessment to explore with games."
+
+
+func _on_hand_grip_pressed() -> void:
+	var handle_rom := ROM.new("HANDLE", true)
+	if handle_rom.is_arom_set():
+		var grip_rom := ROM.new("GRIP", true)
+		if grip_rom.is_arom_set():
+			Appdata.set_mechanism("Handle")
+			if message_label:
+				message_label.text = "✓ Both Handle & Grip done! Opening Game Selection..."
+			await get_tree().create_timer(0.5).timeout
+			get_tree().change_scene_to_file("res://scene/game_selection.tscn")
+		else:
+			if message_label:
+				message_label.text = "✓ Handle done! Finish the Grip assessment to explore with games."
+		return
+	Appdata.set_mechanism("Handle")
+	if message_label:
+		message_label.text = "Starting AROM assessment for Handle..."
+	await get_tree().create_timer(0.5).timeout
+	get_tree().change_scene_to_file("res://scene/handle_assessment.tscn")
 
 func _on_grip_pressed() -> void:
+	var grip_rom := ROM.new("GRIP", true)
+	if grip_rom.is_arom_set():
+		var handle_rom := ROM.new("HANDLE", true)
+		if handle_rom.is_arom_set():
+			Appdata.set_mechanism("Grip")
+			if message_label:
+				message_label.text = "✓ Both Handle & Grip done! Opening Game Selection..."
+			await get_tree().create_timer(0.5).timeout
+			get_tree().change_scene_to_file("res://scene/game_selection.tscn")
+		else:
+			if message_label:
+				message_label.text = "✓ Grip done! Finish the Handle assessment to explore with games."
+		return
 	Appdata.set_mechanism("Grip")
-
-	# Check if grip force assessment is already completed
-	if Appdata.selected_mechanism.old_rom and Appdata.selected_mechanism.old_rom.is_arom_set():
-		message_label.text = "✓ Grip AROM done! Opening Game Selection..."
-		await get_tree().create_timer(0.5).timeout
-		get_tree().change_scene_to_file("res://scene/game_selection.tscn")
-	else:
-		message_label.text = "Starting Grip Force assessment...\nPlease squeeze the handle with maximum force."
-		await get_tree().create_timer(0.5).timeout
-		get_tree().change_scene_to_file("res://scene/grip_assessment.tscn")
+	if message_label:
+		message_label.text = "Starting Grip Force assessment..."
+	await get_tree().create_timer(0.5).timeout
+	get_tree().change_scene_to_file("res://scene/grip_assessment.tscn")
 
 func _on_knob_selected() -> void:
 	Appdata.set_mechanism("Knob")

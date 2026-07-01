@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://cfkxckf6yasjm"]
+
+[ext_resource type="Script" uid="uid://dmwc8hia53w0c" path="res://scripts/juicer/GameManager.gd" id="1_5qwn3"]
+[ext_resource type="PackedScene" uid="uid://cqjxygnlamcv" path="res://scene/juicer/ui.tscn" id="2_6mgd5"]
+[ext_resource type="Script" uid="uid://c5wofwa18avrl" path="res://scripts/juicer/JuicePourStream.gd" id="3_abc12"]
+[ext_resource type="Texture2D" uid="uid://cxcjef2gp8deu" path="res://assets/juicer/586593920188198048.jpg" id="3_i6g32"]
+[ext_resource type="Script" uid="uid://bg4o7bg3o56la" path="res://scripts/juicer/Background.gd" id="4_bg_script"]
+[ext_resource type="Texture2D" uid="uid://bm18v836cdkrh" path="res://assets/juicer/table.png" id="4_ldgsr"]
+[ext_resource type="Script" uid="uid://4jff0tl8wtoc" path="res://scripts/juicer/ParticleManager.gd" id="5_particle_script"]
+[ext_resource type="AudioStream" uid="uid://dtmq5j4xrsxiw" path="res://assets/juicer/game_bgm.mp3" id="6_bgm"]
+[ext_resource type="AudioStream" uid="uid://n1hsdjshoe0i" path="res://assets/juicer/pouring_sound.mp3" id="7_pour"]
+[ext_resource type="AudioStream" uid="uid://ir08v4purn81" path="res://assets/juicer/amazing.mp3" id="8_amazing"]
+
+[node name="Game" type="Node2D" unique_id=2100925268]
+script = ExtResource("1_5qwn3")
+
+[node name="Background" type="Node2D" parent="." unique_id=1952147090]
+z_index = -10
+script = ExtResource("4_bg_script")
+
+[node name="Sprite2D" type="Sprite2D" parent="Background" unique_id=2127802054]
+position = Vector2(-2.0000076, 10.000004)
+scale = Vector2(2.6558905, 2.502707)
+texture = ExtResource("3_i6g32")
+
+[node name="Table" type="Sprite2D" parent="Background" unique_id=653360840]
+position = Vector2(-83.49998, 395.5)
+scale = Vector2(0.24149376, 0.16259858)
+texture = ExtResource("4_ldgsr")
+
+[node name="UI" parent="." unique_id=1611494801 instance=ExtResource("2_6mgd5")]
+
+[node name="JuicePourStream" type="Node2D" parent="." unique_id=187471086]
+script = ExtResource("3_abc12")
+
+[node name="ParticleManager" type="Node2D" parent="." unique_id=1326397323]
+script = ExtResource("5_particle_script")
+
+[node name="BGMPlayer" type="AudioStreamPlayer" parent="." unique_id=327587535]
+stream = ExtResource("6_bgm")
+
+[node name="PouringSoundPlayer" type="AudioStreamPlayer" parent="." unique_id=1612414864]
+stream = ExtResource("7_pour")
+
+[node name="AmazingSoundPlayer" type="AudioStreamPlayer" parent="." unique_id=1239177707]
+stream = ExtResource("8_amazing")

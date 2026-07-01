@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://b761axxvtn1if"]
+
+[ext_resource type="Texture2D" uid="uid://c6uvdausts1f6" path="res://assets/juicer/BeachBackground.jpg" id="1_sn1xx"]
+
+[node name="Background" type="Node2D" unique_id=1778171014]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1154256572]
+position = Vector2(973, 520)
+scale = Vector2(1.3880813, 1.3489583)
+texture = ExtResource("1_sn1xx")

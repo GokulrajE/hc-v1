@@ -291,5 +291,7 @@ func go_to_menu() -> void:
 
 
 func exit_game() -> void:
-	if _game_state not in [GameState.WAITING, GameState.DONE]:
+	if _game_state in [GameState.WAITING, GameState.DONE]:
+		get_tree().change_scene_to_file("res://scene/game_selection.tscn")
+	else:
 		_game_state = GameState.STOP

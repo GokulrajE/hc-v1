@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://bj016vn78lyjn"]
+
+[ext_resource type="Script" uid="uid://2ogjkb2cea8c" path="res://scripts/juicer/Fruit.gd" id="1_sljr5"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_t6yr1"]
+radius = 50.0
+
+[node name="Fruit" type="Node2D" unique_id=1284030847]
+script = ExtResource("1_sljr5")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=991652903]
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1963611824]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=119584159]
+shape = SubResource("CircleShape2D_t6yr1")

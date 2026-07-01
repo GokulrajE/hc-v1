@@ -294,7 +294,11 @@ func _on_save_pressed() -> void:
 		_cleanup()
 		# await get_tree().create_timer(1.5).timeout
 		# Navigate to game launcher after AROM assessment complete
-		get_tree().change_scene_to_file("res://scenes/game_selection.tscn")
+		var handle_rom := ROM.new("HANDLE", true)
+		if handle_rom.is_arom_set():
+			get_tree().change_scene_to_file("res://scene/game_selection.tscn")
+		else:
+			get_tree().change_scene_to_file("res://scene/mechanism.tscn")
 	else:
 		if status_label:
 			status_label.text = "Error: Failed to save assessment data."

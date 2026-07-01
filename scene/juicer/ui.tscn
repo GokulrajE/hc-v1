@@ -1,0 +1,244 @@
+[gd_scene format=3 uid="uid://cqjxygnlamcv"]
+
+[ext_resource type="Script" uid="uid://beqym6omcr8vu" path="res://scripts/juicer/UI.gd" id="1_ui_script"]
+[ext_resource type="Texture2D" uid="uid://kwcjyyaksqc5" path="res://assets/ui/start game board.png" id="2_startboard"]
+[ext_resource type="Texture2D" uid="uid://sk2a0xm7sp3k" path="res://assets/ui/gameover board.png" id="3_goboard"]
+[ext_resource type="Texture2D" uid="uid://bmwg8y55461y8" path="res://assets/ui/Button13.png" id="4_btn_play_n"]
+[ext_resource type="Texture2D" uid="uid://cn668kccj0k6y" path="res://assets/ui/Button08.png" id="5_btn_play_h"]
+[ext_resource type="Texture2D" uid="uid://c2kvtt4ccy8at" path="res://assets/ui/Btn_V01.png" id="6_btn_menu_n"]
+[ext_resource type="Texture2D" uid="uid://daqibh5tqjbfl" path="res://assets/ui/Btn_V05.png" id="7_btn_menu_h"]
+[ext_resource type="Texture2D" uid="uid://cui1ajpmfoeo8" path="res://assets/ui/Btn_V03.png" id="8_btn_exit_n"]
+[ext_resource type="Texture2D" uid="uid://dcvu4oconjgk2" path="res://assets/ui/Btn_V04.png" id="9_btn_exit_h"]
+[ext_resource type="FontFile" uid="uid://btw3w8gykgilf" path="res://assets/fonts/TiltNeon-Regular-VariableFont_XROT,YROT.ttf" id="10_font"]
+
+[sub_resource type="StyleBoxTexture" id="Juicer_ExitNormal"]
+texture = ExtResource("8_btn_exit_n")
+
+[sub_resource type="StyleBoxTexture" id="Juicer_ExitHover"]
+texture = ExtResource("9_btn_exit_h")
+
+[sub_resource type="StyleBoxTexture" id="Juicer_PlayNormal"]
+texture = ExtResource("4_btn_play_n")
+
+[sub_resource type="StyleBoxTexture" id="Juicer_PlayHover"]
+texture = ExtResource("5_btn_play_h")
+
+[sub_resource type="StyleBoxTexture" id="Juicer_MenuNormal"]
+texture = ExtResource("6_btn_menu_n")
+
+[sub_resource type="StyleBoxTexture" id="Juicer_MenuHover"]
+texture = ExtResource("7_btn_menu_h")
+
+[node name="UI" type="CanvasLayer" unique_id=340927656]
+script = ExtResource("1_ui_script")
+
+[node name="Control" type="Control" parent="." unique_id=100000001]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScoreLabel" type="Label" parent="Control" unique_id=100000002]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 30.0
+offset_right = 450.0
+offset_bottom = 90.0
+theme_override_colors/font_color = Color(0.2, 1, 0.4, 1)
+theme_override_font_sizes/font_size = 48
+text = "Score: 0"
+
+[node name="TimerLabel" type="Label" parent="Control" unique_id=100000003]
+layout_mode = 0
+offset_left = 1540.0
+offset_top = 30.0
+offset_right = 1870.0
+offset_bottom = 90.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 48
+text = "⏱️ 60s"
+
+[node name="ExitButton" type="Button" parent="Control" unique_id=100000004]
+visible = false
+layout_mode = 0
+offset_left = 1730.0
+offset_top = 15.0
+offset_right = 1900.0
+offset_bottom = 72.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("Juicer_ExitNormal")
+theme_override_styles/pressed = SubResource("Juicer_ExitNormal")
+theme_override_styles/hover = SubResource("Juicer_ExitHover")
+text = "Exit"
+
+[node name="StartBoard" type="TextureRect" parent="Control" unique_id=100000005]
+layout_mode = 0
+offset_left = 430.0
+offset_top = 130.0
+offset_right = 1490.0
+offset_bottom = 900.0
+texture = ExtResource("2_startboard")
+expand_mode = 1
+
+[node name="ContentVBox" type="VBoxContainer" parent="Control/StartBoard" unique_id=100000006]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 60.0
+offset_top = 30.0
+offset_right = -60.0
+offset_bottom = -120.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="Control/StartBoard/ContentVBox" unique_id=100000007]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.05, 0.12, 0.18, 1)
+theme_override_fonts/font = ExtResource("10_font")
+theme_override_font_sizes/font_size = 64
+text = "Juicer Game"
+horizontal_alignment = 1
+
+[node name="EmojiLabel" type="Label" parent="Control/StartBoard/ContentVBox" unique_id=100000008]
+layout_mode = 2
+theme_override_font_sizes/font_size = 60
+text = "🍊 🍋 🍓 🍇 🍎"
+horizontal_alignment = 1
+
+[node name="DescLabel" type="Label" parent="Control/StartBoard/ContentVBox" unique_id=100000009]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.12, 0.12, 0.12, 1)
+theme_override_font_sizes/font_size = 28
+text = "Point the arrow at the glowing fruit
+then squeeze to fill the glass!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="StartPromptLabel" type="Label" parent="Control/StartBoard/ContentVBox" unique_id=100000010]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.05, 0.05, 0.05, 1)
+theme_override_font_sizes/font_size = 40
+text = "Press SPACEBAR to Start"
+horizontal_alignment = 1
+
+[node name="GameOverBoard" type="TextureRect" parent="Control" unique_id=100000011]
+visible = false
+layout_mode = 0
+offset_left = 580.0
+offset_top = 185.0
+offset_right = 1340.0
+offset_bottom = 900.0
+texture = ExtResource("3_goboard")
+expand_mode = 1
+
+[node name="ContentVBox" type="VBoxContainer" parent="Control/GameOverBoard" unique_id=100000012]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 80.0
+offset_top = 60.0
+offset_right = -80.0
+offset_bottom = -60.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 26
+alignment = 1
+
+[node name="GameOverLabel" type="Label" parent="Control/GameOverBoard/ContentVBox" unique_id=100000013]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.3, 0.3, 1)
+theme_override_font_sizes/font_size = 68
+text = "GAME OVER!"
+horizontal_alignment = 1
+
+[node name="ResultsLabel" type="Label" parent="Control/GameOverBoard/ContentVBox" unique_id=100000014]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.05, 0.05, 0.05, 1)
+theme_override_font_sizes/font_size = 30
+text = "Score: 0"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="RestartButton" type="Button" parent="Control/GameOverBoard/ContentVBox" unique_id=100000015]
+custom_minimum_size = Vector2(320, 72)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("Juicer_PlayNormal")
+theme_override_styles/pressed = SubResource("Juicer_PlayNormal")
+theme_override_styles/hover = SubResource("Juicer_PlayHover")
+text = "Play Again"
+
+[node name="MenuButton" type="Button" parent="Control/GameOverBoard/ContentVBox" unique_id=100000016]
+custom_minimum_size = Vector2(320, 72)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("Juicer_MenuNormal")
+theme_override_styles/pressed = SubResource("Juicer_MenuNormal")
+theme_override_styles/hover = SubResource("Juicer_MenuHover")
+text = "Back to Menu"
+
+[node name="SuccessPopup" type="Control" parent="." unique_id=100000017]
+visible = false
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -50.0
+offset_right = 200.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SuccessLabel" type="Label" parent="SuccessPopup" unique_id=100000018]
+layout_mode = 0
+offset_left = -200.0
+offset_right = 200.0
+offset_bottom = 100.0
+theme_override_colors/font_color = Color(0.1, 1.0, 0.3, 1)
+theme_override_font_sizes/font_size = 56
+text = "🍹 JUICED!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="FailurePopup" type="Control" parent="." unique_id=100000019]
+visible = false
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -50.0
+offset_right = 200.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FailureLabel" type="Label" parent="FailurePopup" unique_id=100000020]
+layout_mode = 0
+offset_left = -200.0
+offset_right = 200.0
+offset_bottom = 100.0
+theme_override_colors/font_color = Color(1.0, 0.35, 0.1, 1)
+theme_override_font_sizes/font_size = 56
+text = "⏰ TOO SLOW!"
+horizontal_alignment = 1
+vertical_alignment = 1

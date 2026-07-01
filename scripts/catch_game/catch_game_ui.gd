@@ -24,7 +24,7 @@ signal restart_pressed
 
 func _ready() -> void:
 	game_over_board.visible = false
-	exit_button.visible = false
+	exit_button.visible = true
 	success_popup.visible = false
 	failure_popup.visible = false
 
