@@ -44,10 +44,10 @@ texture = ExtResource("3_gsel")
 [node name="ConnectStatus" parent="." unique_id=905347685 instance=ExtResource("2_gsel")]
 
 [node name="title" type="Label" parent="." unique_id=325990650]
-offset_left = 48.0
-offset_top = 2.0
-offset_right = 1848.0
-offset_bottom = 84.0
+offset_left = 73.0
+offset_top = 121.0
+offset_right = 1873.0
+offset_bottom = 203.0
 theme_override_colors/font_color = Color(0, 0.8, 1, 1)
 theme_override_fonts/font = ExtResource("5_gsel")
 theme_override_font_sizes/font_size = 64
@@ -57,7 +57,7 @@ text = "Select Game.."
 offset_left = 27.0
 offset_top = 92.0
 offset_right = 630.0
-offset_bottom = 554.0
+offset_bottom = 560.0
 texture = ExtResource("4_gsel")
 expand_mode = 1
 
@@ -244,10 +244,10 @@ text = "HAT TRICK"
 horizontal_alignment = 1
 
 [node name="icon_ht_hat" type="TextureRect" parent="." unique_id=1390000003]
-offset_left = 209.0
-offset_top = 712.0
-offset_right = 573.0
-offset_bottom = 855.0
+offset_left = 198.0
+offset_top = 723.0
+offset_right = 562.0
+offset_bottom = 866.0
 texture = ExtResource("14_gsel")
 expand_mode = 1
 stretch_mode = 5

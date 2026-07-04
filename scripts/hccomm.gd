@@ -55,6 +55,11 @@ func _process(_delta: float):
 	if manager:
 		manager.poll_events()
 
+
+func _exit_tree() -> void:
+	if device_is_connected:
+		disconnect_device()
+
 func _on_serial_data_received(_port: String, data: PackedByteArray) -> void:
 	packet_buffer.append_array(data)
 	_parse_packets()

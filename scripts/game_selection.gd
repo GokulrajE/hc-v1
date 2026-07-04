@@ -75,7 +75,7 @@ func _update_game_visibility() -> void:
 				show_map["rnr"] = true; show_map["tw"] = true; show_map["juicer"] = true
 			"TRIPOD":
 				show_map["catch"] = true; show_map["ht"] = true; show_map["juicer"] = true
-			"PINCH BUTTON":
+			"PINCH", "BUTTONS":
 				show_map["rnr"] = true; show_map["safe"] = true; show_map["catch"] = true
 			_:
 				for key in show_map:
@@ -131,6 +131,13 @@ func _reposition_and_show(keys: Array) -> void:
 					(nd as Button).custom_minimum_size = Vector2.ZERO
 				nd.size = Vector2(sz.x * x_scale, sz.y * y_scale)
 			nd.visible = true
+			# icon_ht_hat2 is a child of icon_ht_hat with fixed offsets — keep it
+			# filling the parent exactly so it doesn't misalign when parent is scaled.
+			if node_name == "icon_ht_hat":
+				var hat2 := nd.get_node_or_null("icon_ht_hat2") as Control
+				if hat2:
+					hat2.position = Vector2.ZERO
+					hat2.size     = nd.size
 
 
 func _update_info() -> void:
@@ -140,7 +147,7 @@ func _update_info() -> void:
 		message_label.text = "No mechanism selected"
 		return
 	var mech = Appdata.selected_mechanism
-	if mech.is_mechanism("Pinch Button"):
+	if mech.is_mechanism("Pinch") or mech.is_mechanism("Buttons"):
 		message_label.text = "Mechanism: %s  |  No AROM required — Ready to play!" % mech.name
 		return
 	var arom = mech.get_current_arom()

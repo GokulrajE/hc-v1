@@ -22,11 +22,16 @@ var trial_number_session: int = 0
 func _init(mechanism_name: String = "", sess_no: int = 1) -> void:
 	name = mechanism_name.to_upper() if mechanism_name else ""
 
-	# Initialize ROM objects
-	old_rom = ROM.new(name, true)  # Read from file if exists (previous assessment)
-	new_rom = ROM.new("", false)  # Empty ROM for new measurements
+	if name == "PINCH":
+		old_rom = PinchROM.new(name, true)
+		new_rom = PinchROM.new("", false)
+	elif name == "BUTTONS":
+		old_rom = ButtonsROM.new(name, true)
+		new_rom = ButtonsROM.new("", false)
+	else:
+		old_rom = ROM.new(name, true)
+		new_rom = ROM.new("", false)
 
-	# Reset flags
 	arom_completed = false
 
 	curr_speed = -1.0

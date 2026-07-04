@@ -59,6 +59,7 @@ var current_phase := AssessmentPhase.PINCH1
 var _card_styles: Array = []
 var _last_step:   int   = 1
 var _pulse_tw:    Tween = null
+var _warn_tw:     Tween = null
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -80,7 +81,6 @@ func _ready() -> void:
 		_warning_ok_btn.pressed.connect(_on_warning_ok)
 	if _warning_cancel_btn:
 		_warning_cancel_btn.pressed.connect(_on_warning_cancel)
-	_style_warning_buttons()
 
 	for i in CARD_NODES_LIST.size():
 		var ci   := i
@@ -108,23 +108,7 @@ func _ready() -> void:
 		if card:
 			card.gui_input.connect(func(ev): _on_card_gui_input(ev, ci))
 
-		_style_card_buttons(i)
-
-		var sbox := StyleBoxFlat.new()
-		sbox.corner_radius_top_left     = 12
-		sbox.corner_radius_top_right    = 12
-		sbox.corner_radius_bottom_left  = 12
-		sbox.corner_radius_bottom_right = 12
-		sbox.border_width_left   = 2; sbox.border_width_right  = 2
-		sbox.border_width_top    = 2; sbox.border_width_bottom = 2
-		sbox.shadow_offset       = Vector2(0, 0)
-		sbox.bg_color            = Color(0.08, 0.08, 0.08, 1.0)
-		sbox.border_color        = Color(0.18, 0.18, 0.18, 0.5)
-		sbox.shadow_color        = Color(0.0, 0.0, 0.0, 0.0)
-		sbox.shadow_size         = 0
-		_card_styles.append(sbox)
-		if card:
-			card.add_theme_stylebox_override("panel", sbox)
+		_card_styles.append(card.get_theme_stylebox("panel") as StyleBoxFlat if card else null)
 
 	if back_button:
 		back_button.pressed.connect(_on_back_pressed)
@@ -140,70 +124,6 @@ func _ready() -> void:
 		HCcomm.new_device_data.connect(_on_device_data_received)
 
 	_refresh_ui()
-
-
-func _style_card_buttons(i: int) -> void:
-	var incap := _card_incapable_btn[i] as Button
-	if incap:
-		var sn := StyleBoxFlat.new()
-		sn.bg_color = Color(0.22, 0.05, 0.05, 1.0)
-		sn.corner_radius_top_left = 5; sn.corner_radius_top_right = 5
-		sn.corner_radius_bottom_left = 5; sn.corner_radius_bottom_right = 5
-		sn.border_width_left = 1; sn.border_width_right = 1
-		sn.border_width_top = 1; sn.border_width_bottom = 1
-		sn.border_color = Color(0.55, 0.12, 0.12, 0.85)
-		incap.add_theme_stylebox_override("normal", sn)
-		var sh := sn.duplicate() as StyleBoxFlat
-		sh.bg_color = Color(0.42, 0.07, 0.07, 1.0)
-		incap.add_theme_stylebox_override("hover", sh)
-		var sp := sh.duplicate() as StyleBoxFlat
-		sp.bg_color = Color(0.58, 0.09, 0.09, 1.0)
-		incap.add_theme_stylebox_override("pressed", sp)
-
-	var cont := _card_continue_btn[i] as Button
-	if cont:
-		var sn := StyleBoxFlat.new()
-		sn.bg_color = Color(0.04, 0.20, 0.07, 1.0)
-		sn.corner_radius_top_left = 5; sn.corner_radius_top_right = 5
-		sn.corner_radius_bottom_left = 5; sn.corner_radius_bottom_right = 5
-		sn.border_width_left = 1; sn.border_width_right = 1
-		sn.border_width_top = 1; sn.border_width_bottom = 1
-		sn.border_color = Color(0.12, 0.55, 0.22, 0.85)
-		cont.add_theme_stylebox_override("normal", sn)
-		var sh := sn.duplicate() as StyleBoxFlat
-		sh.bg_color = Color(0.07, 0.36, 0.12, 1.0)
-		cont.add_theme_stylebox_override("hover", sh)
-		var sp := sh.duplicate() as StyleBoxFlat
-		sp.bg_color = Color(0.09, 0.48, 0.16, 1.0)
-		cont.add_theme_stylebox_override("pressed", sp)
-
-
-func _style_warning_buttons() -> void:
-	if _warning_cancel_btn:
-		var sn := StyleBoxFlat.new()
-		sn.bg_color = Color(0.15, 0.15, 0.18, 1.0)
-		sn.corner_radius_top_left = 6; sn.corner_radius_top_right = 6
-		sn.corner_radius_bottom_left = 6; sn.corner_radius_bottom_right = 6
-		sn.border_width_left = 1; sn.border_width_right = 1
-		sn.border_width_top = 1; sn.border_width_bottom = 1
-		sn.border_color = Color(0.4, 0.4, 0.45, 0.7)
-		_warning_cancel_btn.add_theme_stylebox_override("normal", sn)
-		var sh := sn.duplicate() as StyleBoxFlat
-		sh.bg_color = Color(0.25, 0.25, 0.30, 1.0)
-		_warning_cancel_btn.add_theme_stylebox_override("hover", sh)
-
-	if _warning_ok_btn:
-		var sn := StyleBoxFlat.new()
-		sn.bg_color = Color(0.28, 0.06, 0.06, 1.0)
-		sn.corner_radius_top_left = 6; sn.corner_radius_top_right = 6
-		sn.corner_radius_bottom_left = 6; sn.corner_radius_bottom_right = 6
-		sn.border_width_left = 1; sn.border_width_right = 1
-		sn.border_width_top = 1; sn.border_width_bottom = 1
-		sn.border_color = Color(0.7, 0.15, 0.15, 0.9)
-		_warning_ok_btn.add_theme_stylebox_override("normal", sn)
-		var sh := sn.duplicate() as StyleBoxFlat
-		sh.bg_color = Color(0.50, 0.08, 0.08, 1.0)
-		_warning_ok_btn.add_theme_stylebox_override("hover", sh)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -282,13 +202,11 @@ func _on_incapable_pressed(idx: int) -> void:
 	var names := ["PINCH 1", "PINCH 2"]
 	if _warning_msg_lbl:
 		_warning_msg_lbl.text = "Mark  %s  as INCAPABLE?\n\nResult will be saved as 0." % names[idx]
-	if _warning_panel:
-		_warning_panel.visible = true
+	_show_warning()
 
 
 func _on_warning_ok() -> void:
-	if _warning_panel:
-		_warning_panel.visible = false
+	_hide_warning()
 	if _warning_phase < 0:
 		return
 	match _warning_phase:
@@ -299,9 +217,40 @@ func _on_warning_ok() -> void:
 
 
 func _on_warning_cancel() -> void:
-	if _warning_panel:
-		_warning_panel.visible = false
+	_hide_warning()
 	_warning_phase = -1
+
+
+func _show_warning() -> void:
+	if _warning_panel == null:
+		return
+	if _warn_tw and _warn_tw.is_valid():
+		_warn_tw.kill()
+	_warning_panel.pivot_offset = Vector2(400.0, 180.0)
+	_warning_panel.scale    = Vector2(0.88, 0.88)
+	_warning_panel.modulate = Color(1, 1, 1, 0)
+	_warning_panel.visible  = true
+	_warn_tw = create_tween().set_parallel(true)
+	_warn_tw.tween_property(_warning_panel, "scale",    Vector2(1.0, 1.0),   0.22) \
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_warn_tw.tween_property(_warning_panel, "modulate", Color(1, 1, 1, 1), 0.18)
+
+
+func _hide_warning() -> void:
+	if _warning_panel == null:
+		return
+	if _warn_tw and _warn_tw.is_valid():
+		_warn_tw.kill()
+	_warn_tw = create_tween().set_parallel(true)
+	_warn_tw.tween_property(_warning_panel, "scale",    Vector2(0.88, 0.88), 0.16) \
+		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	_warn_tw.tween_property(_warning_panel, "modulate", Color(1, 1, 1, 0),   0.14)
+	_warn_tw.chain().tween_callback(func():
+		if _warning_panel:
+			_warning_panel.visible  = false
+			_warning_panel.scale    = Vector2(1.0, 1.0)
+			_warning_panel.modulate = Color(1, 1, 1, 1)
+	)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -513,8 +462,6 @@ func _hold_complete() -> bool:
 # ─────────────────────────────────────────────────────────────────────────────
 
 func _draw_arc_content(canvas: Node2D) -> void:
-	if current_phase == AssessmentPhase.COMPLETE:
-		return
 	var center: Vector2
 	var r_circ: float
 	if circleIndication:
@@ -525,11 +472,17 @@ func _draw_arc_content(canvas: Node2D) -> void:
 		r_circ = 202.5
 	center.x += AssessmentBase.arc_shake_offset
 	var r_arc := r_circ + 22.0
-	var col   := _get_phase_color()
-	canvas.draw_arc(center, r_arc, 0.0, TAU, 80, Color(0.18, 0.18, 0.18, 0.7), 20.0, true)
+	if current_phase == AssessmentPhase.COMPLETE:
+		var both_incapable := pinch1_incapable and pinch2_incapable
+		if not both_incapable:
+			canvas.draw_arc(center, r_arc, 0.0, TAU, 80, Color(0.18, 0.18, 0.18, 0.7), 20.0, true)
+			canvas.draw_arc(center, r_arc, -PI * 0.5, -PI * 0.5 + TAU, 80, Color(1.0, 0.2, 0.2), 20.0, true)
+		return
+	var bg_col := Color(0.1, 0.6, 0.2, 0.65) if AssessmentBase.arc_fill < 1.0 else Color(0.18, 0.18, 0.18, 0.7)
+	canvas.draw_arc(center, r_arc, 0.0, TAU, 80, bg_col, 20.0, true)
 	if AssessmentBase.arc_fill > 0.001:
 		var a0      := -PI * 0.5
-		var arc_col := Color.WHITE if AssessmentBase.arc_fill >= 1.0 else col
+		var arc_col := Color(1.0, 0.2, 0.2) if AssessmentBase.arc_fill >= 1.0 else Color(0.2, 1.0, 0.35)
 		canvas.draw_arc(center, r_arc, a0, a0 + TAU * AssessmentBase.arc_fill, 80, arc_col, 20.0, true)
 
 
@@ -544,7 +497,19 @@ func _pulse_circle(pressed: bool) -> void:
 		_pulse_tw.kill()
 	_pulse_tw = create_tween().set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 	_pulse_tw.tween_property(circleIndication, "scale",
-		Vector2(1.72, 1.72) if pressed else Vector2(1.5, 1.5), 0.28)
+		Vector2(1, 1) if pressed else Vector2(0.75, 0.75), 0.28)
+
+
+func _nudge_continue_btn(idx: int) -> void:
+	var btn: Button = _card_continue_btn[idx] if idx >= 0 and idx < _card_continue_btn.size() else null
+	if btn == null or not btn.visible:
+		return
+	btn.pivot_offset = btn.size * 0.5
+	var tw := create_tween()
+	tw.tween_property(btn, "scale", Vector2(1.18, 1.18), 0.08) \
+		.set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
+	tw.tween_property(btn, "scale", Vector2(1.0, 1.0), 0.35) \
+		.set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 
 
 func _pop_circle() -> void:
@@ -553,9 +518,9 @@ func _pop_circle() -> void:
 	if _pulse_tw and _pulse_tw.is_valid():
 		_pulse_tw.kill()
 	_pulse_tw = create_tween()
-	_pulse_tw.tween_property(circleIndication, "scale", Vector2(2.05, 2.05), 0.12) \
+	_pulse_tw.tween_property(circleIndication, "scale", Vector2(1, 1), 0.12) \
 		.set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
-	_pulse_tw.tween_property(circleIndication, "scale", Vector2(1.72, 1.72), 0.35) \
+	_pulse_tw.tween_property(circleIndication, "scale", Vector2(1, 1), 0.35) \
 		.set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 
 
@@ -601,7 +566,8 @@ func _process(delta: float) -> void:
 
 	var base := AssessmentBase
 	_last_step = base.current_step
-	base.tick(delta, _is_current_active())
+	var effective_active := _is_current_active() and not (base.current_step == 1 and _step1_done())
+	base.tick(delta, effective_active)
 
 	if base.current_step == 2 and base.phase_timer >= base.TIME_LIMIT:
 		_advance_phase(_find_next_unfinished())
@@ -649,6 +615,8 @@ func _on_active_changed(was: bool, now: bool) -> void:
 		match current_phase:
 			AssessmentPhase.PINCH1: pinch1_first_press_happened = true
 			AssessmentPhase.PINCH2: pinch2_first_press_happened = true
+	if now and AssessmentBase.current_step == 1 and _step1_done():
+		_nudge_continue_btn(_phase_index())
 	if not now:
 		AssessmentBase.stop_shake()
 		if AssessmentBase.current_step == 1 and _step1_done():
@@ -677,34 +645,32 @@ func _advance_phase(next: AssessmentPhase) -> void:
 # ─────────────────────────────────────────────────────────────────────────────
 
 func _on_save_pressed() -> void:
-	var mech = Appdata.selected_mechanism
+	var mech: HyperCubeMechanism = Appdata.selected_mechanism
 	if mech == null:
 		push_error("PinchAssessment: no mechanism selected")
 		return
 
-	var pinch_rom := mech.new_rom
-	if not (pinch_rom is PinchROM):
-		push_error("PinchAssessment: new_rom is not PinchROM")
-		return
+	if not (pinch1_incapable and pinch2_incapable):
+		var pinch_rom := mech.new_rom as PinchROM
+		if pinch_rom == null:
+			push_error("PinchAssessment: new_rom is not PinchROM")
+			return
+		var p1_done := pinch1_step1_complete and pinch1_step2_complete and not pinch1_incapable
+		var p2_done := pinch2_step1_complete and pinch2_step2_complete and not pinch2_incapable
+		pinch_rom.set_pinch_data(p1_done, p2_done, pinch1_reach_time, pinch2_reach_time)
+		if not pinch_rom.write_to_assessment_file():
+			if _hint_lbl:
+				_hint_lbl.text = "SAVE FAILED"
+				_hint_lbl.add_theme_color_override("font_color", Color.RED)
+			push_error("PinchAssessment: ROM write failed")
+			return
 
-	var p1_done := pinch1_step1_complete and pinch1_step2_complete and not pinch1_incapable
-	var p2_done := pinch2_step1_complete and pinch2_step2_complete and not pinch2_incapable
-
-	pinch_rom.set_pinch_data(p1_done, p2_done, pinch1_reach_time, pinch2_reach_time)
-	var ok := pinch_rom.write_to_assessment_file()
-
-	if ok:
-		if _hint_lbl:
-			_hint_lbl.text = "✓  SAVED"
-			_hint_lbl.add_theme_color_override("font_color", Color(0.2, 1.0, 0.45))
-		_cleanup()
-		await get_tree().create_timer(1.2).timeout
-		get_tree().change_scene_to_file("res://scene/game_selection.tscn")
-	else:
-		if _hint_lbl:
-			_hint_lbl.text = "SAVE FAILED"
-			_hint_lbl.add_theme_color_override("font_color", Color.RED)
-		push_error("PinchAssessment: ROM write failed")
+	if _hint_lbl:
+		_hint_lbl.text = "✓  SAVED"
+		_hint_lbl.add_theme_color_override("font_color", Color(0.2, 1.0, 0.45))
+	_cleanup()
+	await get_tree().create_timer(1.2).timeout
+	get_tree().change_scene_to_file("res://scene/game_selection.tscn")
 
 
 func _on_back_pressed() -> void:

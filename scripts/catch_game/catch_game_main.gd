@@ -86,10 +86,8 @@ func _ready() -> void:
 
 func _connect_device() -> void:
 	var mech_name := Appdata.selected_mechanism.name if Appdata.selected_mechanism != null else ""
-	if mech_name == "PINCH BUTTON":
-		# No AROM for pinch button; buttons are polled directly each frame
+	if mech_name in ["PINCH", "BUTTONS"]:
 		_use_device = HCcomm != null and HCcomm.device_is_connected
-		print("🎮 Catch Game: PINCH BUTTON mode — device: %s" % ("active" if _use_device else "fallback"))
 		return
 	if Appdata.selected_mechanism != null:
 		var arom = Appdata.selected_mechanism.get_current_arom()
@@ -112,11 +110,8 @@ func _on_device_data_received() -> void:
 	if _game_state != GameState.MOVE:
 		return
 	var mech_name := Appdata.selected_mechanism.name if Appdata.selected_mechanism != null else ""
-	if mech_name == "PINCH BUTTON":
-		# No button = hands fully open; button pressed = hands closed to catch
-		var any_btn := HCcomm.button_1== 0 or HCcomm.button_2== 0 or HCcomm.button_3== 0 \
-					or HCcomm.button_4== 0 or HCcomm.button_5== 0
-		var spread := 0.0 if any_btn else MAX_DEVICE_SPREAD
+	if mech_name in ["PINCH", "BUTTONS"]:
+		var spread := 0.0 if _read_active_input() else MAX_DEVICE_SPREAD
 		_hand_spread_left  = spread
 		_hand_spread_right = spread
 	else:
@@ -225,11 +220,8 @@ func _reset_hand_positions() -> void:
 ## Update hand positions based on input or device
 func _update_hand_positions(delta: float) -> void:
 	var mech_name := Appdata.selected_mechanism.name if Appdata.selected_mechanism != null else ""
-	if mech_name == "PINCH BUTTON" and HCcomm != null and HCcomm.device_is_connected:
-		# Read buttons directly every frame: no button = open, button pressed = closed (catch)
-		var any_btn := HCcomm.button_1== 0 or HCcomm.button_2== 0 or HCcomm.button_3== 0 \
-					or HCcomm.button_4== 0 or HCcomm.button_5== 0
-		var spread := 0.0 if any_btn else MAX_DEVICE_SPREAD
+	if mech_name in ["PINCH", "BUTTONS"] and HCcomm != null and HCcomm.device_is_connected:
+		var spread := 0.0 if _read_active_input() else MAX_DEVICE_SPREAD
 		_hand_spread_left  = spread
 		_hand_spread_right = spread
 	elif not _use_device:
@@ -557,3 +549,18 @@ func exit_game() -> void:
 		get_tree().change_scene_to_file("res://scene/game_selection.tscn")
 	else:
 		_game_state = GameState.STOP
+
+
+func _read_active_input() -> bool:
+	if not (HCcomm and HCcomm.device_is_connected): return false
+	var mech = Appdata.selected_mechanism
+	if mech == null: return false
+	if mech.name == "PINCH":
+		var rom := mech.old_rom as PinchROM
+		if rom == null: return HCcomm.button_7 == 0 or HCcomm.button_6 == 0
+		return (rom.pinch1_done and HCcomm.button_7 == 0) or \
+			   (rom.pinch2_done and HCcomm.button_6 == 0)
+	if mech.name == "BUTTONS":
+		return HCcomm.button_1 == 0 or HCcomm.button_2 == 0 or HCcomm.button_3 == 0 \
+			or HCcomm.button_4 == 0 or HCcomm.button_5 == 0
+	return false

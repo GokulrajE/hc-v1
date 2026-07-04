@@ -22,8 +22,6 @@ var grip_value_current = 0.0
 var current_mechanism = null
 var flash_timer: float = 0.0
 var pulse_time: float = 0.0
-var target_dot_max: Sprite2D = null
-var target_dot_min: Sprite2D = null
 
 const MAX_ANGLE_RANGE = 110.0
 const REACHING_TIME_LIMIT = 60.0
@@ -210,33 +208,14 @@ func _advance_to_step3() -> void:
 	if max_label:
 		max_label.text = "AROM Max: %.2f°" % arom_max
 
-	# Show reach count label and create indicator dots
+	# Show reach count label
 	if reach_count_label:
 		reach_count_label.visible = true
 		reach_count_label.text = "1"
 		reach_count_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
 
-	# Create pulsing dots at arc tips (positioned outside the gauge)
-	var circle_tex = load("res://sprites/Circle Filled.png")
-	var angle_gauge_node = angle_gauge
-	if angle_gauge_node and circle_tex:
-		var gauge_center = angle_gauge_node.size / 2.0
-		var gauge_radius = 200.0
-		var dot_radius = gauge_radius + 50.0
-
-		target_dot_max = Sprite2D.new()
-		target_dot_max.texture = circle_tex
-		target_dot_max.scale = Vector2(0.09, 0.09)
-		var angle_max_rad = deg_to_rad(arom_max - 180.0)
-		target_dot_max.position = gauge_center + Vector2(cos(angle_max_rad), sin(angle_max_rad)) * dot_radius
-		angle_gauge_node.add_child(target_dot_max)
-
-		target_dot_min = Sprite2D.new()
-		target_dot_min.texture = circle_tex
-		target_dot_min.scale = Vector2(0.09, 0.09)
-		var angle_min_rad = deg_to_rad(arom_min - 180.0)
-		target_dot_min.position = gauge_center + Vector2(cos(angle_min_rad), sin(angle_min_rad)) * dot_radius
-		angle_gauge_node.add_child(target_dot_min)
+	if angle_gauge:
+		angle_gauge.activate_step3(arom_min, arom_max, false)
 
 	print("HandGripAssessment: Step 2 complete! AROM: %.2f° to %.2f°" % [arom_min, arom_max])
 
@@ -251,11 +230,15 @@ func _process_step3() -> void:
 		last_reached_min = true
 		last_reached_max = false
 		flash_timer = 0.3
+		if angle_gauge:
+			angle_gauge.update_step3(true)   # next target is max
 	elif at_max and not last_reached_max:
 		last_reached_max = true
 		last_reached_min = false
 		reach_count += 1
 		flash_timer = 0.3
+		if angle_gauge:
+			angle_gauge.update_step3(false)  # next target is min
 
 	if reach_count_label:
 		reach_count_label.text = "%d" % (reach_count)
@@ -276,12 +259,8 @@ func _complete_step3() -> void:
 		save_button.visible = true
 	if reach_count_label:
 		reach_count_label.visible = false
-	if target_dot_max:
-		target_dot_max.queue_free()
-		target_dot_max = null
-	if target_dot_min:
-		target_dot_min.queue_free()
-		target_dot_min = null
+	if angle_gauge:
+		angle_gauge.clear_step3()
 	print("HandGripAssessment: Step 3 complete! Reaches: %d in %.2f seconds" % [reach_count, reaching_timer])
 
 func _physics_process(_delta: float) -> void:
@@ -350,19 +329,9 @@ func _update_reaching_visual_feedback() -> void:
 		# Default state
 		angle_gauge.add_shade_zone(arom_min, arom_max, Color(0.714, 0.161, 0.255, 1.0))
 
-	# Pulse the active indicator dot; dim the inactive one
-	if target_dot_max and target_dot_min:
-		var dot_scale = 0.065 + pulse * 0.035
-		if going_to_max:
-			target_dot_max.scale = Vector2(dot_scale, dot_scale)
-			target_dot_max.modulate = Color(0.2, 0.8, 1, 0.8 + pulse * 0.2)
-			target_dot_min.scale = Vector2(0.055, 0.055)
-			target_dot_min.modulate = Color(0.21, 0.129, 0.069, 0.3)
-		else:
-			target_dot_min.scale = Vector2(dot_scale, dot_scale)
-			target_dot_min.modulate = Color(0.2, 0.8, 1, 0.8 + pulse * 0.2)
-			target_dot_max.scale = Vector2(0.055, 0.055)
-			target_dot_max.modulate = Color(0.21, 0.129, 0.069, 0.3)
+	# Update gauge step3 target direction
+	if angle_gauge:
+		angle_gauge.update_step3(going_to_max)
 
 func _start_arom_raw_logging() -> void:
 	AppDataTrial.start_arom_raw_data_logging()

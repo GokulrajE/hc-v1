@@ -29,7 +29,7 @@ var _current_score: int = 0
 
 func _ready() -> void:
 	game_over_board.visible = false
-	exit_button.visible = false
+	exit_button.visible = true
 	start_board.visible = true
 
 	# Hide labels not needed in this UI
@@ -90,7 +90,7 @@ func _on_game_state_changed_ui(new_state: String) -> void:
 			exit_button.visible = false
 		"waiting":
 			start_board.visible = true
-			exit_button.visible = false
+			exit_button.visible = true
 
 func _on_score_changed(new_score: int) -> void:
 	_current_score = new_score

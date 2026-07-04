@@ -1,0 +1,423 @@
+[gd_scene format=3 uid="uid://ba6tns7h2q5ki"]
+
+[ext_resource type="Script" uid="uid://lre5smtdxarn" path="res://scripts/buttons_assessment.gd" id="1_btn_script"]
+[ext_resource type="Texture2D" uid="uid://sal3ip0hwbsd" path="res://assets/ui/Window04.png" id="2_bg"]
+[ext_resource type="PackedScene" uid="uid://ca8b3v7p5hc5" path="res://scene/connect_status.tscn" id="2_cs"]
+[ext_resource type="Texture2D" uid="uid://cov80lucdvvvm" path="res://sprites/Circle Filled.png" id="3_circle"]
+[ext_resource type="FontFile" uid="uid://btw3w8gykgilf" path="res://assets/fonts/TiltNeon-Regular-VariableFont_XROT,YROT.ttf" id="3_font"]
+[ext_resource type="Texture2D" uid="uid://c2kvtt4ccy8at" path="res://assets/ui/Btn_V01.png" id="4_btn01"]
+[ext_resource type="Texture2D" uid="uid://daqibh5tqjbfl" path="res://assets/ui/Btn_V05.png" id="5_btn05"]
+[ext_resource type="Texture2D" uid="uid://c7b54u1ko0m6u" path="res://assets/ui/Btn_V02.png" id="6_btn02"]
+[ext_resource type="Texture2D" uid="uid://n8eqx2nfw4dc" path="res://assets/ui/Btn_V06.png" id="7_btn06"]
+
+[sub_resource type="CircleShape2D" id="CircleShape_btn"]
+radius = 134.9703
+
+[sub_resource type="GDScript" id="GDScript_arc"]
+script/source = "extends Node2D
+func _draw():
+	var p = get_parent()
+	if p:
+		p._draw_arc_content(self)
+"
+
+[sub_resource type="StyleBoxTexture" id="SBT_back_n"]
+texture = ExtResource("4_btn01")
+
+[sub_resource type="StyleBoxTexture" id="SBT_back_p"]
+texture = ExtResource("4_btn01")
+
+[sub_resource type="StyleBoxTexture" id="SBT_back_h"]
+texture = ExtResource("5_btn05")
+
+[sub_resource type="StyleBoxTexture" id="SBT_save_n"]
+texture = ExtResource("6_btn02")
+
+[sub_resource type="StyleBoxTexture" id="SBT_save_p"]
+texture = ExtResource("6_btn02")
+
+[sub_resource type="StyleBoxTexture" id="SBT_save_h"]
+texture = ExtResource("7_btn06")
+
+[sub_resource type="StyleBoxFlat" id="SF_card"]
+bg_color = Color(0.08, 0.08, 0.08, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.18, 0.18, 0.18, 0.5)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="SF_incap_n"]
+bg_color = Color(0.22, 0.05, 0.05, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.55, 0.12, 0.12, 0.85)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="SF_incap_p"]
+bg_color = Color(0.58, 0.09, 0.09, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.55, 0.12, 0.12, 0.85)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="SF_incap_h"]
+bg_color = Color(0.42, 0.07, 0.07, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.55, 0.12, 0.12, 0.85)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="SF_cont_n"]
+bg_color = Color(0.04, 0.2, 0.07, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.12, 0.55, 0.22, 0.85)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="SF_cont_p"]
+bg_color = Color(0.09, 0.48, 0.16, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.12, 0.55, 0.22, 0.85)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="SF_cont_h"]
+bg_color = Color(0.07, 0.36, 0.12, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.12, 0.55, 0.22, 0.85)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h3f8q"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.6117689, 0.40639967, 0, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0.58431375, 0.5058824, 0, 1)
+shadow_size = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xx38d"]
+bg_color = Color(0.15, 0.15, 0.18, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.4, 0.4, 0.45, 0.7)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8uf21"]
+bg_color = Color(0.25, 0.25, 0.3, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.4, 0.4, 0.45, 0.7)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dvbq6"]
+bg_color = Color(0.28, 0.06, 0.06, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.7, 0.15, 0.15, 0.9)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2hwgx"]
+bg_color = Color(0.5, 0.08, 0.08, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.7, 0.15, 0.15, 0.9)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="ButtonsAssessment" type="Node2D" unique_id=726250718]
+script = ExtResource("1_btn_script")
+
+[node name="bg" type="TextureRect" parent="." unique_id=474929077]
+offset_left = -35.0
+offset_top = -18.0
+offset_right = 1991.0
+offset_bottom = 1126.0
+texture = ExtResource("2_bg")
+
+[node name="title" type="Label" parent="." unique_id=2106228783]
+offset_left = 50.0
+offset_top = 20.0
+offset_right = 1850.0
+offset_bottom = 110.0
+theme_override_colors/font_color = Color(1, 0.6, 0, 1)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 70
+text = "Buttons Assessment"
+
+[node name="ConnectStatus" parent="." unique_id=1584010519 instance=ExtResource("2_cs")]
+
+[node name="buttonstateUI" type="Sprite2D" parent="." unique_id=2064077001]
+modulate = Color(0.22, 0.22, 0.22, 1)
+position = Vector2(956.00006, 671)
+texture = ExtResource("3_circle")
+
+[node name="CircleClickArea" type="Area2D" parent="buttonstateUI" unique_id=659681226]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="buttonstateUI/CircleClickArea" unique_id=711257637]
+shape = SubResource("CircleShape_btn")
+
+[node name="arc_layer" type="Node2D" parent="." unique_id=1786401063]
+script = SubResource("GDScript_arc")
+
+[node name="back_button" type="Button" parent="." unique_id=1617703251]
+offset_left = 32.0
+offset_top = 977.0
+offset_right = 232.0
+offset_bottom = 1047.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("SBT_back_n")
+theme_override_styles/pressed = SubResource("SBT_back_p")
+theme_override_styles/hover = SubResource("SBT_back_h")
+text = "Back"
+
+[node name="save_button" type="Button" parent="." unique_id=1281714808]
+anchors_preset = -1
+offset_left = 1705.0
+offset_top = 969.0
+offset_right = 1905.0
+offset_bottom = 1039.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("SBT_save_n")
+theme_override_styles/pressed = SubResource("SBT_save_p")
+theme_override_styles/hover = SubResource("SBT_save_h")
+text = "Save"
+
+[node name="hint_label" type="Label" parent="." unique_id=240400097]
+offset_left = 8.0
+offset_top = 886.0
+offset_right = 1928.0
+offset_bottom = 976.0
+theme_override_colors/font_color = Color(1, 0.6, 0, 1)
+theme_override_font_sizes/font_size = 52
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="card_buttons" type="Panel" parent="." unique_id=289817941]
+offset_left = 698.0
+offset_top = 192.0
+offset_right = 1198.0
+offset_bottom = 422.0
+theme_override_styles/panel = SubResource("SF_card")
+
+[node name="phase_name" type="Label" parent="card_buttons" unique_id=2122013670]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 12.0
+offset_right = 420.0
+offset_bottom = 72.0
+theme_override_colors/font_color = Color(1, 0.6, 0, 1)
+theme_override_font_sizes/font_size = 44
+text = "BUTTONS"
+vertical_alignment = 1
+
+[node name="check_lbl" type="Label" parent="card_buttons" unique_id=1721802610]
+visible = false
+layout_mode = 0
+offset_left = 435.0
+offset_top = 10.0
+offset_right = 490.0
+offset_bottom = 65.0
+theme_override_colors/font_color = Color(0.2, 1, 0.45, 1)
+theme_override_font_sizes/font_size = 48
+text = "✓"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="step_lbl" type="Label" parent="card_buttons" unique_id=1126033373]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 78.0
+offset_right = 260.0
+offset_bottom = 112.0
+theme_override_colors/font_color = Color(0.55, 0.55, 0.55, 1)
+theme_override_font_sizes/font_size = 24
+text = "STEP 1"
+vertical_alignment = 1
+
+[node name="timer_lbl" type="Label" parent="card_buttons" unique_id=756146824]
+layout_mode = 0
+offset_left = 270.0
+offset_top = 78.0
+offset_right = 485.0
+offset_bottom = 112.0
+theme_override_colors/font_color = Color(0.55, 0.55, 0.55, 1)
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="progress_bg" type="ColorRect" parent="card_buttons" unique_id=538192847]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 118.0
+offset_right = 485.0
+offset_bottom = 136.0
+color = Color(0.14, 0.14, 0.14, 1)
+
+[node name="progress_fill" type="ColorRect" parent="card_buttons/progress_bg" unique_id=1616218219]
+layout_mode = 0
+offset_bottom = 18.0
+color = Color(1, 0.6, 0, 1)
+
+[node name="step_seg_a" type="ColorRect" parent="card_buttons" unique_id=496771540]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 143.0
+offset_right = 240.0
+offset_bottom = 156.0
+color = Color(0.15, 0.15, 0.15, 1)
+
+[node name="step_seg_b" type="ColorRect" parent="card_buttons" unique_id=874474478]
+layout_mode = 0
+offset_left = 260.0
+offset_top = 143.0
+offset_right = 485.0
+offset_bottom = 156.0
+color = Color(0.15, 0.15, 0.15, 1)
+
+[node name="incapable_btn" type="Button" parent="card_buttons" unique_id=2110283658]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 168.0
+offset_right = 237.0
+offset_bottom = 218.0
+theme_override_colors/font_color = Color(1, 0.35, 0.35, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("SF_incap_n")
+theme_override_styles/pressed = SubResource("SF_incap_p")
+theme_override_styles/hover = SubResource("SF_incap_h")
+text = "Incapable"
+
+[node name="continue_btn" type="Button" parent="card_buttons" unique_id=1274570205]
+visible = false
+layout_mode = 0
+offset_left = 263.0
+offset_top = 168.0
+offset_right = 488.0
+offset_bottom = 218.0
+theme_override_colors/font_color = Color(0.2, 1, 0.45, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("SF_cont_n")
+theme_override_styles/pressed = SubResource("SF_cont_p")
+theme_override_styles/hover = SubResource("SF_cont_h")
+text = "Continue"
+
+[node name="warning_panel" type="Panel" parent="." unique_id=233373838]
+visible = false
+anchors_preset = -1
+offset_left = 571.0
+offset_top = 484.0
+offset_right = 1362.0
+offset_bottom = 873.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_h3f8q")
+
+[node name="warning_title" type="Label" parent="warning_panel" unique_id=1401469065]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 28.0
+offset_right = 770.0
+offset_bottom = 98.0
+theme_override_colors/font_color = Color(1, 0.35, 0.35, 1)
+theme_override_font_sizes/font_size = 40
+text = "⚠  INCAPABLE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="warning_msg" type="Label" parent="warning_panel" unique_id=131795617]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 108.0
+offset_right = 770.0
+offset_bottom = 248.0
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="warning_cancel_btn" type="Button" parent="warning_panel" unique_id=796320572]
+layout_mode = 0
+offset_left = 55.0
+offset_top = 272.0
+offset_right = 355.0
+offset_bottom = 332.0
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("StyleBoxFlat_xx38d")
+theme_override_styles/hover = SubResource("StyleBoxFlat_8uf21")
+text = "Cancel"
+
+[node name="warning_ok_btn" type="Button" parent="warning_panel" unique_id=596322006]
+layout_mode = 0
+offset_left = 445.0
+offset_top = 272.0
+offset_right = 745.0
+offset_bottom = 332.0
+theme_override_colors/font_color = Color(1, 0.35, 0.35, 1)
+theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("StyleBoxFlat_dvbq6")
+theme_override_styles/hover = SubResource("StyleBoxFlat_2hwgx")
+text = "Mark Incapable"

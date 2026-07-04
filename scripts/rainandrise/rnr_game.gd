@@ -117,7 +117,27 @@ func _is_knob_mode() -> bool:
 
 
 func _is_pinch_mode() -> bool:
-	return Appdata.selected_mechanism != null and Appdata.selected_mechanism.name == "PINCH BUTTON"
+	if Appdata.selected_mechanism == null:
+		return false
+	return Appdata.selected_mechanism.name in ["PINCH", "BUTTONS"]
+
+
+func _read_active_input() -> bool:
+	if not (HCcomm and HCcomm.device_is_connected):
+		return false
+	var mech = Appdata.selected_mechanism
+	if mech == null:
+		return false
+	if mech.name == "PINCH":
+		var rom := mech.old_rom as PinchROM
+		if rom == null:
+			return HCcomm.button_7 == 0 or HCcomm.button_6 == 0
+		return (rom.pinch1_done and HCcomm.button_7 == 0) or \
+			   (rom.pinch2_done and HCcomm.button_6 == 0)
+	if mech.name == "BUTTONS":
+		return HCcomm.button_1==0 or HCcomm.button_2==0 or HCcomm.button_3==0 \
+			   or HCcomm.button_4==0 or HCcomm.button_5==0
+	return false
 
 
 func _get_cloud_angle() -> float:
@@ -287,9 +307,11 @@ func _physics_process(delta: float) -> void:
 func _update_cloud(delta: float) -> void:
 	var squeezing := false
 
-	if _waiting_release and not _is_knob_mode() and not _is_pinch_mode():
+	if _waiting_release and not _is_knob_mode():
 		if HCcomm and HCcomm.device_is_connected:
-			if HCcomm.get_total_force() < _rain_threshold:
+			var released := (not _read_active_input()) if _is_pinch_mode() \
+				else HCcomm.get_total_force() < _rain_threshold
+			if released:
 				_waiting_release = false
 			else:
 				cloud_x = clamp(cloud_x, PLAY_LEFT + CLOUD_HALF_W, PLAY_RIGHT - CLOUD_HALF_W)
@@ -304,8 +326,7 @@ func _update_cloud(delta: float) -> void:
 			# Cloud auto-targets the highlighted seed; any button triggers rain
 			if _highlighted >= 0:
 				cloud_x = move_toward(cloud_x, SEED_XS[_highlighted], CLOUD_SPEED * delta)
-			squeezing = HCcomm.button_1==0 or HCcomm.button_2==0 or HCcomm.button_3==0 \
-				or HCcomm.button_4==0 or HCcomm.button_5==0	
+			squeezing = _read_active_input()
 		else:
 			var a_max := _angle_max if _angle_max != _angle_min else _angle_min + 110.0
 			var t := clampf(inverse_lerp(_angle_min, a_max, _get_cloud_angle()), 0.0, 1.0)
@@ -513,7 +534,10 @@ func _highlight_next_seed() -> void:
 	glow.visible  = true
 	rays.rotation = 0.0
 	rays.visible  = true
-	if not _is_knob_mode() and not _is_pinch_mode():
+	if _is_pinch_mode():
+		if n_targets > 1:
+			_waiting_release = true
+	elif not _is_knob_mode():
 		_waiting_release = true
 
 

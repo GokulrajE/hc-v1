@@ -29,16 +29,25 @@ var range_label_color: Color = Color(0.65, 0.65, 0.65, 1.0)
 var track_color: Color = Color(0.14, 0.14, 0.18, 1.0)
 var show_track : bool  = true
 
+# Pulse animation time for step 3 target highlighting
+var pulse_time: float = 0.0
+
 const COL_BG    := Color(0.04, 0.04, 0.07, 1.0)
 const COL_TRACK := Color(0.14, 0.14, 0.18, 1.0)
 const COL_NEEDLE := Color(1.0,  1.0,  1.0,  1.0)
 const COL_MAX    := Color(0.2,  0.95, 0.4,  1.0)
 const COL_MIN    := Color(0.3,  0.7,  1.0,  1.0)
-const DIM        := 0.22
+const DIM        := 0.08
 
 
 func _ready() -> void:
 	resized.connect(queue_redraw)
+
+
+func _process(delta: float) -> void:
+	if step3_active:
+		pulse_time += delta * 3.0
+		queue_redraw()
 
 
 # ── Public API ────────────────────────────────────────────────────────────────
@@ -121,6 +130,22 @@ func _draw() -> void:
 				 _rad(shade_from), _rad(shade_to),
 				 64, shade_color, track_width)
 
+	# Step 3: pulsing path arc + arrowhead showing which direction to rotate
+	if step3_active:
+		var pulse        := sin(pulse_time) * 0.5 + 0.5  # 0..1
+		var path_col_raw := COL_MAX if going_to_max else COL_MIN
+		var path_alpha   := 0.18 + pulse * 0.28
+		var path_color   := Color(path_col_raw.r, path_col_raw.g, path_col_raw.b, path_alpha)
+		var outer_r      := radius + track_width * 0.5 + 14.0
+		if going_to_max and current_angle < arom_max:
+			draw_arc(center, outer_r, _rad(current_angle), _rad(arom_max),
+					 48, path_color, 10.0)
+			_draw_arc_arrowhead(center, outer_r, arom_max, path_col_raw, path_alpha, true)
+		elif not going_to_max and current_angle > arom_min:
+			draw_arc(center, outer_r, _rad(arom_min), _rad(current_angle),
+					 48, path_color, 10.0)
+			_draw_arc_arrowhead(center, outer_r, arom_min, path_col_raw, path_alpha, false)
+
 	# Step 3 markers drawn on top of shade zone
 	if step3_active:
 		_draw_marker(center, radius, arom_max, COL_MAX, going_to_max,     "MAX")
@@ -154,24 +179,36 @@ func _draw_range_labels(center: Vector2, radius: float) -> void:
 
 func _draw_marker(center: Vector2, radius: float, deg: float,
 				  color: Color, active: bool, label: String) -> void:
-	var c    := color if active else Color(color.r, color.g, color.b, DIM)
-	var dir  := _dir(deg)
-	var perp := Vector2(-dir.y, dir.x)
-	var font := ThemeDB.fallback_font
-
-	# Perpendicular tick at the outer arc edge
+	var pulse  := (sin(pulse_time) * 0.5 + 0.5) if active else 0.0  # 0..1
+	var c      := color if active else Color(color.r, color.g, color.b, DIM)
+	var dir    := _dir(deg)
+	var perp   := Vector2(-dir.y, dir.x)
+	var font   := ThemeDB.fallback_font
 	var arc_pt := center + dir * (radius + track_width * 0.5)
-	draw_line(arc_pt - perp * 15.0, arc_pt + perp * 15.0, c, 4.0)
 
-	# Arrow triangle outside the tick, tip pointing inward toward arc
-	var tip    := arc_pt + dir *  8.0
-	var base_l := arc_pt + dir * 26.0 + perp * 10.0
-	var base_r := arc_pt + dir * 26.0 - perp * 10.0
+	# Pulsing glow rings at the target arc position (active only)
+	if active:
+		for i in range(3):
+			var gr := 12.0 + i * 9.0 + pulse * 10.0
+			var ga := (0.45 - i * 0.12) * (0.35 + pulse * 0.65)
+			draw_circle(arc_pt, gr, Color(color.r, color.g, color.b, ga))
+
+	# Perpendicular tick — wider and taller when active
+	var tick_len := (20.0 + pulse * 7.0) if active else 11.0
+	var tick_w   := (5.5  + pulse * 2.5) if active else 3.0
+	draw_line(arc_pt - perp * tick_len, arc_pt + perp * tick_len, c, tick_w)
+
+	# Arrow triangle — scaled with pulse when active
+	var s      := (1.0 + pulse * 0.55) if active else 1.0
+	var tip    := arc_pt + dir *  8.0 * s
+	var base_l := arc_pt + dir * 28.0 * s + perp * 11.0 * s
+	var base_r := arc_pt + dir * 28.0 * s - perp * 11.0 * s
 	draw_polygon(PackedVector2Array([tip, base_l, base_r]), PackedColorArray([c, c, c]))
 
-	# Label above the arrow
-	var lp := center + dir * (radius + track_width + 34) - Vector2(14, 0)
-	draw_string(font, lp, label, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, c)
+	# Label — larger font and further out when active
+	var lp  := center + dir * (radius + track_width + (46.0 if active else 34.0)) - Vector2(14, 0)
+	var lsz := 16 if active else 11
+	draw_string(font, lp, label, HORIZONTAL_ALIGNMENT_LEFT, -1, lsz, c)
 
 
 func _draw_count(center: Vector2, _r: float) -> void:
@@ -197,3 +234,18 @@ func _rad(deg: float) -> float:
 func _dir(deg: float) -> Vector2:
 	var r := _rad(deg)
 	return Vector2(cos(r), sin(r))
+
+
+func _draw_arc_arrowhead(center: Vector2, radius: float, deg: float,
+						 color: Color, alpha: float, clockwise: bool) -> void:
+	var dir     := _dir(deg)
+	var perp    := Vector2(-dir.y, dir.x)          # clockwise tangent on the arc
+	var tangent := perp if clockwise else -perp    # direction of travel at tip
+	var arc_pt  := center + dir * radius           # point on the arc midline
+	var c       := Color(color.r, color.g, color.b, alpha + 0.3)
+
+	# Triangle: tip forward along tangent, base wings spread radially
+	var tip    := arc_pt
+	var base_l := arc_pt - tangent * 20.0 + dir * 10.0
+	var base_r := arc_pt - tangent * 20.0 - dir * 10.0
+	draw_polygon(PackedVector2Array([tip, base_l, base_r]), PackedColorArray([c, c, c]))

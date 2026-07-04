@@ -34,6 +34,17 @@ func initilize_user(hospital_id: String) -> void:
 	
 	print("✓ Current session number set to: %d" % current_session_number)
 
+func _ready() -> void:
+	get_tree().auto_accept_quit = false
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		if HCcomm and HCcomm.device_is_connected:
+			HCcomm.disconnect_device()
+		get_tree().quit()
+
+
 func initialize_connection(port: String = "") -> void:
 	var target_port: String = port if port != "" else COM_PORT
 	if HCcomm == null:

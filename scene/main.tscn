@@ -87,6 +87,10 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 3.0
+offset_top = 7.0
+offset_right = 3.0
+offset_bottom = 7.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_itxqv")
@@ -97,7 +101,7 @@ offset_left = -10.0
 offset_top = -9.0
 offset_right = 1933.0
 offset_bottom = 1091.0
-color = Color(6.317161e-08, 0.060050197, 0.16735807, 1)
+color = Color(0.033811424, 0.0455084, 0.10818011, 1)
 
 [node name="TextureRect" type="TextureRect" parent="bg" unique_id=466015314]
 modulate = Color(1, 0.4509161, 0.6560772, 1)

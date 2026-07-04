@@ -79,7 +79,6 @@ func _ready() -> void:
 	_setup_glasses()
 	_setup_device()
 	_ui.show_start()
-	_bgm.play()
 
 
 func _setup_fruits() -> void:
@@ -379,6 +378,7 @@ func _begin_game() -> void:
 	_tripod_ready    = true
 	_waiting_release = false   # no lock for first fruit
 	_ui.show_playing()
+	_bgm.play()
 	_spawn_fruit()
 
 
@@ -416,6 +416,8 @@ func _end_game() -> void:
 	_state  = _S.DONE
 	_hl_idx = -1
 	_stop_juicing()
+	_bgm.stop()
+	ScAudioManager.play_gameover()
 	for f: Node in _fruits:
 		f.deselect()
 	_ui.show_game_over(_score, _targets, _successes, _failures)

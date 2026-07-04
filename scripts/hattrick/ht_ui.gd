@@ -69,24 +69,40 @@ func update_timer(time_left: float) -> void:
 
 
 func show_success_popup() -> void:
-	_show_popup(success_popup)
+	_show_popup(success_popup, Color(0.0, 1.0, 0.35), false)
 
 
 func show_failure_popup() -> void:
-	_show_popup(failure_popup)
+	_show_popup(failure_popup, Color(1.0, 0.08, 0.08), true)
 
 
-func _show_popup(popup: Control) -> void:
+func _show_popup(popup: Control, label_color: Color, do_shake: bool) -> void:
+	# Vivid color + black outline so text pops on any background
+	var lbl := popup.get_child(0) as Label
+	if lbl:
+		lbl.add_theme_color_override("font_color", label_color)
+		lbl.add_theme_color_override("font_outline_color", Color.BLACK)
+		lbl.add_theme_constant_override("outline_size", 6)
+
+	# Burst in from tiny
 	popup.visible    = true
 	popup.modulate.a = 0.0
-	popup.scale      = Vector2(0.5, 0.5)
+	popup.scale      = Vector2(0.05, 0.05)
 	var tw := create_tween()
-	tw.tween_property(popup, "scale", Vector2(1.12, 1.12), 0.15) \
+	tw.tween_property(popup, "scale", Vector2(1.7, 1.7), 0.22) \
 		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
 	tw.parallel().tween_property(popup, "modulate:a", 1.0, 0.15)
-	tw.tween_property(popup, "scale", Vector2(1.0, 1.0), 0.08) \
-		.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
-	tw.tween_interval(0.6)
-	tw.tween_property(popup, "modulate:a", 0.0, 0.3) \
+	tw.tween_property(popup, "scale", Vector2(1.0, 1.0), 0.14) \
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
+
+	# Shake for failure
+	if do_shake:
+		var ox := popup.position.x
+		for i in range(5):
+			tw.tween_property(popup, "position:x", ox + (10.0 if i % 2 == 0 else -10.0), 0.04)
+		tw.tween_property(popup, "position:x", ox, 0.03)
+
+	tw.tween_interval(0.85)
+	tw.tween_property(popup, "modulate:a", 0.0, 0.4) \
 		.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_SINE)
 	tw.tween_callback(func(): popup.visible = false)

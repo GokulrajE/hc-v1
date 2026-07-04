@@ -87,10 +87,7 @@ func _process(delta: float) -> void:
 		return
 
 	# Detect brake input
-	var device_button_pressed := false
-	if HCcomm and (HCcomm.button_1 == 0 or HCcomm.button_2 == 0 or HCcomm.button_3 == 0 or
-		HCcomm.button_4 == 0 or HCcomm.button_5 == 0 or HCcomm.button_6 == 0 or HCcomm.button_7 == 0):
-		device_button_pressed = true
+	var device_button_pressed := _read_active_input()
 	if not device_button_pressed and Input.is_action_pressed("ui_select"):
 		device_button_pressed = true
 
@@ -431,6 +428,24 @@ func _unregister_traffic_cars() -> void:
 		car.remove_traffic_car(traffic_car)
 
 
+func _read_active_input() -> bool:
+	if not (HCcomm and HCcomm.device_is_connected):
+		return false
+	var mech = Appdata.selected_mechanism
+	if mech == null:
+		return false
+	if mech.name == "PINCH":
+		var rom := mech.old_rom as PinchROM
+		if rom == null:
+			return HCcomm.button_7 == 0 or HCcomm.button_6 == 0
+		return (rom.pinch1_done and HCcomm.button_7 == 0) or \
+			   (rom.pinch2_done and HCcomm.button_6 == 0)
+	if mech.name == "BUTTONS":
+		return HCcomm.button_1==0 or HCcomm.button_2==0 or HCcomm.button_3==0 \
+			   or HCcomm.button_4==0 or HCcomm.button_5==0
+	return false
+
+
 func _show_game_over_screen() -> void:
 	print("📊 GAME OVER SCREEN:")
 	print("  Score: %d" % _player_score)
@@ -457,6 +472,8 @@ func restart_game() -> void:
 
 
 func exit_game() -> void:
-	if _game_state not in [GameState.WAITING, GameState.DONE]:
-		get_tree().paused = false
+	
+	if _game_state in [GameState.WAITING, GameState.DONE]:
+		get_tree().change_scene_to_file("res://scene/game_selection.tscn")
+	else:
 		_game_state = GameState.STOP

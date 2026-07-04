@@ -102,26 +102,28 @@ func update_stain_timer(time_remaining: float, time_total: float) -> void:
 
 
 func show_success_popup(stain_top_center: Vector2 = Vector2(960.0, 540.0)) -> void:
-	# Place popup centred above the stain top edge
 	const PW := 260.0
 	const PH := 60.0
 	success_popup.position = Vector2(stain_top_center.x - PW * 0.5,
 									 stain_top_center.y - PH - 12.0)
+	# Vivid color + black outline
+	var lbl := success_popup.get_child(0) as Label
+	if lbl:
+		lbl.add_theme_color_override("font_color", Color(0.0, 1.0, 0.35))
+		lbl.add_theme_color_override("font_outline_color", Color.BLACK)
+		lbl.add_theme_constant_override("outline_size", 6)
+
+	# Burst in from tiny
 	success_popup.visible    = true
 	success_popup.modulate.a = 0.0
-	success_popup.scale      = Vector2(0.5, 0.5)
-
+	success_popup.scale      = Vector2(0.05, 0.05)
 	var tw := create_tween()
-	# Pop in
-	tw.tween_property(success_popup, "scale", Vector2(1.12, 1.12), 0.16) \
+	tw.tween_property(success_popup, "scale", Vector2(1.7, 1.7), 0.22) \
 		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
-	tw.parallel().tween_property(success_popup, "modulate:a", 1.0, 0.16)
-	# Settle
-	tw.tween_property(success_popup, "scale", Vector2(1.0, 1.0), 0.08) \
-		.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
-	# Hold
+	tw.parallel().tween_property(success_popup, "modulate:a", 1.0, 0.15)
+	tw.tween_property(success_popup, "scale", Vector2(1.0, 1.0), 0.14) \
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
 	tw.tween_interval(0.9)
-	# Fade out
 	tw.tween_property(success_popup, "modulate:a", 0.0, 0.4) \
 		.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_SINE)
 	tw.tween_callback(func(): success_popup.visible = false)

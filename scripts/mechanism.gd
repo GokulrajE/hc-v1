@@ -7,6 +7,7 @@ var fine_knob: Button
 var key_knob: Button
 var tripod_grip_button: Button
 var pinch_button_button: Button
+var buttons_button: Button
 var back_button: Button
 var message_label: Label
 
@@ -18,6 +19,7 @@ func _ready() -> void:
 	key_knob = get_node_or_null("key_knob")
 	tripod_grip_button = get_node_or_null("tripod_grip_button")
 	pinch_button_button = get_node_or_null("pinch_button_button")
+	buttons_button      = get_node_or_null("buttons_button")
 	back_button = get_node_or_null("back_button")
 	message_label = get_node_or_null("message_label")
 
@@ -41,7 +43,10 @@ func _ready() -> void:
 		tripod_grip_button.pressed.connect(_on_tripod_grip_pressed)
 
 	if pinch_button_button:
-		pinch_button_button.pressed.connect(_on_pinch_button_pressed)
+		pinch_button_button.pressed.connect(_on_pinch_pressed)
+
+	if buttons_button:
+		buttons_button.pressed.connect(_on_buttons_pressed)
 
 	if back_button:
 		back_button.pressed.connect(_on_back_pressed)
@@ -151,16 +156,32 @@ func _on_tripod_grip_pressed() -> void:
 		await get_tree().create_timer(0.5).timeout
 		get_tree().change_scene_to_file("res://scene/tripod_assessment.tscn")
 
-func _on_pinch_button_pressed() -> void:
-	Appdata.set_mechanism("Pinch Button")
-	if Appdata.user_data and Appdata.user_data.buttons_done:
-		message_label.text = "✓ Pinch Button Assessment done! Opening Game Selection..."
+func _on_pinch_pressed() -> void:
+	Appdata.set_mechanism("Pinch")
+	if Appdata.selected_mechanism.old_rom != null and Appdata.selected_mechanism.old_rom.is_set():
+		if message_label:
+			message_label.text = "✓ Pinch Assessment done! Opening Game Selection..."
 		await get_tree().create_timer(0.5).timeout
 		get_tree().change_scene_to_file("res://scene/game_selection.tscn")
 	else:
-		message_label.text = "Starting Pinch & Button assessment...\nPlease perform the pinch and button press tests."
+		if message_label:
+			message_label.text = "Starting Pinch assessment..."
 		await get_tree().create_timer(0.5).timeout
-		get_tree().change_scene_to_file("res://scene/pinch_button_assessment.tscn")
+		get_tree().change_scene_to_file("res://scene/pinch_assessment.tscn")
+
+
+func _on_buttons_pressed() -> void:
+	Appdata.set_mechanism("Buttons")
+	if Appdata.selected_mechanism.old_rom != null and Appdata.selected_mechanism.old_rom.is_set():
+		if message_label:
+			message_label.text = "✓ Buttons Assessment done! Opening Game Selection..."
+		await get_tree().create_timer(0.5).timeout
+		get_tree().change_scene_to_file("res://scene/game_selection.tscn")
+	else:
+		if message_label:
+			message_label.text = "Starting Buttons assessment..."
+		await get_tree().create_timer(0.5).timeout
+		get_tree().change_scene_to_file("res://scene/buttons_assessment.tscn")
 
 func _on_back_pressed() -> void:
 	Appdata.selected_mechanism = null

@@ -1,0 +1,546 @@
+[gd_scene format=3 uid="uid://dp7s3kn4m2xwq"]
+
+[ext_resource type="Script" uid="uid://cbcc6h57vtwbv" path="res://scripts/pinch_assessment.gd" id="1_pinch_script"]
+[ext_resource type="Texture2D" uid="uid://sal3ip0hwbsd" path="res://assets/ui/Window04.png" id="2_ihexf"]
+[ext_resource type="PackedScene" uid="uid://ca8b3v7p5hc5" path="res://scene/connect_status.tscn" id="2_qncqe"]
+[ext_resource type="Texture2D" uid="uid://cov80lucdvvvm" path="res://sprites/Circle Filled.png" id="3_kcucj"]
+[ext_resource type="FontFile" uid="uid://btw3w8gykgilf" path="res://assets/fonts/TiltNeon-Regular-VariableFont_XROT,YROT.ttf" id="3_yihel"]
+[ext_resource type="Texture2D" uid="uid://c2kvtt4ccy8at" path="res://assets/ui/Btn_V01.png" id="4_52jl4"]
+[ext_resource type="Texture2D" uid="uid://daqibh5tqjbfl" path="res://assets/ui/Btn_V05.png" id="5_n30og"]
+[ext_resource type="Texture2D" uid="uid://c7b54u1ko0m6u" path="res://assets/ui/Btn_V02.png" id="6_s6hp7"]
+[ext_resource type="Texture2D" uid="uid://n8eqx2nfw4dc" path="res://assets/ui/Btn_V06.png" id="7_ihexf"]
+
+[sub_resource type="CircleShape2D" id="CircleClickShape"]
+radius = 134.9703
+
+[sub_resource type="GDScript" id="GDScript_arc_layer"]
+script/source = "extends Node2D
+func _draw():
+	var p = get_parent()
+	if p:
+		p._draw_arc_content(self)
+"
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_s6hp7"]
+texture = ExtResource("4_52jl4")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ihexf"]
+texture = ExtResource("4_52jl4")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_yihel"]
+texture = ExtResource("5_n30og")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_upsgf"]
+texture = ExtResource("6_s6hp7")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xfk3g"]
+texture = ExtResource("6_s6hp7")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_yog1n"]
+texture = ExtResource("7_ihexf")
+
+[sub_resource type="StyleBoxFlat" id="SF_card1"]
+bg_color = Color(0.08, 0.08, 0.08, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.18, 0.18, 0.18, 0.5)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="SF_incap_n"]
+bg_color = Color(0.22, 0.05, 0.05, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.55, 0.12, 0.12, 0.85)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="SF_incap_p"]
+bg_color = Color(0.58, 0.09, 0.09, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.55, 0.12, 0.12, 0.85)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="SF_incap_h"]
+bg_color = Color(0.42, 0.07, 0.07, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.55, 0.12, 0.12, 0.85)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="SF_cont_n"]
+bg_color = Color(0.04, 0.2, 0.07, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.12, 0.55, 0.22, 0.85)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="SF_cont_p"]
+bg_color = Color(0.09, 0.48, 0.16, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.12, 0.55, 0.22, 0.85)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="SF_cont_h"]
+bg_color = Color(0.07, 0.36, 0.12, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.12, 0.55, 0.22, 0.85)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="SF_card2"]
+bg_color = Color(0.08, 0.08, 0.08, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0.6901961, 0.63529414, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(0, 0.42745098, 0.4392157, 0.8117647)
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1dyfe"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.6117689, 0.40639967, 0, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0.58431375, 0.5058824, 0, 1)
+shadow_size = 8
+
+[sub_resource type="StyleBoxFlat" id="SF_warn_cancel_n"]
+bg_color = Color(0.15, 0.15, 0.18, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.4, 0.4, 0.45, 0.7)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="SF_warn_cancel_h"]
+bg_color = Color(0.25, 0.25, 0.3, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.4, 0.4, 0.45, 0.7)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="SF_warn_ok_n"]
+bg_color = Color(0.28, 0.06, 0.06, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.7, 0.15, 0.15, 0.9)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="SF_warn_ok_h"]
+bg_color = Color(0.5, 0.08, 0.08, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.7, 0.15, 0.15, 0.9)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="PinchAssessment" type="Node2D" unique_id=1368716062]
+script = ExtResource("1_pinch_script")
+
+[node name="bg" type="TextureRect" parent="." unique_id=104113357]
+offset_left = -35.0
+offset_top = -18.0
+offset_right = 1991.0
+offset_bottom = 1126.0
+texture = ExtResource("2_ihexf")
+
+[node name="title" type="Label" parent="." unique_id=2121930229]
+offset_left = 50.0
+offset_top = 20.0
+offset_right = 1850.0
+offset_bottom = 110.0
+theme_override_colors/font_color = Color(0, 0.8, 1, 1)
+theme_override_fonts/font = ExtResource("3_yihel")
+theme_override_font_sizes/font_size = 70
+text = "Pinch Assessment"
+
+[node name="ConnectStatus" parent="." unique_id=2048302340 instance=ExtResource("2_qncqe")]
+
+[node name="buttonstateUI" type="Sprite2D" parent="." unique_id=137998956]
+modulate = Color(0.22, 0.22, 0.22, 1)
+position = Vector2(956.00006, 671)
+texture = ExtResource("3_kcucj")
+
+[node name="CircleClickArea" type="Area2D" parent="buttonstateUI" unique_id=1376155563]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="buttonstateUI/CircleClickArea" unique_id=1763054688]
+shape = SubResource("CircleClickShape")
+
+[node name="arc_layer" type="Node2D" parent="." unique_id=1814635396]
+script = SubResource("GDScript_arc_layer")
+
+[node name="back_button" type="Button" parent="." unique_id=508570293]
+offset_left = 32.0
+offset_top = 977.0
+offset_right = 232.0
+offset_bottom = 1047.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxTexture_s6hp7")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_ihexf")
+theme_override_styles/hover = SubResource("StyleBoxTexture_yihel")
+text = "Back"
+
+[node name="save_button" type="Button" parent="." unique_id=1482149908]
+anchors_preset = -1
+offset_left = 1705.0
+offset_top = 969.0
+offset_right = 1905.0
+offset_bottom = 1039.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxTexture_upsgf")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_xfk3g")
+theme_override_styles/hover = SubResource("StyleBoxTexture_yog1n")
+text = "Save"
+
+[node name="hint_label" type="Label" parent="." unique_id=917866990]
+offset_left = 8.0
+offset_top = 886.0
+offset_right = 1928.0
+offset_bottom = 976.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 52
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="card_pinch1" type="Panel" parent="." unique_id=1092781948]
+offset_left = 257.0
+offset_top = 143.0
+offset_right = 757.0
+offset_bottom = 373.0
+theme_override_styles/panel = SubResource("SF_card1")
+
+[node name="phase_name" type="Label" parent="card_pinch1" unique_id=38418142]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 12.0
+offset_right = 420.0
+offset_bottom = 72.0
+theme_override_colors/font_color = Color(0.3, 0.3, 0.3, 1)
+theme_override_font_sizes/font_size = 44
+text = "PINCH 1"
+vertical_alignment = 1
+
+[node name="check_lbl" type="Label" parent="card_pinch1" unique_id=211572038]
+visible = false
+layout_mode = 0
+offset_left = 435.0
+offset_top = 10.0
+offset_right = 490.0
+offset_bottom = 65.0
+theme_override_colors/font_color = Color(0.2, 1, 0.45, 1)
+theme_override_font_sizes/font_size = 48
+text = "✓"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="step_lbl" type="Label" parent="card_pinch1" unique_id=938116822]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 78.0
+offset_right = 260.0
+offset_bottom = 112.0
+theme_override_colors/font_color = Color(0.3, 0.3, 0.3, 1)
+theme_override_font_sizes/font_size = 24
+text = "STEP 1"
+vertical_alignment = 1
+
+[node name="timer_lbl" type="Label" parent="card_pinch1" unique_id=658928830]
+layout_mode = 0
+offset_left = 270.0
+offset_top = 78.0
+offset_right = 485.0
+offset_bottom = 112.0
+theme_override_colors/font_color = Color(0.55, 0.55, 0.55, 1)
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="progress_bg" type="ColorRect" parent="card_pinch1" unique_id=1034830563]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 118.0
+offset_right = 485.0
+offset_bottom = 136.0
+color = Color(0.14, 0.14, 0.14, 1)
+
+[node name="progress_fill" type="ColorRect" parent="card_pinch1/progress_bg" unique_id=2107213147]
+layout_mode = 0
+offset_bottom = 18.0
+color = Color(0, 0.9, 1, 1)
+
+[node name="step_seg_a" type="ColorRect" parent="card_pinch1" unique_id=145761566]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 143.0
+offset_right = 240.0
+offset_bottom = 156.0
+color = Color(0.15, 0.15, 0.15, 1)
+
+[node name="step_seg_b" type="ColorRect" parent="card_pinch1" unique_id=76341717]
+layout_mode = 0
+offset_left = 260.0
+offset_top = 143.0
+offset_right = 485.0
+offset_bottom = 156.0
+color = Color(0.15, 0.15, 0.15, 1)
+
+[node name="incapable_btn" type="Button" parent="card_pinch1" unique_id=102789047]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 168.0
+offset_right = 237.0
+offset_bottom = 218.0
+theme_override_colors/font_color = Color(1, 0.35, 0.35, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("SF_incap_n")
+theme_override_styles/pressed = SubResource("SF_incap_p")
+theme_override_styles/hover = SubResource("SF_incap_h")
+text = "Incapable"
+
+[node name="continue_btn" type="Button" parent="card_pinch1" unique_id=1857927799]
+visible = false
+layout_mode = 0
+offset_left = 263.0
+offset_top = 168.0
+offset_right = 488.0
+offset_bottom = 218.0
+theme_override_colors/font_color = Color(0.2, 1, 0.45, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("SF_cont_n")
+theme_override_styles/pressed = SubResource("SF_cont_p")
+theme_override_styles/hover = SubResource("SF_cont_h")
+text = "Continue"
+
+[node name="card_pinch2" type="Panel" parent="." unique_id=1644638672]
+offset_left = 1181.0
+offset_top = 150.0
+offset_right = 1681.0
+offset_bottom = 380.0
+theme_override_styles/panel = SubResource("SF_card2")
+
+[node name="phase_name" type="Label" parent="card_pinch2" unique_id=453013763]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 12.0
+offset_right = 420.0
+offset_bottom = 72.0
+theme_override_colors/font_color = Color(0.3, 0.3, 0.3, 1)
+theme_override_font_sizes/font_size = 44
+text = "PINCH 2"
+vertical_alignment = 1
+
+[node name="check_lbl" type="Label" parent="card_pinch2" unique_id=1392122019]
+visible = false
+layout_mode = 0
+offset_left = 435.0
+offset_top = 10.0
+offset_right = 490.0
+offset_bottom = 65.0
+theme_override_colors/font_color = Color(0.2, 1, 0.45, 1)
+theme_override_font_sizes/font_size = 48
+text = "✓"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="step_lbl" type="Label" parent="card_pinch2" unique_id=1747464861]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 78.0
+offset_right = 260.0
+offset_bottom = 112.0
+theme_override_colors/font_color = Color(0.3, 0.3, 0.3, 1)
+theme_override_font_sizes/font_size = 24
+text = "STEP 1"
+vertical_alignment = 1
+
+[node name="timer_lbl" type="Label" parent="card_pinch2" unique_id=1253291565]
+layout_mode = 0
+offset_left = 270.0
+offset_top = 78.0
+offset_right = 485.0
+offset_bottom = 112.0
+theme_override_colors/font_color = Color(0.55, 0.55, 0.55, 1)
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="progress_bg" type="ColorRect" parent="card_pinch2" unique_id=1189576375]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 118.0
+offset_right = 485.0
+offset_bottom = 136.0
+color = Color(0.14, 0.14, 0.14, 1)
+
+[node name="progress_fill" type="ColorRect" parent="card_pinch2/progress_bg" unique_id=1143793294]
+layout_mode = 0
+offset_bottom = 18.0
+color = Color(0.78, 0, 1, 1)
+
+[node name="step_seg_a" type="ColorRect" parent="card_pinch2" unique_id=894228477]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 143.0
+offset_right = 240.0
+offset_bottom = 156.0
+color = Color(0.15, 0.15, 0.15, 1)
+
+[node name="step_seg_b" type="ColorRect" parent="card_pinch2" unique_id=1695791772]
+layout_mode = 0
+offset_left = 260.0
+offset_top = 143.0
+offset_right = 485.0
+offset_bottom = 156.0
+color = Color(0.15, 0.15, 0.15, 1)
+
+[node name="incapable_btn" type="Button" parent="card_pinch2" unique_id=1300961091]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 168.0
+offset_right = 237.0
+offset_bottom = 218.0
+theme_override_colors/font_color = Color(1, 0.35, 0.35, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("SF_incap_n")
+theme_override_styles/pressed = SubResource("SF_incap_p")
+theme_override_styles/hover = SubResource("SF_incap_h")
+text = "Incapable"
+
+[node name="continue_btn" type="Button" parent="card_pinch2" unique_id=403347903]
+visible = false
+layout_mode = 0
+offset_left = 263.0
+offset_top = 168.0
+offset_right = 488.0
+offset_bottom = 218.0
+theme_override_colors/font_color = Color(0.2, 1, 0.45, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("SF_cont_n")
+theme_override_styles/pressed = SubResource("SF_cont_p")
+theme_override_styles/hover = SubResource("SF_cont_h")
+text = "Continue"
+
+[node name="warning_panel" type="Panel" parent="." unique_id=655679005]
+visible = false
+anchors_preset = -1
+offset_left = 571.0
+offset_top = 484.0
+offset_right = 1362.0
+offset_bottom = 873.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_1dyfe")
+
+[node name="warning_title" type="Label" parent="warning_panel" unique_id=1470810126]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 28.0
+offset_right = 770.0
+offset_bottom = 98.0
+theme_override_colors/font_color = Color(1, 0.35, 0.35, 1)
+theme_override_font_sizes/font_size = 40
+text = "⚠  INCAPABLE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="warning_msg" type="Label" parent="warning_panel" unique_id=1420480216]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 108.0
+offset_right = 770.0
+offset_bottom = 248.0
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="warning_cancel_btn" type="Button" parent="warning_panel" unique_id=882379640]
+layout_mode = 0
+offset_left = 55.0
+offset_top = 272.0
+offset_right = 355.0
+offset_bottom = 332.0
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("SF_warn_cancel_n")
+theme_override_styles/hover = SubResource("SF_warn_cancel_h")
+text = "Cancel"
+
+[node name="warning_ok_btn" type="Button" parent="warning_panel" unique_id=1673378911]
+layout_mode = 0
+offset_left = 445.0
+offset_top = 272.0
+offset_right = 745.0
+offset_bottom = 332.0
+theme_override_colors/font_color = Color(1, 0.35, 0.35, 1)
+theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("SF_warn_ok_n")
+theme_override_styles/hover = SubResource("SF_warn_ok_h")
+text = "Mark Incapable"
