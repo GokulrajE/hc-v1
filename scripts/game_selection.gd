@@ -155,30 +155,37 @@ func _update_info() -> void:
 
 
 func _on_catch_game_pressed() -> void:
+	Appdata.set_game("Catch")
 	get_tree().change_scene_to_file("res://scene/catch_game/catch_game.tscn")
 
 
 func _on_safe_crossing_pressed() -> void:
+	Appdata.set_game("Safe Crossing")
 	get_tree().change_scene_to_file("res://scenes/safecrossing/sc_game.tscn")
 
 
 func _on_tw_game_pressed() -> void:
+	Appdata.set_game("Table Wipping")
 	get_tree().change_scene_to_file("res://scene/tablewipping/tw_game.tscn")
 
 
 func _on_ht_game_pressed() -> void:
+	Appdata.set_game("Hat Trick")
 	get_tree().change_scene_to_file("res://scene/hattrick/ht_game.tscn")
 
 
 func _on_rnr_game_pressed() -> void:
+	Appdata.set_game("Rain and Rise")
 	get_tree().change_scene_to_file("res://scene/rainandrise/rnr_game.tscn")
 
 
 func _on_sc3d_pressed() -> void:
+	Appdata.set_game("Safe Crossing 3D")
 	get_tree().change_scene_to_file("res://scene/safecrossing3D/sc3d_game.tscn")
 
 
 func _on_juicer_game_pressed() -> void:
+	Appdata.set_game("Juicer")
 	get_tree().change_scene_to_file("res://scene/juicer/game.tscn")
 
 

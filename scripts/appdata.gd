@@ -12,12 +12,13 @@ var trail_stop_time:float
 
 var user_data: HyperCubeUserData
 var selected_mechanism : HyperCubeMechanism
- 
+var selected_game : HyperCubeGame
 func initilize_user(hospital_id: String) -> void:
 	# Initialize user data
 	start_time = Datamanager.get_formatted_datetime()
 	user_data = HyperCubeUserData.new(hospital_id)
 	selected_mechanism = null
+	selected_game = null
 
 	# Update current session number - get last session number from history and increment it
 	if user_data.session_data_table.size() > 0:
@@ -62,6 +63,7 @@ static func close_connection() -> void:
 func set_mechanism(mech_name: String,) -> void:
 	selected_mechanism = HyperCubeMechanism.new(mech_name,current_session_number)
 
-
+func set_game(game_name: String, reach_speed: float = 1.0) -> void:
+	selected_game = HyperCubeGame.new(game_name, selected_mechanism.name, reach_speed)
 
 	

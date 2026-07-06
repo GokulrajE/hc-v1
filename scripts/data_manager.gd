@@ -3,7 +3,7 @@ class_name DataStructure
 
 const CONFIG_HEADER = ["DateTime", "HospitalID", "Name", "Age", "Location", "AffectedLimb","PinchGrasp1", "PinchGrasp2", "Buttons"]
 const SESSION_HEADER = ["SessionNumber", "DateTime", "TrialNumberDay", "TrialNumberSession", "TrialStartTime", "TrialStopTime", "Mechanism", "GameName",  "GameParameter", "GameDuration", "SuccessRate","CurrentTargets", "CurrentHits", "CurrentMisses", "CumulativeTargets", "CumulativeHits", "CumulativeMisses", "RawDataFileName"]
-const RAW_HEADER = ["Force1", "Force2", "Angle1", "Angle2", "Angle3", "Angle4", "Distance1", "Distance2", "Button1", "Button2", "Button3", "Button4", "Button5", "Button6", "Button7"]
+const RAW_HEADER = ["Force1", "Force2", "Angle1", "Angle2", "Angle3", "Angle4", "Distance1", "Distance2", "Button1", "Button2", "Button3", "Button4", "Button5", "Button6", "Button7", "GameState", "PlayerX", "PlayerY", "TargetX", "TargetY"]
 
 func get_formatted_datetime() -> String:
 	var dt = Time.get_datetime_dict_from_system()

@@ -1,5 +1,0 @@
-:Device: HC-V1
-:Location: 1234
-:User: 1234
-:Mechanism: KNOB
-Timestamp,PacketNumber,Force1,Force2,Angle1,Angle2,Angle3,Angle4,Distance1,Distance2,Button1,Button2,Button3,Button4,Button5,Button6,Button7

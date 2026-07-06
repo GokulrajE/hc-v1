@@ -302,6 +302,9 @@ func _physics_process(delta: float) -> void:
 
 	_update_rain_visual(delta)
 	_run_game_state_machine(delta)
+	var _tgt_x: float = SEED_XS[_highlighted] if _highlighted >= 0 else 0.0
+	var _tgt_y: float = SEED_Y if _highlighted >= 0 else 0.0
+	AppDataTrial.set_game_context(GameState.keys()[_game_state], cloud_x, CLOUD_Y, _tgt_x, _tgt_y)
 
 
 func _update_cloud(delta: float) -> void:
@@ -496,6 +499,7 @@ func _initialize_game() -> void:
 	ui.update_timer(GAME_DURATION)
 	ui.show_playing()
 
+	AppDataTrial.start_new_trial()
 	ScAudioManager.play_background_music("res://assets/audio/rnr_bg.mp3")
 	print("🌧️ RainAndRise started — 60s")
 
@@ -508,6 +512,7 @@ func _end_game() -> void:
 	_cloud_sprite.modulate.a = 1.0
 	_is_raining = false
 
+	AppDataTrial.stop_trial(n_targets, n_success, n_failure)
 	ScAudioManager.stop_music()
 	ScAudioManager.play_gameover()
 	ui.show_game_over(score, n_targets, n_success, n_failure)

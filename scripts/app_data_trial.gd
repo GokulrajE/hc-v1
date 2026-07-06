@@ -7,6 +7,19 @@ static var raw_data_buffer: String = ""
 static var current_raw_filepath: String = ""
 static var packet_number: int = 0
 
+static var game_context_state:    String = ""
+static var game_context_player_x: float  = 0.0
+static var game_context_player_y: float  = 0.0
+static var game_context_target_x: float  = 0.0
+static var game_context_target_y: float  = 0.0
+
+static func set_game_context(state: String, px: float, py: float, tx: float, ty: float) -> void:
+	game_context_state    = state
+	game_context_player_x = px
+	game_context_player_y = py
+	game_context_target_x = tx
+	game_context_target_y = ty
+
 # AROM raw data logging variables
 var arom_logging_active: bool = false
 var arom_start_time: float = 0.0
@@ -17,6 +30,11 @@ var arom_mechanism: String = ""
 var arom_knob_type: String = ""
 
 func start_new_trial() -> void:
+	game_context_state    = ""
+	game_context_player_x = 0.0
+	game_context_player_y = 0.0
+	game_context_target_x = 0.0
+	game_context_target_y = 0.0
 	trial_start_time = Datamanager.get_formatted_datetime()
 	Appdata.selected_mechanism.next_trial()
 	var filename = Datamanager.get_raw_filename(Appdata.current_session_number, Appdata.selected_mechanism.trial_number_session, Appdata.selected_mechanism.name)
@@ -50,7 +68,12 @@ func write_frame_data() -> void:
 		HCcomm.button_4,
 		HCcomm.button_5,
 		HCcomm.button_6,
-		HCcomm.button_7
+		HCcomm.button_7,
+		game_context_state,
+		"%.1f" % game_context_player_x,
+		"%.1f" % game_context_player_y,
+		"%.1f" % game_context_target_x,
+		"%.1f" % game_context_target_y
 	]
 
 	raw_data_buffer += ",".join(row.map(func(x): return str(x))) + "\n"
@@ -88,7 +111,7 @@ func stop_trial(n_targets: int, n_success: int, n_failure: int) -> void:
 		trial_start_time,
 		trial_stop_time,
 		Appdata.selected_mechanism.name,
-		"",
+		Appdata.selected_game.name,
 		"%.2f" % 0.0,  # Trial time placeholder (can be calculated if needed)
 		"%.2f" % 60.0,
 		"%.1f" % success_rate,

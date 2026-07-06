@@ -85,6 +85,8 @@ func _physics_process(delta: float) -> void:
 			_update_hat(delta)
 
 	_run_game_state_machine(delta)
+	var _tgt: Vector2 = _ball_sprite.position if _ball_sprite != null else Vector2.ZERO
+	AppDataTrial.set_game_context(GameState.keys()[_game_state], hat_x, HAT_Y, _tgt.x, _tgt.y)
 
 
 func _update_hat(delta: float) -> void:
@@ -209,7 +211,7 @@ func _initialize_game() -> void:
 	ui.update_timer(GAME_DURATION)
 	ui.show_playing()
 
-	# AppDataTrial.start_new_trial()
+	AppDataTrial.start_new_trial()
 	ScAudioManager.play_background_music("res://assets/audio/hattrick_bg.mp3")
 	print("🎩 HatTrick started — 60s trial")
 
@@ -218,7 +220,7 @@ func _end_game() -> void:
 	_free_ball()
 	hat_sprite.visible = false
 
-	# AppDataTrial.stop_trial(n_targets, n_success, n_failure)
+	AppDataTrial.stop_trial(n_targets, n_success, n_failure)
 	ScAudioManager.stop_music()
 	ScAudioManager.play_gameover()
 	ui.show_game_over(score, n_targets, n_success, n_failure)

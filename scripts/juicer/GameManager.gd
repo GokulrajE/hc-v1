@@ -154,6 +154,8 @@ func _process(delta: float) -> void:
 				_begin_game()
 		_S.PLAYING:
 			_tick(delta)
+			var _tgt: Vector2 = Vector2(_fruit_xs[_hl_idx], _fruits[_hl_idx].position.y) if _hl_idx >= 0 else Vector2.ZERO
+			AppDataTrial.set_game_context(str(_state), _arrow_x, ARROW_BASE_Y, _tgt.x, _tgt.y)
 		_S.DONE:
 			pass
 
@@ -377,6 +379,7 @@ func _begin_game() -> void:
 	_hl_idx          = -1
 	_tripod_ready    = true
 	_waiting_release = false   # no lock for first fruit
+	AppDataTrial.start_new_trial()
 	_ui.show_playing()
 	_bgm.play()
 	_spawn_fruit()
@@ -416,6 +419,7 @@ func _end_game() -> void:
 	_state  = _S.DONE
 	_hl_idx = -1
 	_stop_juicing()
+	AppDataTrial.stop_trial(_targets, _successes, _failures)
 	_bgm.stop()
 	ScAudioManager.play_gameover()
 	for f: Node in _fruits:

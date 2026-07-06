@@ -141,6 +141,7 @@ func _physics_process(delta: float) -> void:
 		_update_phase_display()
 
 	_run_game_state_machine(delta)
+	AppDataTrial.set_game_context(GameState.keys()[_game_state], car.position.x, car.position.y, 0.0, 0.0)
 
 
 # ============================================================================

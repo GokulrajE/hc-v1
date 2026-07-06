@@ -148,6 +148,9 @@ func _physics_process(delta: float) -> void:
 			left_hand.position.x = _left_hand_pos.x - _shake_offset
 			right_hand.position.x = _right_hand_pos.x + _shake_offset
 	_run_game_state_machine(delta)
+	var _pl_x: float   = (_left_hand_pos.x + _right_hand_pos.x) * 0.5
+	var _tgt:  Vector2 = _current_obj.get("position") if not _current_obj.is_empty() else Vector2.ZERO
+	AppDataTrial.set_game_context(GameState.keys()[_game_state], _pl_x, _left_hand_pos.y, _tgt.x, _tgt.y)
 
 
 func _run_game_state_machine(delta: float) -> void:

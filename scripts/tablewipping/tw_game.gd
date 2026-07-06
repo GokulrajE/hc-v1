@@ -105,6 +105,8 @@ var _angle_min:       float = 0.0
 var _angle_max:       float = 110.0
 var _grip_threshold:  float = 10.0
 var _waiting_release: bool  = false
+var _at_center:       bool  = false
+var _stain_pulse_tw:  Tween = null
 
 
 # ============================================================
@@ -197,7 +199,16 @@ func _physics_process(delta: float) -> void:
 			var dist: float = abs(cloth_x - stain_center.x)
 			if _is_handle_mode() or _is_grip_mode():
 				var is_forcing := HCcomm.device_is_connected and HCcomm.get_total_force() >= _grip_threshold
-				if dist <= CENTER_TOUCH_ZONE and is_forcing and not center_touched:
+				var in_zone    := dist <= CENTER_TOUCH_ZONE and not center_touched and not is_animating
+				if in_zone and not _at_center:
+					_at_center = true
+					_start_stain_pulse()
+				elif not in_zone and _at_center and not center_touched:
+					_at_center = false
+					_stop_stain_pulse()
+				if in_zone and is_forcing:
+					_at_center = false
+					_stop_stain_pulse()
 					center_touched = true
 					_play_cleaner_animation()
 				if center_touched and not is_animating and is_forcing and dist > CENTER_DEAD_ZONE:
@@ -217,6 +228,8 @@ func _physics_process(delta: float) -> void:
 				_on_stain_timeout()
 
 	_run_game_state_machine(delta)
+	var _tgt: Vector2 = stain_center if stain_sprite != null else Vector2.ZERO
+	AppDataTrial.set_game_context(GameState.keys()[_game_state], cloth_x, cloth_y, _tgt.x, _tgt.y)
 
 
 # ============================================================
@@ -305,6 +318,8 @@ func _spawn_stain() -> void:
 	_clear_stain()
 	stain_done     = false
 	center_touched = false
+	_at_center     = false
+	_stop_stain_pulse()
 
 	# Random position — at least MIN_STAIN_DIST away from last stain
 	var mx: float = STAIN_W * 0.5 + 30.0
@@ -375,6 +390,8 @@ func _spawn_stain() -> void:
 
 
 func _clear_stain() -> void:
+	_stop_stain_pulse()
+	_at_center = false
 	if stain_sprite != null:
 		stain_sprite.queue_free()
 		stain_sprite  = null
@@ -522,6 +539,26 @@ func _show_glitter_stars() -> void:
 # ============================================================
 # CLEANER ANIMATION
 # ============================================================
+func _start_stain_pulse() -> void:
+	if stain_sprite == null:
+		return
+	if _stain_pulse_tw and _stain_pulse_tw.is_valid():
+		_stain_pulse_tw.kill()
+	_stain_pulse_tw = create_tween().set_loops()
+	_stain_pulse_tw.tween_property(stain_sprite, "scale", Vector2(1.09, 1.09), 0.32) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_stain_pulse_tw.tween_property(stain_sprite, "scale", Vector2(1.0, 1.0), 0.32) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+
+
+func _stop_stain_pulse() -> void:
+	if _stain_pulse_tw and _stain_pulse_tw.is_valid():
+		_stain_pulse_tw.kill()
+	_stain_pulse_tw = null
+	if stain_sprite and is_instance_valid(stain_sprite):
+		stain_sprite.scale = Vector2(1.0, 1.0)
+
+
 func _play_cleaner_animation() -> void:
 	is_animating    = true
 	cleaner.visible = true
