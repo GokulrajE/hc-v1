@@ -42,6 +42,7 @@ var _last_step:  int          = 1
 var _card_style: StyleBoxFlat = null
 var _pulse_tw:   Tween        = null
 var _warn_tw:    Tween        = null
+var _card_act_tw: Tween       = null
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -137,7 +138,7 @@ func _update_card() -> void:
 		if buttons_incapable:
 			_card_name_lbl.add_theme_color_override("font_color", Color(0.65, 0.22, 0.22, 1.0))
 		elif _complete:
-			_card_name_lbl.add_theme_color_override("font_color", Color(col.r, col.g, col.b, 0.45))
+			_card_name_lbl.add_theme_color_override("font_color", Color(col.r * 0.75, col.g * 0.75, col.b * 0.75, 0.85))
 		else:
 			_card_name_lbl.add_theme_color_override("font_color", col)
 
@@ -150,10 +151,10 @@ func _update_card() -> void:
 			_card_step_lbl.add_theme_color_override("font_color", Color(0.9, 0.3, 0.3, 0.85))
 		elif _complete:
 			_card_step_lbl.text = "DONE"
-			_card_step_lbl.add_theme_color_override("font_color", Color(0.55, 0.55, 0.55, 1.0))
+			_card_step_lbl.add_theme_color_override("font_color", Color(0.65, 0.68, 0.72, 1.0))
 		else:
 			_card_step_lbl.text = "STEP %d" % base.current_step
-			_card_step_lbl.add_theme_color_override("font_color", Color(0.55, 0.55, 0.55, 1.0))
+			_card_step_lbl.add_theme_color_override("font_color", Color(0.88, 0.88, 0.92, 1.0))
 
 	if _card_timer_lbl:
 		_card_timer_lbl.text = ("%ds" % max(int(base.TIME_LIMIT - base.phase_timer), 0)) if (base.current_step == 2 and not _complete) else ""
@@ -273,7 +274,7 @@ func _draw_arc_content(canvas: Node2D) -> void:
 		return
 	if _complete:
 		return
-	var bg_col := Color(0.1, 0.6, 0.2, 0.65) if AssessmentBase.arc_fill < 1.0 else Color(0.18, 0.18, 0.18, 0.7)
+	var bg_col := Color(0.18, 0.88, 0.32, 0.9) if AssessmentBase.arc_fill < 1.0 else Color(0.18, 0.18, 0.18, 0.7)
 	canvas.draw_arc(center, r_arc, 0.0, TAU, 80, bg_col, 20.0, true)
 	if AssessmentBase.arc_fill > 0.001:
 		var a0      := -PI * 0.5
@@ -318,6 +319,22 @@ func _pop_circle() -> void:
 		.set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 
 
+func _animate_card_complete() -> void:
+	if _card_bg == null:
+		return
+	if _card_act_tw and _card_act_tw.is_valid():
+		_card_act_tw.kill()
+	_card_bg.pivot_offset = _card_bg.size * 0.5
+	_card_act_tw = create_tween().set_parallel(true)
+	_card_act_tw.tween_property(_card_bg, "scale", Vector2(1.06, 1.06), 0.09) \
+		.set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
+	_card_act_tw.tween_property(_card_bg, "modulate", Color(1.35, 1.35, 1.35, 1.0), 0.09)
+	_card_act_tw.chain().set_parallel(true)
+	_card_act_tw.tween_property(_card_bg, "scale", Vector2(1.0, 1.0), 0.4) \
+		.set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
+	_card_act_tw.tween_property(_card_bg, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.28)
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # ASSESSMENTBASE SIGNAL HANDLERS
 # ─────────────────────────────────────────────────────────────────────────────
@@ -325,6 +342,7 @@ func _pop_circle() -> void:
 func _on_hold_just_completed(completed_step: int) -> void:
 	_pop_circle()
 	if completed_step == 1:
+		ScAudioManager.play_asmnt_reach()
 		buttons_step1_complete = true
 	_update_card()
 	_update_hint()
@@ -332,6 +350,7 @@ func _on_hold_just_completed(completed_step: int) -> void:
 
 func _on_step2_hold_registered(count: int) -> void:
 	if count >= AssessmentBase.HOLDS_REQUIRED:
+		ScAudioManager.play_asmnt_complete()
 		buttons_step2_complete = true
 		buttons_reach_time     = AssessmentBase.phase_timer
 		_complete = true
@@ -339,9 +358,11 @@ func _on_step2_hold_registered(count: int) -> void:
 		_update_card()
 		_update_hint()
 		_update_circle_color()
+		_animate_card_complete()
 		if save_button:
 			save_button.visible = true
 	else:
+		ScAudioManager.play_asmnt_reach()
 		_update_card()
 		_update_hint()
 
@@ -362,6 +383,7 @@ func _process(delta: float) -> void:
 	base.tick(delta, effective_active)
 
 	if base.current_step == 2 and base.phase_timer >= base.TIME_LIMIT:
+		ScAudioManager.play_asmnt_complete()
 		_complete = true
 		AssessmentBase.reset_phase()
 		_update_card()
@@ -376,7 +398,17 @@ func _process(delta: float) -> void:
 	_update_active_progress()
 
 	if base.current_step == 2 and _card_timer_lbl:
-		_card_timer_lbl.text = "%ds" % max(int(base.TIME_LIMIT - base.phase_timer), 0)
+		var remaining: int = max(int(float(base.TIME_LIMIT) - float(base.phase_timer)), 0)
+		_card_timer_lbl.text = "%ds" % remaining
+		var urgency: float = float(base.phase_timer) / float(base.TIME_LIMIT)
+		var tcol: Color
+		if urgency > 0.75:
+			tcol = Color(1.0, 0.28, 0.28, 1.0)
+		elif urgency > 0.5:
+			tcol = Color(1.0, 0.72, 0.12, 1.0)
+		else:
+			tcol = Color(0.75, 0.85, 1.0, 1.0)
+		_card_timer_lbl.add_theme_color_override("font_color", tcol)
 
 	if _arc_layer:
 		_arc_layer.queue_redraw()
@@ -412,6 +444,7 @@ func _on_device_data_received() -> void:
 # ─────────────────────────────────────────────────────────────────────────────
 
 func _on_continue_pressed() -> void:
+	ScAudioManager.play_asmnt_btn()
 	var base := AssessmentBase
 	if base.current_step == 1 and buttons_step1_complete:
 		base.enter_step2()
@@ -441,6 +474,7 @@ func _on_warning_ok() -> void:
 	_update_card()
 	_update_hint()
 	_update_circle_color()
+	_animate_card_complete()
 	if save_button:
 		save_button.visible = true
 

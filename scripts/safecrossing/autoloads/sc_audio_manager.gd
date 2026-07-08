@@ -6,15 +6,18 @@ var _music_player: AudioStreamPlayer = null
 var _audio_enabled: bool = true
 
 const _SOUND_PATHS: Dictionary = {
-	"cg_success":  "res://assets/audio/success_cg.mp3",
-	"cg_miss":     "res://assets/audio/failure_miss_cg.mp3",
-	"cg_wrong":    "res://assets/audio/failure_wrong_cg.mp3",
-	"sc_success":  "res://assets/audio/success_sc.mp3",
-	"sc_failure":  "res://assets/audio/failure_sc.mp3",
-	"gameover":    "res://assets/audio/gameover.mp3",
-	"score":       "res://assets/audio/score.mp3",
-	"tw_spray":    "res://assets/audio/spray.mp3",
-	"rnr_success": "res://assets/audio/rnr_success.mp3",
+	"cg_success":    "res://assets/audio/success_cg.mp3",
+	"cg_miss":       "res://assets/audio/failure_miss_cg.mp3",
+	"cg_wrong":      "res://assets/audio/failure_wrong_cg.mp3",
+	"sc_success":    "res://assets/audio/success_sc.mp3",
+	"sc_failure":    "res://assets/audio/failure_sc.mp3",
+	"gameover":      "res://assets/audio/gameover.mp3",
+	"score":         "res://assets/audio/score.mp3",
+	"tw_spray":      "res://assets/audio/spray.mp3",
+	"rnr_success":   "res://assets/audio/rnr_success.mp3",
+	"asmnt_reach":   "res://assets/audio/reach.mp3",
+	"asmnt_complete":"res://assets/audio/reachTaskCompleted.mp3",
+	"asmnt_btn":     "res://assets/audio/buttons.WAV",
 }
 
 func _ready() -> void:
@@ -72,6 +75,16 @@ func play_tw_spray() -> void:
 func play_rnr_success() -> void:
 	_play("rnr_success")
 
+
+## Assessment
+func play_asmnt_reach() -> void:
+	_play("asmnt_reach")
+
+func play_asmnt_complete() -> void:
+	_play("asmnt_complete")
+
+func play_asmnt_btn() -> void:
+	_play("asmnt_btn")
 
 ## Background music
 func play_background_music(path: String, loop: bool = true) -> void:

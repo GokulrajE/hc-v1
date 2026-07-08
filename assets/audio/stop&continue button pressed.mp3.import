@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://d1y4vxy5r4p7y"
+path="res://.godot/imported/stop&continue button pressed.mp3-fc0fa072f5f17c2784e969e6601a7aef.mp3str"
+
+[deps]
+
+source_file="res://assets/audio/stop&continue button pressed.mp3"
+dest_files=["res://.godot/imported/stop&continue button pressed.mp3-fc0fa072f5f17c2784e969e6601a7aef.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

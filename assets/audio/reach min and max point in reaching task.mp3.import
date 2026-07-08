@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bkytlk7ffem0h"
+path="res://.godot/imported/reach min and max point in reaching task.mp3-e5ff5ff466c03271033a4b32101406ee.mp3str"
+
+[deps]
+
+source_file="res://assets/audio/reach min and max point in reaching task.mp3"
+dest_files=["res://.godot/imported/reach min and max point in reaching task.mp3-e5ff5ff466c03271033a4b32101406ee.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

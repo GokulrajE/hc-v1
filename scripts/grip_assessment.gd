@@ -6,9 +6,9 @@ var back_button: Button
 var save_button: Button
 var status_label: Label
 var threshold_line: Line2D
-var counter_label: Label
-var set_threshold_button: Button
+var continue_button: Button
 var redo_button: Button
+var counter_label: Label
 var timer_label: Label
 
 var grip_value_current: float = 0.0
@@ -21,6 +21,7 @@ enum AssessmentStep { capture_max, validate_threshold }
 var current_step = AssessmentStep.capture_max
 var threshold_reach_count: int = 0
 var released: bool = true
+var baseline_captured: bool = false
 
 # Timer variables
 var timer_started: bool = false
@@ -33,19 +34,11 @@ func _ready() -> void:
 	grip_value = get_node_or_null("grip_value")
 	back_button = get_node_or_null("back_button")
 	status_label = get_node_or_null("status_label")
-
+	counter_label = get_node_or_null("rep_count")
+	timer_label = get_node_or_null("timer")
 	if back_button:
 		back_button.pressed.connect(_on_back_pressed)
 
-	# Create counter label if it doesn't exist
-	if not has_node("counter_label"):
-		counter_label = Label.new()
-		counter_label.name = "counter_label"
-		add_child(counter_label)
-		counter_label.position = Vector2(1400, 500)
-		counter_label.add_theme_font_size_override("font_size", 40)
-	else:
-		counter_label = get_node_or_null("counter_label")
 
 	# Create threshold line if it doesn't exist
 	if not has_node("threshold_line"):
@@ -57,64 +50,18 @@ func _ready() -> void:
 	else:
 		threshold_line = get_node_or_null("threshold_line")
 
-	# Create set threshold button
-	if not has_node("set_threshold_button"):
-		set_threshold_button = Button.new()
-		set_threshold_button.name = "set_threshold_button"
-		add_child(set_threshold_button)
-		set_threshold_button.position = Vector2(650, 950)
-		set_threshold_button.size = Vector2(200, 70)
-		set_threshold_button.text = "Set Threshold"
-		set_threshold_button.add_theme_font_size_override("font_size", 30)
-		set_threshold_button.visible = false
-	else:
-		set_threshold_button = get_node_or_null("set_threshold_button")
+	continue_button = get_node_or_null("continue_button")
+	if continue_button:
+		continue_button.pressed.connect(_on_continue_pressed)
 
-	if set_threshold_button:
-		set_threshold_button.pressed.connect(_on_set_threshold_pressed)
-
-	# Create redo button
-	if not has_node("redo_button"):
-		redo_button = Button.new()
-		redo_button.name = "redo_button"
-		add_child(redo_button)
-		redo_button.position = Vector2(950, 950)
-		redo_button.size = Vector2(200, 70)
-		redo_button.text = "Redo"
-		redo_button.add_theme_font_size_override("font_size", 30)
-		redo_button.visible = false
-	else:
-		redo_button = get_node_or_null("redo_button")
-
+	redo_button = get_node_or_null("redo_button")
 	if redo_button:
 		redo_button.pressed.connect(_on_redo_pressed)
 
-	# Create save button if it doesn't exist
-	if not has_node("save_button"):
-		save_button = Button.new()
-		save_button.name = "save_button"
-		add_child(save_button)
-		save_button.position = Vector2(1350, 950)
-		save_button.size = Vector2(200, 70)
-		save_button.text = "Save Assessment"
-		save_button.add_theme_font_size_override("font_size", 30)
-		save_button.visible = false
-	else:
-		save_button = get_node_or_null("save_button")
-
+	save_button = get_node_or_null("save_button")
 	if save_button:
 		save_button.pressed.connect(_on_save_pressed)
 
-	# Create timer label if it doesn't exist
-	if not has_node("timer_label"):
-		timer_label = Label.new()
-		timer_label.name = "timer_label"
-		add_child(timer_label)
-		timer_label.position = Vector2(1400, 100)
-		timer_label.add_theme_font_size_override("font_size", 50)
-		timer_label.text = "60"
-	else:
-		timer_label = get_node_or_null("timer_label")
 
 	if HCcomm:
 		# Disconnect if already connected to prevent duplicate signal error
@@ -133,10 +80,10 @@ func _process(delta: float) -> void:
 
 		if timer_label:
 			if remaining_time > 0:
-				timer_label.text = "%.1f" % remaining_time
-				timer_label.add_theme_color_override("font_color", Color.WHITE)
+				timer_label.text = "%.0f" % remaining_time
+				
 			else:
-				timer_label.text = "0.0"
+				timer_label.text = "0"
 				timer_label.add_theme_color_override("font_color", Color.RED)
 				_on_timer_expired()
 
@@ -158,7 +105,6 @@ func _on_device_data_received() -> void:
 	_update_progress()
 
 func _handle_capture_max_step() -> void:
-	# Track maximum grip force
 	if grip_value_current > grip_max:
 		grip_max = grip_value_current
 
@@ -171,6 +117,7 @@ func _handle_validate_threshold_step() -> void:
 				# Transitioned from below to above threshold
 				threshold_reach_count += 1
 				released = false
+				ScAudioManager.play_asmnt_reach()
 				print("GripAssessment: Threshold reached %d/5 times" % threshold_reach_count)
 				_update_counter_label()
 
@@ -180,6 +127,7 @@ func _handle_validate_threshold_step() -> void:
 					timer_started = false
 					save_button.visible = true
 					redo_button.visible = false
+					ScAudioManager.play_asmnt_complete()
 					_update_display()
 					print("GripAssessment: 5 repetitions reached in %.2f seconds" % reaching_time)
 		else:
@@ -189,24 +137,33 @@ func _update_display() -> void:
 	if status_label:
 		match current_step:
 			AssessmentStep.capture_max:
+				if timer_label: timer_label.visible = false
+				if counter_label: counter_label.visible = false
 				status_label.text = "STEP 1: Squeeze handle with MAXIMUM force to establish baseline"
-				set_threshold_button.visible = grip_max > 0
+				if continue_button:
+					continue_button.visible = baseline_captured
+				if redo_button:
+					redo_button.visible = baseline_captured
 				save_button.visible = false
-				redo_button.visible = false
 			AssessmentStep.validate_threshold:
+				if timer_label:
+					timer_label.visible = true
+					if threshold_reach_count == 0:
+						timer_label.text = "%.0f" % TIMER_DURATION
+				if counter_label:
+					counter_label.visible = true
+					if threshold_reach_count == 0:
+						counter_label.text = "Reach count: 0 / 5"
 				status_label.text = "STEP 2: Reach the yellow line (%.1f N) - %d / 5 times" % [grip_threshold, threshold_reach_count]
 				save_button.visible = (threshold_reach_count >= 5)
 				redo_button.visible = (threshold_reach_count < 5)
 
 func _update_counter_label() -> void:
 	if counter_label:
-		counter_label.text = "Threshold Reaches: %d / 5" % threshold_reach_count
+		counter_label.text = "Reach count: %d / 5" % threshold_reach_count
 		if threshold_reach_count >= 5:
-			counter_label.add_theme_color_override("font_color", Color.GREEN)
-			counter_label.text = "✓ Threshold Reaches: 5 / 5"
-		else:
-			counter_label.add_theme_color_override("font_color", Color.WHITE)
-
+			counter_label.text = "✓ Reach count : 5 / 5"
+		
 	# Also update status label with counter progress
 	if status_label:
 		status_label.text = "STEP 2: Reach the yellow line (%.1f N) - %d / 5 times" % [grip_threshold, threshold_reach_count]
@@ -215,13 +172,15 @@ func _update_progress() -> void:
 	if grip_progress:
 		grip_progress.value = float(grip_value_current)
 
-	# Draw threshold line when in validation step
-	if current_step == AssessmentStep.validate_threshold and grip_progress:
+	if grip_progress and (current_step == AssessmentStep.validate_threshold or baseline_captured):
 		_draw_threshold_line()
 
-	# Transition to validation step when user releases after capturing max
-	if current_step == AssessmentStep.capture_max and grip_max > 1 and grip_value_current <= 1:
-		_transition_to_validation()
+	if current_step == AssessmentStep.capture_max and not baseline_captured \
+			and grip_max > 1.0 and grip_value_current <= 1.0:
+		baseline_captured = true
+		grip_threshold = grip_max * 0.4
+		_update_display()
+
 
 func _transition_to_validation() -> void:
 	grip_threshold = grip_max * 0.4
@@ -304,29 +263,31 @@ func _on_save_pressed() -> void:
 			status_label.text = "Error: Failed to save assessment data."
 		push_error("GripAssessment: Failed to save assessment data for Grip Force")
 
-func _on_set_threshold_pressed() -> void:
+func _on_continue_pressed() -> void:
+	ScAudioManager.play_asmnt_btn()
 	if grip_max <= 0:
 		if status_label:
 			status_label.text = "Error: No maximum force recorded. Squeeze handle first."
 		return
 
 	_transition_to_validation()
-	set_threshold_button.visible = false
-	print("GripAssessment: Set Threshold button pressed. Max: %.1f N, Threshold: %.1f N" % [grip_max, grip_threshold])
+	continue_button.visible = false
+	print("GripAssessment: Continue button pressed. Max: %.1f N, Threshold: %.1f N" % [grip_max, grip_threshold])
 
 func _on_redo_pressed() -> void:
-	# Reset entire process back to Step 1
+	
 	current_step = AssessmentStep.capture_max
 	grip_max = 0.0
 	grip_threshold = 0.0
 	threshold_reach_count = 0
 	released = true
+	baseline_captured = false
 	timer_started = false
 	timer_elapsed = 0.0
 	reaching_time = 0.0
 
 	# Hide all action buttons
-	set_threshold_button.visible = false
+	continue_button.visible = false
 	redo_button.visible = false
 	save_button.visible = false
 
@@ -337,13 +298,13 @@ func _on_redo_pressed() -> void:
 	# Reset timer display
 	if timer_label:
 		timer_label.text = "60"
-		timer_label.add_theme_color_override("font_color", Color.WHITE)
-
+		
 	_update_counter_label()
 	_update_display()
 	print("GripAssessment: Redo button pressed. Restarting from Step 1.")
 
 func _on_back_pressed() -> void:
+	
 	_cleanup()
 	get_tree().change_scene_to_file("res://scene/mechanism.tscn")
 

@@ -7,7 +7,8 @@ var location_input: TextEdit
 var age_input: TextEdit
 var save_button: Button
 var back_button: Button
-var limb_input: OptionButton
+var limb_left_btn: Button
+var limb_right_btn: Button
 var status_label: Label
 var title_label: Label
 var panel: Panel
@@ -24,7 +25,8 @@ func _ready() -> void:
 	age_input = get_node_or_null("age")
 	save_button = get_node_or_null("save")
 	back_button = get_node_or_null("back_button")
-	limb_input = get_node_or_null("limb")
+	limb_left_btn = get_node_or_null("limb_container/limb_left")
+	limb_right_btn = get_node_or_null("limb_container/limb_right")
 	status_label = get_node_or_null("status_label")
 	title_label = get_node_or_null("title")
 	panel = get_node_or_null("Panel")
@@ -84,7 +86,7 @@ func _animate_ui_entrance() -> void:
 		panel.modulate.a = 0.0
 		tween.parallel().tween_property(panel, "modulate:a", 1.0, FADE_IN_DURATION)
 
-	var input_fields = [hospital_id_input, name_input, age_input, location_input, limb_input, save_button, back_button]
+	var input_fields = [hospital_id_input, name_input, age_input, location_input, limb_left_btn, limb_right_btn, save_button, back_button]
 	for field in input_fields:
 		if field:
 			field.modulate.a = 0.0
@@ -151,7 +153,7 @@ func _on_save_pressed() -> void:
 		"Name": name_input.text.strip_edges(),
 		"Age": age_input.text.strip_edges(),
 		"Location": location_input.text.strip_edges(),
-		"AffectedLimb": limb_input.get_item_text(limb_input.selected) if limb_input else "Unknown",
+		"AffectedLimb": ("Right" if limb_right_btn and limb_right_btn.button_pressed else "Left"),
 	}
 
 	if not Datamanager.save_config(config_data):

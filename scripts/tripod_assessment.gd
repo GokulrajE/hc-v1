@@ -13,8 +13,20 @@ var maxprogressbar1: ProgressBar
 var maxprogressbar2: ProgressBar
 var reach_count_label: Label
 var reaching_timer_label: Label
-var min_indicator_overlay: Control
-var max_indicator_overlay: Control
+var min_ind_left:   Control = null
+var min_ind_right:  Control = null
+var max_ind_left:   Control = null
+var max_ind_right:  Control = null
+var _mm_container:  Control = null
+var _min_val_label: Label   = null
+var _max_val_label: Label   = null
+var _cur_val_label: Label   = null
+var _arrow_col_min: Color   = Color(1.0, 0.9, 0.0, 1.0)
+var _arrow_col_max: Color   = Color(1.0, 0.9, 0.0, 1.0)
+var _min_row_ind:   Control = null
+var _max_row_ind:   Control = null
+const FLASH_COL_MIN: Color  = Color(0.15, 1.0, 0.45, 1.0)
+const FLASH_COL_MAX: Color  = Color(0.0,  0.82, 1.0, 1.0)
 
 var distance_current: float = 6.0
 var distance_start: float = 6.0
@@ -85,6 +97,10 @@ func _ready() -> void:
 
 	reach_count_label = get_node_or_null("timer_label")
 	reaching_timer_label = get_node_or_null("reaching_timer_display")
+	_mm_container  = get_node_or_null("min_max_container")
+	_min_val_label = get_node_or_null("min_max_container/min_label")
+	_max_val_label = get_node_or_null("min_max_container/max_label")
+	_cur_val_label = get_node_or_null("min_max_container/current_label")
 
 	print("TripodAssessment: Started for Tripod Grip mechanism")
 	_reset_moving_average()
@@ -159,67 +175,172 @@ func _update_max_bars() -> void:
 		maxprogressbar2.modulate = Color(1, 1, 1, 1)
 
 func _update_reaching_bars() -> void:
-	# # Update progress bars to show min/max ranges (fixed)
-	# if minprogressbar1:
-	# 	minprogressbar1.value = distance_min
-	# 	minprogressbar1.modulate = Color(0, 0.6, 0.5, 1)
+	if minprogressbar1: minprogressbar1.value = distance_min
+	if minprogressbar2: minprogressbar2.value = distance_min
+	if maxprogressbar1: maxprogressbar1.value = distance_max
+	if maxprogressbar2: maxprogressbar2.value = distance_max
+	if _cur_val_label:
+		_cur_val_label.text = "Now: %.2f cm" % distance_current
+	var at_min := distance_current <= distance_min + NEAR_THRESHOLD
+	var at_max := distance_current >= distance_max - NEAR_THRESHOLD
+	_arrow_col_min = FLASH_COL_MIN if at_min else Color(1.0, 0.9, 0.0, 1.0)
+	_arrow_col_max = FLASH_COL_MAX if at_max else Color(1.0, 0.9, 0.0, 1.0)
+	if min_ind_left  and minprogressbar2: _update_ind(min_ind_left,  minprogressbar2, distance_current, distance_min, _arrow_col_min, pulse_time, flash_timer)
+	if min_ind_right and minprogressbar1: _update_ind(min_ind_right, minprogressbar1, distance_current, distance_min, _arrow_col_min, pulse_time, flash_timer)
+	if max_ind_left  and maxprogressbar2: _update_ind(max_ind_left,  maxprogressbar2, distance_current, distance_max, _arrow_col_max, pulse_time, flash_timer)
+	if max_ind_right and maxprogressbar1: _update_ind(max_ind_right, maxprogressbar1, distance_current, distance_max, _arrow_col_max, pulse_time, flash_timer)
+	_update_row_arrows()
 
-	# if minprogressbar2:
-	# 	minprogressbar2.value = distance_min
-	# 	minprogressbar2.modulate = Color(0, 0.6, 0.5, 1)
+func _update_row_arrows() -> void:
+	var next_is_min: bool = last_reached_max
+	var at_min: bool = distance_current <= distance_min + NEAR_THRESHOLD
+	var at_max: bool = distance_current >= distance_max - NEAR_THRESHOLD
+	var col: Color = FLASH_COL_MIN if next_is_min else Color(1.0, 0.82, 0.0, 1.0)
+	if _min_row_ind and minprogressbar2 and minprogressbar1:
+		_update_row_ind(_min_row_ind, minprogressbar2, minprogressbar1, next_is_min, col, at_min, at_max)
+	if _max_row_ind and maxprogressbar2 and maxprogressbar1:
+		_update_row_ind(_max_row_ind, maxprogressbar2, maxprogressbar1, next_is_min, col, at_min, at_max)
 
-	# if maxprogressbar1:
-	# 	maxprogressbar1.value = distance_max
-	# 	maxprogressbar1.modulate = Color(0.2, 0.4, 0.6, 1)
-
-	# if maxprogressbar2:
-	# 	maxprogressbar2.value = distance_max
-	# 	maxprogressbar2.modulate = Color(0.2, 0.4, 0.6, 1)
-
-	# Update indicator line positions
-	if minprogressbar1 and min_indicator_overlay:
-		_update_indicator_overlay(min_indicator_overlay, minprogressbar1, distance_current)
-
-	if maxprogressbar2 and max_indicator_overlay:
-		_update_indicator_overlay(max_indicator_overlay, maxprogressbar2, distance_current)
-
-func _update_indicator_overlay(overlay: Control, progress_bar: ProgressBar, current_value: float) -> void:
-	# Calculate position based on progress bar value range
-	var bar_min = progress_bar.min_value
-	var bar_max = progress_bar.max_value
-	var bar_range = bar_max - bar_min
-	var percent = (current_value - bar_min) / bar_range if bar_range > 0 else 0.0
-	percent = clamp(percent, 0.0, 1.0)
-
-	# Position overlay to match progress bar exactly
-	overlay.global_position = progress_bar.global_position
-	overlay.size = progress_bar.size
-
-	# Calculate x position for the indicator line within the overlay
-	var indicator_x: float
-	if progress_bar.fill_mode == 1:
-		# Right to Left fill (min bar) - reverse the percentage
-		indicator_x = (1.0 - percent) * progress_bar.size.x - 4
-	else:
-		# Left to Right fill (max bar) - normal percentage
-		indicator_x = percent * progress_bar.size.x - 4
-
-	# Store the indicator position in a custom property for the draw function
-	overlay.set_meta("indicator_x", indicator_x)
-
-	# Draw the golden yellow vertical line
+func _update_row_ind(overlay: Control, left_pb: ProgressBar, right_pb: ProgressBar, next_is_min: bool, col: Color, at_min: bool, at_max: bool) -> void:
+	var br: float = float(left_pb.max_value) - float(left_pb.min_value)
+	if br <= 0.0: return
+	var min_pct: float = clamp((distance_min - float(left_pb.min_value)) / br, 0.0, 1.0)
+	var max_pct: float = clamp((distance_max - float(left_pb.min_value)) / br, 0.0, 1.0)
+	var x0: float    = left_pb.global_position.x
+	var x_mid: float = right_pb.global_position.x
+	var x1: float    = right_pb.global_position.x + right_pb.size.x
+	var lw: float = x_mid - x0
+	var rw: float = x1 - x_mid
+	var lmin_x: float = (1.0 - min_pct) * lw
+	var lmax_x: float = (1.0 - max_pct) * lw
+	var rmin_x: float = lw + min_pct * rw
+	var rmax_x: float = lw + max_pct * rw
+	overlay.global_position = Vector2(x0, left_pb.global_position.y - 54.0)
+	overlay.size = Vector2(x1 - x0, 54.0)
+	overlay.set_meta("lmin_x", lmin_x)
+	overlay.set_meta("lmax_x", lmax_x)
+	overlay.set_meta("rmin_x", rmin_x)
+	overlay.set_meta("rmax_x", rmax_x)
+	overlay.set_meta("col",    col)
+	overlay.set_meta("nim",    next_is_min)
+	overlay.set_meta("pt",     pulse_time)
+	overlay.set_meta("ft",     flash_timer)
+	overlay.set_meta("at_min", at_min)
+	overlay.set_meta("at_max", at_max)
 	overlay.queue_redraw()
+	if not overlay.get_meta("row_conn", false):
+		overlay.draw.connect(_on_draw_row_ind.bind(overlay))
+		overlay.set_meta("row_conn", true)
 
-	# Connect to draw signal if not already connected
-	if not overlay.is_connected("draw", Callable(self, "_on_draw_indicator")):
-		overlay.draw.connect(_on_draw_indicator.bindv([overlay, progress_bar]))
+func _on_draw_row_ind(overlay: Control) -> void:
+	var lmin_x: float = overlay.get_meta("lmin_x", 0.0)
+	var lmax_x: float = overlay.get_meta("lmax_x", 0.0)
+	var rmin_x: float = overlay.get_meta("rmin_x", 0.0)
+	var rmax_x: float = overlay.get_meta("rmax_x", 0.0)
+	var col:    Color = overlay.get_meta("col",    Color(1.0, 0.82, 0.0, 1.0))
+	var nim:    bool  = overlay.get_meta("nim",    false)
+	var pt:     float = overlay.get_meta("pt",     0.0)
+	var ft:     float = overlay.get_meta("ft",     0.0)
+	var at_min: bool  = overlay.get_meta("at_min", false)
+	var at_max: bool  = overlay.get_meta("at_max", false)
+	var cy:      float = 20.0
+	var lcx:     float = (lmin_x + lmax_x) * 0.5
+	var rcx:     float = (rmin_x + rmax_x) * 0.5
+	var pulse:   float = 0.5 + 0.5 * sin(pt * 5.5)
+	var lw:      float = 2.0 + 1.0 * pulse
+	var hs:      float = 18.0 + 6.0 * pulse
+	var tail:    float = 30.0
+	var flash_t: float = ft / 0.3 if ft > 0.0 else 0.0
+	var glow:    Color = Color(col.r, col.g, col.b, 0.22)
 
-func _on_draw_indicator(overlay: Control, progress_bar: ProgressBar) -> void:
-	# Draw a golden yellow vertical line (8px wide)
-	var line_width = 8
-	var line_height = progress_bar.size.y
-	var indicator_x = overlay.get_meta("indicator_x", 0.0)
-	overlay.draw_rect(Rect2(indicator_x, 0, line_width, line_height), Color(1.0, 0.85, 0.0, 1.0))
+	# Left bar is RTL so its directions are mirrored vs the right bar
+	_draw_centered_arrow(overlay, lcx, cy, not nim, col, glow, lw, hs, tail)
+	_draw_centered_arrow(overlay, rcx, cy, nim,     col, glow, lw, hs, tail)
+
+	if ft > 0.0:
+		var ring_r: float = 18.0 + (1.0 - flash_t) * 20.0
+		var rc: Color = Color(col.r, col.g, col.b, flash_t)
+		if nim and at_min:
+			# left bar points right → tip is at lcx + tail; right bar points left → tip at rcx - tail
+			overlay.draw_arc(Vector2(lcx + tail, cy), ring_r, 0.0, TAU, 28, rc, 4.0)
+			overlay.draw_arc(Vector2(rcx - tail, cy), ring_r, 0.0, TAU, 28, rc, 4.0)
+		elif not nim and at_max:
+			# left bar points left → tip at lcx - tail; right bar points right → tip at rcx + tail
+			overlay.draw_arc(Vector2(lcx - tail, cy), ring_r, 0.0, TAU, 28, rc, 4.0)
+			overlay.draw_arc(Vector2(rcx + tail, cy), ring_r, 0.0, TAU, 28, rc, 4.0)
+
+
+func _draw_centered_arrow(overlay: Control, cx: float, cy: float, point_left: bool, col: Color, glow: Color, lw: float, hs: float, tail: float) -> void:
+	if point_left:
+		var tip_x  := cx - tail
+		var tail_x := cx + tail
+		overlay.draw_line(Vector2(tail_x, cy), Vector2(tip_x + hs, cy), glow, lw + 10.0)
+		overlay.draw_line(Vector2(tail_x, cy), Vector2(tip_x + hs, cy), col, lw)
+		overlay.draw_colored_polygon(PackedVector2Array([
+			Vector2(tip_x, cy), Vector2(tip_x + hs, cy - hs * 0.75), Vector2(tip_x + hs, cy + hs * 0.75)
+		]), col)
+	else:
+		var tip_x  := cx + tail
+		var tail_x := cx - tail
+		overlay.draw_line(Vector2(tail_x, cy), Vector2(tip_x - hs, cy), glow, lw + 10.0)
+		overlay.draw_line(Vector2(tail_x, cy), Vector2(tip_x - hs, cy), col, lw)
+		overlay.draw_colored_polygon(PackedVector2Array([
+			Vector2(tip_x, cy), Vector2(tip_x - hs, cy - hs * 0.75), Vector2(tip_x - hs, cy + hs * 0.75)
+		]), col)
+
+func _update_ind(overlay: Control, pb: ProgressBar, cur_val: float, tgt_val: float, col: Color, pt: float = 0.0, ft: float = 0.0) -> void:
+	var br: float = float(pb.max_value) - float(pb.min_value)
+	var cur_pct: float = clamp((cur_val - float(pb.min_value)) / br, 0.0, 1.0) if br > 0.0 else 0.0
+	var tgt_pct: float = clamp((tgt_val - float(pb.min_value)) / br, 0.0, 1.0) if br > 0.0 else 0.0
+	overlay.global_position = pb.global_position + Vector2(0.0, -30.0)
+	overlay.size = Vector2(pb.size.x, pb.size.y + 30.0)
+	var cur_ix: float = clamp(((1.0 - cur_pct) if pb.fill_mode == 1 else cur_pct) * pb.size.x, 0.0, pb.size.x)
+	var tgt_ix: float = clamp(((1.0 - tgt_pct) if pb.fill_mode == 1 else tgt_pct) * pb.size.x, 0.0, pb.size.x)
+	overlay.set_meta("cur_ix", cur_ix)
+	overlay.set_meta("tgt_ix", tgt_ix)
+	overlay.set_meta("bh",     pb.size.y)
+	overlay.set_meta("col",    col)
+	overlay.set_meta("pt",     pt)
+	overlay.set_meta("ft",     ft)
+	overlay.queue_redraw()
+	if not overlay.get_meta("connected", false):
+		overlay.draw.connect(_on_draw_ind.bind(overlay))
+		overlay.set_meta("connected", true)
+
+func _on_draw_ind(overlay: Control) -> void:
+	var cur_x: float = overlay.get_meta("cur_ix", 0.0)
+	var tgt_x: float = overlay.get_meta("tgt_ix", 0.0)
+	var bh:    float = overlay.get_meta("bh",    58.0)
+	var col:   Color = overlay.get_meta("col",   Color(1.0, 0.9, 0.0, 1.0))
+	var pt:    float = overlay.get_meta("pt",    0.0)
+	var ft:    float = overlay.get_meta("ft",    0.0)
+	var pulse: float = 0.5 + 0.5 * sin(pt * 5.5)
+	var flash_s: float = 1.0 + ft * 0.9
+
+	# Target arrow: glow + solid white
+	var tgt_col := Color(0.92, 0.92, 0.92, 0.78)
+	overlay.draw_colored_polygon(PackedVector2Array([
+		Vector2(tgt_x - 15.0, 0.0), Vector2(tgt_x + 15.0, 0.0), Vector2(tgt_x, 32.0)
+	]), Color(1.0, 1.0, 1.0, 0.18))
+	overlay.draw_colored_polygon(PackedVector2Array([
+		Vector2(tgt_x - 10.0, 0.0), Vector2(tgt_x + 10.0, 0.0), Vector2(tgt_x, 24.0)
+	]), tgt_col)
+	overlay.draw_line(Vector2(tgt_x, 23.0), Vector2(tgt_x, 30.0 + bh), tgt_col, 3.0)
+
+	# Current arrow: glow layer + pulsing solid + stem
+	var hs: float = (11.0 + 3.5 * pulse) * flash_s
+	overlay.draw_colored_polygon(PackedVector2Array([
+		Vector2(cur_x - hs * 1.6, 0.0), Vector2(cur_x + hs * 1.6, 0.0), Vector2(cur_x, hs * 1.6)
+	]), Color(col.r, col.g, col.b, 0.22))
+	overlay.draw_colored_polygon(PackedVector2Array([
+		Vector2(cur_x - hs, 0.0), Vector2(cur_x + hs, 0.0), Vector2(cur_x, hs * 1.15)
+	]), col)
+	overlay.draw_line(Vector2(cur_x, hs - 1.0), Vector2(cur_x, 30.0 + bh), col, 4.0)
+
+	# Flash ring when touching target
+	if ft > 0.0:
+		var ring_r: float = 14.0 + (1.0 - ft / 0.3) * 16.0
+		overlay.draw_arc(Vector2(cur_x, hs * 0.5), ring_r, 0.0, TAU, 24, Color(col.r, col.g, col.b, ft / 0.3), 3.0)
 
 func _calculate_moving_average(raw_value: float) -> float:
 	moving_average_counter += 1
@@ -244,7 +365,7 @@ func _update_display() -> void:
 				status_label.text = "STEP 1: Release and expand to find maximum extension distance, then click SET MAX"
 			AssessmentStep.SETMIN:
 				if start_button and start_button.visible:
-					status_label.text = "Ready to start reaching validation. Click START ASSESSMENT to begin"
+					status_label.text = "Ready to start reaching validation. Click CONTINUE to begin"
 				else:
 					status_label.text = "STEP 2: Squeeze the tripod grip to find minimum compression distance, then click SET MIN"
 			AssessmentStep.REACHING:
@@ -253,7 +374,7 @@ func _update_display() -> void:
 				status_label.text = "✓ Assessment complete! Click SAVE ASSESSMENT to store results"
 
 func _on_setmax_pressed() -> void:
-	# Store the maximum value and move to setmin phase
+	
 	distance_max = distance_current
 	current_step = AssessmentStep.SETMIN
 	setmax_button.visible = false
@@ -263,19 +384,21 @@ func _on_setmax_pressed() -> void:
 	print("TripodAssessment: Maximum distance set to %.2f cm - Now finding minimum" % [distance_max])
 
 func _on_setmin_pressed() -> void:
-	# Store the minimum value and show start button
+	
 	distance_min = distance_current
 	setmin_button.visible = false
 	if start_button:
 		start_button.visible = true
+		start_button.text = "Continue"
 	_advance_to_reaching()
 	print("TripodAssessment: Minimum distance set to %.2f cm - Ready to start reaching validation" % [distance_min])
 
 func _on_start_reaching_pressed() -> void:
-	# Start the reaching validation phase
+	ScAudioManager.play_asmnt_btn()
 	if start_button:
 		start_button.visible = false
 	current_step = AssessmentStep.REACHING
+	_create_indicator_lines()
 	_update_display()
 	print("TripodAssessment: Starting reaching validation phase")
 
@@ -295,23 +418,26 @@ func _advance_to_reaching() -> void:
 		reach_count_label.text = "%d" % reach_count
 		reach_count_label.add_theme_color_override("font_color", Color(1, 0, 0, 1))
 
-	# Create indicator lines for min and max progress bars
-	_create_indicator_lines()
-
 	_update_display()
 	print("TripodAssessment: Advancing to Step 3 - Reaching Validation. Range: %.2f - %.2f cm. Time limit: %.2f s" % [distance_min, distance_max, REACHING_TIME_LIMIT])
 
 func _create_indicator_lines() -> void:
-	# Create overlay Control nodes for indicator lines
-	# These will draw golden yellow vertical lines that move with current value
+	min_ind_left  = _make_ind_overlay()
+	min_ind_right = _make_ind_overlay()
+	max_ind_left  = _make_ind_overlay()
+	max_ind_right = _make_ind_overlay()
+	_min_row_ind  = _make_ind_overlay()
+	_max_row_ind  = _make_ind_overlay()
+	if _mm_container:
+		_mm_container.visible = true
+		if _min_val_label: _min_val_label.text = "Min: %.2f cm" % distance_min
+		if _max_val_label: _max_val_label.text = "Max: %.2f cm" % distance_max
 
-	min_indicator_overlay = Control.new()
-	min_indicator_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(min_indicator_overlay)
-
-	max_indicator_overlay = Control.new()
-	max_indicator_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(max_indicator_overlay)
+func _make_ind_overlay() -> Control:
+	var c := Control.new()
+	c.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(c)
+	return c
 
 func _process_reaching() -> void:
 	if step_reaching_complete:
@@ -326,10 +452,12 @@ func _process_reaching() -> void:
 			reach_count += 1
 		last_reached_max = false
 		flash_timer = 0.3
+		ScAudioManager.play_asmnt_reach()
 	elif at_max and not last_reached_max:
 		last_reached_max = true
 		last_reached_min = false
 		flash_timer = 0.3
+		ScAudioManager.play_asmnt_reach()
 
 	_update_reaching_bars()
 
@@ -341,6 +469,7 @@ func _process_reaching() -> void:
 func _complete_reaching() -> void:
 	step_reaching_complete = true
 	current_step = AssessmentStep.COMPLETE
+	ScAudioManager.play_asmnt_complete()
 
 	if status_label:
 		if reach_count >= REQUIRED_REACHES and reaching_timer <= REACHING_TIME_LIMIT:
@@ -354,12 +483,12 @@ func _complete_reaching() -> void:
 		reach_count_label.visible = false
 
 	# Clean up indicator overlays
-	if min_indicator_overlay:
-		min_indicator_overlay.queue_free()
-		min_indicator_overlay = null
-	if max_indicator_overlay:
-		max_indicator_overlay.queue_free()
-		max_indicator_overlay = null
+	for ovl in [min_ind_left, min_ind_right, max_ind_left, max_ind_right, _min_row_ind, _max_row_ind]:
+		if ovl: ovl.queue_free()
+	min_ind_left = null; min_ind_right = null
+	max_ind_left = null; max_ind_right = null
+	_min_row_ind = null; _max_row_ind = null
+	if _mm_container: _mm_container.visible = false
 
 	_update_display()
 	print("TripodAssessment: Step 3 complete! Reaches: %d in %.2f seconds" % [reach_count, reaching_timer])
@@ -396,6 +525,7 @@ func _on_save_pressed() -> void:
 		push_error("TripodAssessment: Failed to save assessment data for Tripod Grip")
 
 func _on_back_pressed() -> void:
+	
 	_cleanup()
 	get_tree().change_scene_to_file("res://scene/mechanism.tscn")
 

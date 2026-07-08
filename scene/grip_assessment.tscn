@@ -67,9 +67,9 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_n4ipi")
 text = "Back"
 
 [node name="save_button" type="Button" parent="." unique_id=1320693210]
-offset_left = 706.0
+offset_left = 1110.0
 offset_top = 870.0
-offset_right = 1156.0
+offset_right = 1464.0
 offset_bottom = 940.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 32
@@ -87,6 +87,24 @@ theme_override_colors/font_color = Color(0, 0.8, 1, 1)
 theme_override_fonts/font = ExtResource("9_tfcxx")
 theme_override_font_sizes/font_size = 70
 text = "Grip Assessment.."
+
+[node name="timer" type="Label" parent="." unique_id=964671068]
+offset_left = 1349.0
+offset_top = 116.0
+offset_right = 1437.0
+offset_bottom = 189.0
+theme_override_colors/font_color = Color(0.4630522, 0.52513665, 0.9886442, 1)
+theme_override_font_sizes/font_size = 45
+text = "60s"
+
+[node name="rep_count" type="Label" parent="." unique_id=1194108726]
+offset_left = 1048.0
+offset_top = 430.0
+offset_right = 1480.0
+offset_bottom = 499.0
+theme_override_colors/font_color = Color(0.4630522, 0.52513665, 0.9886442, 1)
+theme_override_font_sizes/font_size = 45
+text = "Reach count : 1/5"
 
 [node name="status_label" type="Label" parent="." unique_id=1138660240]
 offset_left = 368.0
@@ -121,3 +139,29 @@ theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
 theme_override_font_sizes/font_size = 60
 text = "Grip: 0.0 N"
 horizontal_alignment = 1
+
+[node name="redo_button" type="Button" parent="." unique_id=1320693211]
+visible = false
+offset_left = 456.0
+offset_top = 870.0
+offset_right = 756.0
+offset_bottom = 940.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxTexture_47fyv")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_yj3nv")
+theme_override_styles/hover = SubResource("StyleBoxTexture_n4ipi")
+text = "Redo"
+
+[node name="continue_button" type="Button" parent="." unique_id=1320693212]
+visible = false
+offset_left = 780.0
+offset_top = 870.0
+offset_right = 1080.0
+offset_bottom = 940.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxTexture_y8hb5")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_pc0ct")
+theme_override_styles/hover = SubResource("StyleBoxTexture_hfsq1")
+text = "Continue"

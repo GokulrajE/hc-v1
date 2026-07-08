@@ -130,6 +130,7 @@ func _process_step1() -> void:
 	
 
 func _on_start_pressed() -> void:
+	ScAudioManager.play_asmnt_btn()
 	match current_step:
 		AssessmentStep.STEP1_COMFORTABLE:
 			start_point = current_angle
@@ -171,11 +172,13 @@ func _process_step2() -> void:
 		angle_gauge.add_shade_zone(min_angle, max_angle, Color(0.42, 0.14, 0.61, 1.0))
 
 func _on_stop_pressed() -> void:
+	ScAudioManager.play_asmnt_btn()
 	if stop_button:
 		stop_button.visible = false
 	_advance_to_step3()
 
 func _on_redo_pressed() -> void:
+	
 	min_angle = current_angle
 	max_angle = current_angle
 
@@ -230,6 +233,7 @@ func _process_step3() -> void:
 		last_reached_min = true
 		last_reached_max = false
 		flash_timer = 0.3
+		ScAudioManager.play_asmnt_reach()
 		if angle_gauge:
 			angle_gauge.update_step3(true)   # next target is max
 	elif at_max and not last_reached_max:
@@ -237,6 +241,7 @@ func _process_step3() -> void:
 		last_reached_min = false
 		reach_count += 1
 		flash_timer = 0.3
+		ScAudioManager.play_asmnt_reach()
 		if angle_gauge:
 			angle_gauge.update_step3(false)  # next target is min
 
@@ -250,6 +255,7 @@ func _process_step3() -> void:
 
 func _complete_step3() -> void:
 	step3_complete = true
+	ScAudioManager.play_asmnt_complete()
 	if status_label:
 		if reach_count >= REQUIRED_REACHES and reaching_timer <= REACHING_TIME_LIMIT:
 			status_label.text = "✓ Assessment Complete! Reaches: %d in %.2f seconds - Click SAVE" % [reach_count, reaching_timer]
@@ -366,6 +372,7 @@ func _on_save_pressed() -> void:
 		push_error("HandGripAssessment: Failed to save assessment data for Handle")
 
 func _on_back_pressed() -> void:
+	
 	_cleanup()
 	get_tree().change_scene_to_file("res://scene/mechanism.tscn")
 

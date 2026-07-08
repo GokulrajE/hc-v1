@@ -58,14 +58,34 @@ texture = ExtResource("3_e8w6f")
 texture_margin_left = 33.0
 texture_margin_top = 20.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rx2mq"]
-content_margin_left = 33.0
-content_margin_top = 6.0
-bg_color = Color(0.8431838, 0.8431839, 0.84318364, 1)
-corner_radius_top_left = 15
-corner_radius_top_right = 15
-corner_radius_bottom_right = 15
-corner_radius_bottom_left = 15
+[sub_resource type="ButtonGroup" id="LimbButtonGroup"]
+
+[sub_resource type="StyleBoxFlat" id="LimbBtnNormal"]
+content_margin_left = 20.0
+content_margin_top = 10.0
+content_margin_right = 20.0
+content_margin_bottom = 10.0
+bg_color = Color(0.1, 0.14, 0.24, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.3, 0.5, 0.8, 0.7)
+
+[sub_resource type="StyleBoxFlat" id="LimbBtnSelected"]
+content_margin_left = 20.0
+content_margin_top = 10.0
+content_margin_right = 20.0
+content_margin_bottom = 10.0
+bg_color = Color(0.12, 0.55, 1.0, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ipb3t"]
 texture = ExtResource("5_20qy8")
@@ -233,20 +253,35 @@ theme_override_colors/font_color = Color(0.7, 0.85, 1, 1)
 theme_override_font_sizes/font_size = 26
 text = "Affected Limb"
 
-[node name="limb" type="OptionButton" parent="." unique_id=2000000006]
+[node name="limb_container" type="HBoxContainer" parent="." unique_id=2000000006]
 offset_left = 380.0
 offset_top = 600.0
-offset_right = 804.0
+offset_right = 810.0
 offset_bottom = 670.0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = SubResource("StyleBoxFlat_rx2mq")
-selected = 0
-item_count = 2
-popup/item_0/text = "Left"
-popup/item_0/id = 0
-popup/item_1/text = "Right"
-popup/item_1/id = 1
+theme_override_constants/separation = 10
+
+[node name="limb_left" type="Button" parent="limb_container" unique_id=2000000011]
+custom_minimum_size = Vector2(207, 70)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("LimbBtnNormal")
+theme_override_styles/hover = SubResource("LimbBtnSelected")
+theme_override_styles/pressed = SubResource("LimbBtnSelected")
+toggle_mode = true
+button_group = SubResource("LimbButtonGroup")
+button_pressed = true
+text = "Left"
+
+[node name="limb_right" type="Button" parent="limb_container" unique_id=2000000012]
+custom_minimum_size = Vector2(207, 70)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("LimbBtnNormal")
+theme_override_styles/hover = SubResource("LimbBtnSelected")
+theme_override_styles/pressed = SubResource("LimbBtnSelected")
+toggle_mode = true
+button_group = SubResource("LimbButtonGroup")
+text = "Right"
 
 [node name="save" type="Button" parent="." unique_id=1815016385]
 custom_minimum_size = Vector2(570, 100)

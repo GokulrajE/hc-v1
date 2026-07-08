@@ -142,8 +142,12 @@ func _update_step1_display() -> void:
 func _process_step1() -> void:
 	min_angle = STEP1_MIN_LIMIT
 	max_angle = STEP1_MAX_LIMIT
-	if current_angle < -STEP1_MIN_LIMIT: step1_crossed_min = true
-	if current_angle >  STEP1_MAX_LIMIT: step1_crossed_max = true
+	if current_angle < -STEP1_MIN_LIMIT: 
+		step1_crossed_min = true
+		
+	if current_angle >  STEP1_MAX_LIMIT: 
+		step1_crossed_max = true
+		
 	if step1_crossed_min and step1_crossed_max:
 		if knob_gauge:
 			knob_gauge.set_track(true, Color(0.2, 0.95, 0.4, 0.7))
@@ -153,6 +157,7 @@ func _process_step1() -> void:
 
 func _complete_step1() -> void:
 	if status_label:
+		
 		status_label.text = "✓ Step 1 Complete! Click START to begin AROM Assessment"
 	if start_button:
 		start_button.visible = true
@@ -164,6 +169,7 @@ func _complete_step1() -> void:
 # ── Step 2 ────────────────────────────────────────────────────────────────────
 
 func _on_start_pressed() -> void:
+	ScAudioManager.play_asmnt_btn()
 	if start_button: start_button.visible = false
 	if stop_button:  stop_button.visible  = true
 	if redo_button:  redo_button.visible  = true
@@ -190,11 +196,13 @@ func _process_step2() -> void:
 
 
 func _on_stop_pressed() -> void:
+	ScAudioManager.play_asmnt_btn()
 	if stop_button: stop_button.visible = false
 	_advance_to_step3()
 
 
 func _on_redo_pressed() -> void:
+	
 	min_angle = current_angle
 	max_angle = current_angle
 	if status_label:
@@ -245,6 +253,7 @@ func _process_step3() -> void:
 		last_reached_max = false
 		step3_flash_timer = 0.4
 		step3_flash_color = COL_FLASH_MIN
+		ScAudioManager.play_asmnt_reach()
 		if knob_gauge:
 			knob_gauge.set_shade_zone(arom_min, arom_max, COL_FLASH_MIN)
 	elif current_angle >= arom_max and last_reached_min and not last_reached_max:
@@ -253,6 +262,7 @@ func _process_step3() -> void:
 		reach_count += 1
 		step3_flash_timer = 0.4
 		step3_flash_color = COL_FLASH_MAX
+		ScAudioManager.play_asmnt_reach()
 		if knob_gauge:
 			knob_gauge.set_shade_zone(arom_min, arom_max, COL_FLASH_MAX)
 
@@ -269,6 +279,7 @@ func _process_step3() -> void:
 
 func _complete_step3() -> void:
 	step3_complete = true
+	ScAudioManager.play_asmnt_complete()
 	if status_label:
 		if reach_count >= REQUIRED_REACHES and reaching_timer <= REACHING_TIME_LIMIT:
 			status_label.text = "✓ Done! %d reaches in %.1f s — Click SAVE" % [reach_count, reaching_timer]
@@ -331,6 +342,7 @@ func _on_save_pressed() -> void:
 
 
 func _on_back_pressed() -> void:
+	
 	_cleanup()
 	get_tree().change_scene_to_file("res://scene/mechanism.tscn")
 
