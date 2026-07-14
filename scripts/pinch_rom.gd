@@ -7,7 +7,7 @@ var pinch1_reach_time: float  = 0.0
 var pinch2_reach_time: float  = 0.0
 var pinch_datetime:    String = ""
 var mechanism:         String = ""
-
+var reaching_time:      float = 0.0
 
 func _init(mechanism_name: String = "", read_from_file: bool = true) -> void:
 	mechanism = mechanism_name
@@ -61,6 +61,7 @@ func load_file() -> bool:
 	pinch2_done       = parts[2] == "1"
 	pinch1_reach_time = float(parts[3])
 	pinch2_reach_time = float(parts[4])
+	reaching_time =(pinch1_reach_time+pinch2_reach_time)/2
 	return true
 
 

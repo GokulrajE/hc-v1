@@ -525,8 +525,11 @@ func _on_save_pressed() -> void:
 		push_error("TripodAssessment: Failed to save assessment data for Tripod Grip")
 
 func _on_back_pressed() -> void:
-	
 	_cleanup()
+	if Appdata.reassessing:
+		Appdata.reassessing = false
+		get_tree().change_scene_to_file("res://scene/game_selection.tscn")
+		return
 	get_tree().change_scene_to_file("res://scene/mechanism.tscn")
 
 func _cleanup() -> void:

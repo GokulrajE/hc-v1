@@ -1,0 +1,538 @@
+[gd_scene format=3 uid="uid://bkd6b76yh6vxs"]
+
+[ext_resource type="Script" uid="uid://o5f76fl8vjdq" path="res://scripts/mode_select.gd" id="1_ms"]
+[ext_resource type="Texture2D" uid="uid://sal3ip0hwbsd" path="res://assets/ui/Window04.png" id="2_ms"]
+[ext_resource type="Texture2D" uid="uid://bmwg8y55461y8" path="res://assets/ui/Button13.png" id="4_ms"]
+[ext_resource type="Texture2D" uid="uid://cn668kccj0k6y" path="res://assets/ui/Button08.png" id="5_ms"]
+[ext_resource type="Texture2D" uid="uid://c2kvtt4ccy8at" path="res://assets/ui/Btn_V01.png" id="6_ms"]
+[ext_resource type="Texture2D" uid="uid://daqibh5tqjbfl" path="res://assets/ui/Btn_V05.png" id="7_ms"]
+[ext_resource type="FontFile" uid="uid://btw3w8gykgilf" path="res://assets/fonts/TiltNeon-Regular-VariableFont_XROT,YROT.ttf" id="8_ms"]
+
+[sub_resource type="StyleBoxTexture" id="BackBtnNormal"]
+texture = ExtResource("6_ms")
+
+[sub_resource type="StyleBoxTexture" id="BackBtnHover"]
+texture = ExtResource("7_ms")
+
+[sub_resource type="StyleBoxFlat" id="CardEasy"]
+bg_color = Color(0.11, 0.1, 0.18, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.2, 0.73, 0.36, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxTexture" id="SelBtnNormal"]
+texture = ExtResource("4_ms")
+
+[sub_resource type="StyleBoxTexture" id="SelBtnPressed"]
+texture = ExtResource("4_ms")
+
+[sub_resource type="StyleBoxTexture" id="SelBtnHover"]
+texture = ExtResource("5_ms")
+
+[sub_resource type="StyleBoxFlat" id="CardNormal"]
+bg_color = Color(0.11, 0.1, 0.18, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 0.6, 0, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="CardHard"]
+bg_color = Color(0.11, 0.1, 0.18, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.9, 0.22, 0.22, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[node name="ModeSelect" type="Node2D" unique_id=1414077626]
+script = ExtResource("1_ms")
+
+[node name="bg" type="TextureRect" parent="." unique_id=1367264181]
+offset_left = -37.0
+offset_top = -27.0
+offset_right = 1969.0
+offset_bottom = 1133.0
+texture = ExtResource("2_ms")
+
+[node name="title" type="Label" parent="." unique_id=1476381763]
+offset_left = 73.0
+offset_top = 25.0
+offset_right = 1873.0
+offset_bottom = 95.0
+theme_override_colors/font_color = Color(0, 0.8, 1, 1)
+theme_override_fonts/font = ExtResource("8_ms")
+theme_override_font_sizes/font_size = 52
+text = "SELECT DIFFICULTY"
+horizontal_alignment = 1
+
+[node name="game_name_label" type="Label" parent="." unique_id=1720886648]
+offset_left = 73.0
+offset_top = 100.0
+offset_right = 1873.0
+offset_bottom = 145.0
+theme_override_colors/font_color = Color(0.85, 0.85, 0.85, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+
+[node name="reach_note_label" type="Label" parent="." unique_id=563113068]
+offset_left = 73.0
+offset_top = 149.0
+offset_right = 1873.0
+offset_bottom = 189.0
+theme_override_colors/font_color = Color(0.3, 0.85, 0.5, 1)
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
+
+[node name="back_button" type="Button" parent="." unique_id=907516017]
+offset_left = 36.0
+offset_top = 965.0
+offset_right = 256.0
+offset_bottom = 1025.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("BackBtnNormal")
+theme_override_styles/hover = SubResource("BackBtnHover")
+text = "Back"
+
+[node name="card_easy" type="Panel" parent="." unique_id=902321066]
+offset_left = 80.0
+offset_top = 272.0
+offset_right = 630.0
+offset_bottom = 832.0
+theme_override_styles/panel = SubResource("CardEasy")
+
+[node name="cat_easy" type="Label" parent="card_easy" unique_id=2010755230]
+layout_mode = 0
+offset_left = -6.0
+offset_top = 40.0
+offset_right = 544.0
+offset_bottom = 90.0
+theme_override_colors/font_color = Color(0.2, 0.95, 0.4, 1)
+theme_override_fonts/font = ExtResource("8_ms")
+theme_override_font_sizes/font_size = 36
+text = "🌱  EASY"
+horizontal_alignment = 1
+
+[node name="desc_easy" type="Label" parent="card_easy" unique_id=1312634247]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 89.0
+offset_right = 510.0
+offset_bottom = 165.0
+theme_override_colors/font_color = Color(0.72, 0.72, 0.72, 1)
+theme_override_font_sizes/font_size = 18
+text = "More time per move.
+Great for beginners and those building up endurance."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="div_easy" type="ColorRect" parent="card_easy" unique_id=378372732]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 154.0
+offset_right = 510.0
+offset_bottom = 157.0
+color = Color(0.2, 0.73, 0.36, 0.5)
+
+[node name="row_targets" type="ColorRect" parent="card_easy" unique_id=783433917]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 162.0
+offset_right = 510.0
+offset_bottom = 226.0
+color = Color(0.2, 0.73, 0.36, 0.12)
+
+[node name="lbl_targets" type="Label" parent="card_easy/row_targets" unique_id=1287626497]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 9.0
+offset_right = 262.0
+offset_bottom = 55.0
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 19
+text = "Expected Targets"
+
+[node name="val_targets" type="Label" parent="card_easy/row_targets" unique_id=843640963]
+layout_mode = 0
+offset_left = 258.0
+offset_top = 9.0
+offset_right = 458.0
+offset_bottom = 55.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 21
+text = "-"
+horizontal_alignment = 2
+
+[node name="row_window" type="ColorRect" parent="card_easy" unique_id=647687247]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 231.0
+offset_right = 510.0
+offset_bottom = 295.0
+color = Color(0.2, 0.73, 0.36, 0.12)
+
+[node name="lbl_window" type="Label" parent="card_easy/row_window" unique_id=566532632]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 9.0
+offset_right = 262.0
+offset_bottom = 55.0
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 19
+text = "Move Window"
+
+[node name="val_window" type="Label" parent="card_easy/row_window" unique_id=372804911]
+layout_mode = 0
+offset_left = 258.0
+offset_top = 9.0
+offset_right = 458.0
+offset_bottom = 55.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 21
+text = "-"
+horizontal_alignment = 2
+
+[node name="row_reach" type="ColorRect" parent="card_easy" unique_id=878538416]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 300.0
+offset_right = 510.0
+offset_bottom = 364.0
+color = Color(0.2, 0.73, 0.36, 0.12)
+
+[node name="lbl_reach" type="Label" parent="card_easy/row_reach" unique_id=641110779]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 9.0
+offset_right = 262.0
+offset_bottom = 55.0
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 19
+text = "Reaching Time"
+
+[node name="val_reach" type="Label" parent="card_easy/row_reach" unique_id=1689865771]
+layout_mode = 0
+offset_left = 258.0
+offset_top = 9.0
+offset_right = 458.0
+offset_bottom = 55.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 21
+text = "-"
+horizontal_alignment = 2
+
+[node name="btn_select" type="Button" parent="card_easy" unique_id=1768000788]
+custom_minimum_size = Vector2(320, 60)
+layout_mode = 0
+offset_left = 80.0
+offset_top = 430.0
+offset_right = 470.0
+offset_bottom = 495.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("SelBtnNormal")
+theme_override_styles/pressed = SubResource("SelBtnPressed")
+theme_override_styles/hover = SubResource("SelBtnHover")
+text = "▶  SELECT"
+
+[node name="card_normal" type="Panel" parent="." unique_id=1287792107]
+offset_left = 685.0
+offset_top = 270.0
+offset_right = 1235.0
+offset_bottom = 830.0
+theme_override_styles/panel = SubResource("CardNormal")
+
+[node name="cat_normal" type="Label" parent="card_normal" unique_id=2033841467]
+layout_mode = 0
+offset_top = 36.0
+offset_right = 550.0
+offset_bottom = 86.0
+theme_override_colors/font_color = Color(1, 0.6, 0, 1)
+theme_override_fonts/font = ExtResource("8_ms")
+theme_override_font_sizes/font_size = 36
+text = "⚡  NORMAL"
+horizontal_alignment = 1
+
+[node name="desc_normal" type="Label" parent="card_normal" unique_id=1713327561]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 90.0
+offset_right = 510.0
+offset_bottom = 166.0
+theme_override_colors/font_color = Color(0.72, 0.72, 0.72, 1)
+theme_override_font_sizes/font_size = 18
+text = "Standard challenge.
+Balanced gameplay for most patients."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="div_normal" type="ColorRect" parent="card_normal" unique_id=1070685248]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 154.0
+offset_right = 510.0
+offset_bottom = 157.0
+color = Color(1, 0.6, 0, 0.5)
+
+[node name="row_targets" type="ColorRect" parent="card_normal" unique_id=595330315]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 162.0
+offset_right = 510.0
+offset_bottom = 226.0
+color = Color(1, 0.6, 0, 0.12)
+
+[node name="lbl_targets" type="Label" parent="card_normal/row_targets" unique_id=1416613496]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 9.0
+offset_right = 262.0
+offset_bottom = 55.0
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 19
+text = "Expected Targets"
+
+[node name="val_targets" type="Label" parent="card_normal/row_targets" unique_id=1880907949]
+layout_mode = 0
+offset_left = 258.0
+offset_top = 9.0
+offset_right = 458.0
+offset_bottom = 55.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 21
+text = "-"
+horizontal_alignment = 2
+
+[node name="row_window" type="ColorRect" parent="card_normal" unique_id=298217287]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 231.0
+offset_right = 510.0
+offset_bottom = 295.0
+color = Color(1, 0.6, 0, 0.12)
+
+[node name="lbl_window" type="Label" parent="card_normal/row_window" unique_id=1174525927]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 9.0
+offset_right = 262.0
+offset_bottom = 55.0
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 19
+text = "Move Window"
+
+[node name="val_window" type="Label" parent="card_normal/row_window" unique_id=548398943]
+layout_mode = 0
+offset_left = 258.0
+offset_top = 9.0
+offset_right = 458.0
+offset_bottom = 55.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 21
+text = "-"
+horizontal_alignment = 2
+
+[node name="row_reach" type="ColorRect" parent="card_normal" unique_id=1626640533]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 300.0
+offset_right = 510.0
+offset_bottom = 364.0
+color = Color(1, 0.6, 0, 0.12)
+
+[node name="lbl_reach" type="Label" parent="card_normal/row_reach" unique_id=957141587]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 9.0
+offset_right = 262.0
+offset_bottom = 55.0
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 19
+text = "Reaching Time"
+
+[node name="val_reach" type="Label" parent="card_normal/row_reach" unique_id=1593781919]
+layout_mode = 0
+offset_left = 258.0
+offset_top = 9.0
+offset_right = 458.0
+offset_bottom = 55.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 21
+text = "-"
+horizontal_alignment = 2
+
+[node name="btn_select" type="Button" parent="card_normal" unique_id=617720130]
+custom_minimum_size = Vector2(320, 60)
+layout_mode = 0
+offset_left = 80.0
+offset_top = 430.0
+offset_right = 470.0
+offset_bottom = 495.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("SelBtnNormal")
+theme_override_styles/pressed = SubResource("SelBtnPressed")
+theme_override_styles/hover = SubResource("SelBtnHover")
+text = "▶  SELECT"
+
+[node name="card_hard" type="Panel" parent="." unique_id=1639472620]
+offset_left = 1290.0
+offset_top = 270.0
+offset_right = 1840.0
+offset_bottom = 830.0
+theme_override_styles/panel = SubResource("CardHard")
+
+[node name="cat_hard" type="Label" parent="card_hard" unique_id=991447634]
+layout_mode = 0
+offset_left = -16.0
+offset_top = 34.0
+offset_right = 534.0
+offset_bottom = 84.0
+theme_override_colors/font_color = Color(0.9, 0.22, 0.22, 1)
+theme_override_fonts/font = ExtResource("8_ms")
+theme_override_font_sizes/font_size = 36
+text = "🔥  HARD"
+horizontal_alignment = 1
+
+[node name="desc_hard" type="Label" parent="card_hard" unique_id=607547586]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 84.0
+offset_right = 510.0
+offset_bottom = 160.0
+theme_override_colors/font_color = Color(0.72, 0.72, 0.72, 1)
+theme_override_font_sizes/font_size = 18
+text = "Less time per move.
+For advanced users pushing their limits."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="div_hard" type="ColorRect" parent="card_hard" unique_id=2095142641]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 154.0
+offset_right = 510.0
+offset_bottom = 157.0
+color = Color(0.9, 0.22, 0.22, 0.5)
+
+[node name="row_targets" type="ColorRect" parent="card_hard" unique_id=635182952]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 162.0
+offset_right = 510.0
+offset_bottom = 226.0
+color = Color(0.9, 0.22, 0.22, 0.12)
+
+[node name="lbl_targets" type="Label" parent="card_hard/row_targets" unique_id=566973396]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 9.0
+offset_right = 262.0
+offset_bottom = 55.0
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 19
+text = "Expected Targets"
+
+[node name="val_targets" type="Label" parent="card_hard/row_targets" unique_id=1026173207]
+layout_mode = 0
+offset_left = 258.0
+offset_top = 9.0
+offset_right = 458.0
+offset_bottom = 55.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 21
+text = "-"
+horizontal_alignment = 2
+
+[node name="row_window" type="ColorRect" parent="card_hard" unique_id=616765777]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 231.0
+offset_right = 510.0
+offset_bottom = 295.0
+color = Color(0.9, 0.22, 0.22, 0.12)
+
+[node name="lbl_window" type="Label" parent="card_hard/row_window" unique_id=72070582]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 9.0
+offset_right = 262.0
+offset_bottom = 55.0
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 19
+text = "Move Window"
+
+[node name="val_window" type="Label" parent="card_hard/row_window" unique_id=97009156]
+layout_mode = 0
+offset_left = 258.0
+offset_top = 9.0
+offset_right = 458.0
+offset_bottom = 55.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 21
+text = "-"
+horizontal_alignment = 2
+
+[node name="row_reach" type="ColorRect" parent="card_hard" unique_id=1078826859]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 300.0
+offset_right = 510.0
+offset_bottom = 364.0
+color = Color(0.9, 0.22, 0.22, 0.12)
+
+[node name="lbl_reach" type="Label" parent="card_hard/row_reach" unique_id=1402875202]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 9.0
+offset_right = 262.0
+offset_bottom = 55.0
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 19
+text = "Reaching Time"
+
+[node name="val_reach" type="Label" parent="card_hard/row_reach" unique_id=2116613066]
+layout_mode = 0
+offset_left = 258.0
+offset_top = 9.0
+offset_right = 458.0
+offset_bottom = 55.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 21
+text = "-"
+horizontal_alignment = 2
+
+[node name="btn_select" type="Button" parent="card_hard" unique_id=796111984]
+custom_minimum_size = Vector2(320, 60)
+layout_mode = 0
+offset_left = 80.0
+offset_top = 430.0
+offset_right = 470.0
+offset_bottom = 495.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("SelBtnNormal")
+theme_override_styles/pressed = SubResource("SelBtnPressed")
+theme_override_styles/hover = SubResource("SelBtnHover")
+text = "▶  SELECT"

@@ -1,22 +1,6 @@
 class_name JuicerGame
 extends Node2D
 
-# ── constants ──────────────────────────────────────────────────────────────
-const FRUIT_COUNT        := 5
-const FRUIT_SPACING      := 280.0
-const TARGET_RADIUS      := 110.0
-const GAME_DURATION      := 60.0
-const HIGHLIGHT_DURATION := 7.0
-const JUICE_FILL_TIME    := 3.0
-const FORCE_THRESHOLD    := 5.0   # fallback; overridden from GRIP ROM
-const ARROW_SPEED_KB     := 600.0
-
-const ARROW_BASE_Y  := 50.0
-const ARROW_TIP_OFF := 52.0
-
-# Fraction of AROM range used as tolerance band at each extreme
-const TRIPOD_BAND := 0.25
-
 enum _S { WAITING, PLAYING, DONE }
 
 # ── scene resources ────────────────────────────────────────────────────────
@@ -60,7 +44,7 @@ var _arom_min        := 0.0
 var _arom_max        := 90.0
 var _arrow_l         := 0.0
 var _arrow_r         := 0.0
-var _force_threshold := FORCE_THRESHOLD
+var _force_threshold := GameDefs.Juicer.FORCE_THRESHOLD
 
 # ── TRIPOD-specific ────────────────────────────────────────────────────────
 var _tripod_ready := true
@@ -68,6 +52,8 @@ var _tripod_ready := true
 # ── release lock (HANDLE/GRIP) ─────────────────────────────────────────────
 # Arrow is frozen after each outcome until force drops below threshold.
 var _waiting_release := false
+
+var _highlight_duration: float = GameDefs.Juicer.HIGHLIGHT_DURATION   # adaptive; set from ROM in _setup_device
 
 
 # ──────────────────────────────────────────────────────────────────────────
@@ -84,12 +70,12 @@ func _ready() -> void:
 func _setup_fruits() -> void:
 	var vs := get_viewport_rect().size
 	var cx := vs.x * 0.5
-	var tw := FRUIT_COUNT * FRUIT_SPACING - FRUIT_SPACING * 0.5
+	var tw := GameDefs.Juicer.FRUIT_COUNT * GameDefs.Juicer.FRUIT_SPACING - GameDefs.Juicer.FRUIT_SPACING * 0.5
 	var sx := cx - tw * 0.5
 	var fy := vs.y * 0.2
 
-	for i in range(FRUIT_COUNT):
-		var fx := sx + i * FRUIT_SPACING
+	for i in range(GameDefs.Juicer.FRUIT_COUNT):
+		var fx := sx + i * GameDefs.Juicer.FRUIT_SPACING
 		var f  := _fruit_scene.instantiate()
 		f.position    = Vector2(fx, fy)
 		f.fruit_index = i
@@ -98,20 +84,20 @@ func _setup_fruits() -> void:
 		_fruit_xs.append(fx)
 
 	_arrow_l = _fruit_xs[0] - 100.0
-	_arrow_r = _fruit_xs[FRUIT_COUNT - 1] + 100.0
+	_arrow_r = _fruit_xs[GameDefs.Juicer.FRUIT_COUNT - 1] + 100.0
 	_arrow_x = cx
 
 
 func _setup_glasses() -> void:
 	var vs := get_viewport_rect().size
 	var cx := vs.x * 0.5
-	var tw := FRUIT_COUNT * FRUIT_SPACING - FRUIT_SPACING * 0.5
+	var tw := GameDefs.Juicer.FRUIT_COUNT * GameDefs.Juicer.FRUIT_SPACING - GameDefs.Juicer.FRUIT_SPACING * 0.5
 	var sx := cx - tw * 0.5
 	var gy := vs.y * 0.6
 
-	for i in range(FRUIT_COUNT):
+	for i in range(GameDefs.Juicer.FRUIT_COUNT):
 		var g := _glass_scene.instantiate()
-		g.position    = Vector2(sx + i * FRUIT_SPACING, gy)
+		g.position    = Vector2(sx + i * GameDefs.Juicer.FRUIT_SPACING, gy)
 		g.fruit_index = i
 		add_child(g)
 		_glasses.append(g)
@@ -131,14 +117,17 @@ func _setup_device() -> void:
 				_force_threshold = grip_rom.arom_max * 0.1
 		"TRIPOD":
 			if Appdata.selected_mechanism != null:
-				var arom := Appdata.selected_mechanism.get_current_arom()
-				_arom_min = arom[0] if arom[1] > arom[0] else 0.0
-				_arom_max = arom[1] if arom[1] > arom[0] else 15.0
+				
+				_arom_min = Appdata.selected_game.angle_min
+				_arom_max = Appdata.selected_game.angle_max
 		_:
 			pass
 
 	if HCcomm != null and HCcomm.device_is_connected and _mech_name in ["HANDLE", "GRIP", "TRIPOD"]:
 		_use_device = true
+
+	if Appdata.selected_game != null:
+		_highlight_duration = Appdata.selected_game.get_speed_mode_parameter(Appdata.selected_game.selected_difficulty)
 
 
 # ──────────────────────────────────────────────────────────────────────────
@@ -155,7 +144,7 @@ func _process(delta: float) -> void:
 		_S.PLAYING:
 			_tick(delta)
 			var _tgt: Vector2 = Vector2(_fruit_xs[_hl_idx], _fruits[_hl_idx].position.y) if _hl_idx >= 0 else Vector2.ZERO
-			AppDataTrial.set_game_context(str(_state), _arrow_x, ARROW_BASE_Y, _tgt.x, _tgt.y)
+			AppdataTrial.set_game_context(str(_state), _arrow_x, GameDefs.Juicer.ARROW_BASE_Y, _tgt.x, _tgt.y)
 		_S.DONE:
 			pass
 
@@ -175,18 +164,19 @@ func _tick(delta: float) -> void:
 	if _mech_name == "TRIPOD" and _use_device and HCcomm != null and HCcomm.device_is_connected:
 		if not _tripod_ready:
 			var dist := HCcomm.get_btw_distance()
-			var ready_thresh := _arom_max - (_arom_max - _arom_min) * TRIPOD_BAND
+			var ready_thresh := _arom_max - (_arom_max - _arom_min) * GameDefs.Juicer.TRIPOD_BAND
 			if dist >= ready_thresh:
 				_tripod_ready = true
 
-	if _game_timer >= GAME_DURATION:
+	if _game_timer >= GameDefs.Juicer.GAME_DURATION:
 		_end_game()
 		return
 
-	_ui.update_timer(GAME_DURATION - _game_timer)
+	_ui.update_timer(GameDefs.Juicer.GAME_DURATION - _game_timer)
 	_ui.update_score(_score)
+	_ui.update_target_timer(_highlight_duration - _hl_timer)
 
-	if _hl_timer >= HIGHLIGHT_DURATION:
+	if _hl_timer >= _highlight_duration:
 		_fruit_failure()
 		return
 
@@ -194,7 +184,7 @@ func _tick(delta: float) -> void:
 	if _mech_name == "TRIPOD" and _use_device:
 		on_target = true  # arrow auto-aims
 	else:
-		on_target = _hl_idx >= 0 and abs(_arrow_x - float(_fruit_xs[_hl_idx])) <= TARGET_RADIUS
+		on_target = _hl_idx >= 0 and abs(_arrow_x - float(_fruit_xs[_hl_idx])) <= GameDefs.Juicer.TARGET_RADIUS
 
 	var squeezing := _get_squeeze()
 
@@ -202,7 +192,7 @@ func _tick(delta: float) -> void:
 		if not _is_juicing:
 			_start_juicing()
 
-		_juice_prog = minf(_juice_prog + delta / JUICE_FILL_TIME, 1.0)
+		_juice_prog = minf(_juice_prog + delta / GameDefs.Juicer.JUICE_FILL_TIME, 1.0)
 		_glasses[_hl_idx].juice_level = _juice_prog
 		_fruits[_hl_idx].update_juice_extracted(_juice_prog)
 
@@ -237,9 +227,9 @@ func _update_arrow(delta: float) -> void:
 		_arrow_x = lerpf(_arrow_l, _arrow_r, t)
 	else:
 		if Input.is_action_pressed("ui_left"):
-			_arrow_x = maxf(_arrow_x - ARROW_SPEED_KB * delta, _arrow_l)
+			_arrow_x = maxf(_arrow_x - GameDefs.Juicer.ARROW_SPEED_KB * delta, _arrow_l)
 		elif Input.is_action_pressed("ui_right"):
-			_arrow_x = minf(_arrow_x + ARROW_SPEED_KB * delta, _arrow_r)
+			_arrow_x = minf(_arrow_x + GameDefs.Juicer.ARROW_SPEED_KB * delta, _arrow_r)
 
 
 func _get_squeeze() -> bool:
@@ -249,7 +239,7 @@ func _get_squeeze() -> bool:
 		return Input.is_action_pressed("ui_select")
 	if _mech_name == "TRIPOD":
 		var dist := HCcomm.get_btw_distance()
-		var squeeze_thresh := _arom_min + (_arom_max - _arom_min) * TRIPOD_BAND
+		var squeeze_thresh := _arom_min + (_arom_max - _arom_min) * GameDefs.Juicer.TRIPOD_BAND
 		return _tripod_ready and dist <= squeeze_thresh
 	return HCcomm.get_total_force() >= _force_threshold
 
@@ -278,13 +268,13 @@ func _draw() -> void:
 			col = Color(0.55, 0.55, 0.55, 0.65)   # grey: release grip first
 		else:
 			col = Color(1.0, 0.35, 0.05, 1.0)   # orange-red default
-			if _hl_idx >= 0 and abs(_arrow_x - float(_fruit_xs[_hl_idx])) <= TARGET_RADIUS:
+			if _hl_idx >= 0 and abs(_arrow_x - float(_fruit_xs[_hl_idx])) <= GameDefs.Juicer.TARGET_RADIUS:
 				col = Color(0.05, 1.0, 0.2, 1.0) if _is_juicing else Color(1.0, 0.95, 0.0, 1.0)
 
 	var shadow := Color(0.0, 0.0, 0.0, 0.55)
 	var ax     := _arrow_x
-	var base_y := ARROW_BASE_Y
-	var tip_y  := ARROW_BASE_Y + ARROW_TIP_OFF + bounce
+	var base_y := GameDefs.Juicer.ARROW_BASE_Y
+	var tip_y  := GameDefs.Juicer.ARROW_BASE_Y + GameDefs.Juicer.ARROW_TIP_OFF + bounce
 	var off    := 3.5
 
 	# Shadow pass
@@ -340,6 +330,7 @@ func _fruit_success() -> void:
 	_fruits[_hl_idx].update_juice_extracted(1.0)
 	_amaze.play()
 	_parts.burst(_glasses[_hl_idx].global_position, _glasses[_hl_idx].get_juice_color(), 12)
+	_glasses[_hl_idx].increment_count()
 	_ui.show_success_popup()
 	_ui.update_score(_score)
 
@@ -361,6 +352,14 @@ func _fruit_failure() -> void:
 		f.deselect()
 
 	await get_tree().create_timer(0.7).timeout
+
+	if _juice_prog > 0.0 and _hl_idx >= 0:
+		var drain_tw := create_tween()
+		drain_tw.tween_property(_glasses[_hl_idx], "juice_level", 0.0, 0.5) \
+			.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+		await drain_tw.finished
+		_glasses[_hl_idx].reset()
+
 	_busy = false
 	_spawn_fruit()
 
@@ -379,6 +378,8 @@ func _begin_game() -> void:
 	_hl_idx          = -1
 	_tripod_ready    = true
 	_waiting_release = false   # no lock for first fruit
+	for g in _glasses:
+		g.reset_count()
 	AppDataTrial.start_new_trial()
 	_ui.show_playing()
 	_bgm.play()
@@ -386,7 +387,7 @@ func _begin_game() -> void:
 
 
 func _spawn_fruit() -> void:
-	if _game_timer >= GAME_DURATION:
+	if _game_timer >= GameDefs.Juicer.GAME_DURATION:
 		_end_game()
 		return
 
@@ -402,15 +403,17 @@ func _spawn_fruit() -> void:
 		_waiting_release = true
 
 	var prev := _hl_idx
-	_hl_idx = randi() % FRUIT_COUNT
-	while _hl_idx == prev and FRUIT_COUNT > 1:
-		_hl_idx = randi() % FRUIT_COUNT
+	_hl_idx = randi() % GameDefs.Juicer.FRUIT_COUNT
+	while _hl_idx == prev and GameDefs.Juicer.FRUIT_COUNT > 1:
+		_hl_idx = randi() % GameDefs.Juicer.FRUIT_COUNT
 
 	for i in range(_fruits.size()):
 		if i == _hl_idx:
 			_fruits[i].highlight()
 		else:
 			_fruits[i].deselect()
+
+	_ui.set_target_timer_pos(float(_fruit_xs[_hl_idx]))
 
 
 func _end_game() -> void:
@@ -424,7 +427,10 @@ func _end_game() -> void:
 	ScAudioManager.play_gameover()
 	for f: Node in _fruits:
 		f.deselect()
-	_ui.show_game_over(_score, _targets, _successes, _failures)
+	var expected: int = Appdata.selected_game.expected_targets if Appdata.selected_game != null else _targets
+	var _card := Appdata.show_achievement(_score, _successes, expected)
+	_card.finished.connect(func(): _ui.show_game_over(_score, _successes, _targets, expected))
+	print("🏁 Juicer Over | Score:%d | %d/%d juiced (expected %d)" % [_score, _successes, _targets, expected])
 
 
 # ──────────────────────────────────────────────────────────────────────────

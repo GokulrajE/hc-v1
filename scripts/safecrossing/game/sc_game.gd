@@ -2,6 +2,8 @@ class_name SCGame
 
 extends Node2D
 
+
+
 @onready var car = $car
 @onready var spawner = $Spawner
 @onready var ui = $UI
@@ -12,7 +14,7 @@ var _game_state: GameState = GameState.WAITING
 var _is_game_started: bool = false
 var _event_delay_timer: float = 0.0
 
-const RESULT_DELAY: float = 0.8
+# GameDefs.SafeCrossing.RESULT_DELAY and GameDefs.SafeCrossing.TRIAL_DURATION moved to GameDefs.SafeCrossing
 
 var _scroll_manager: Node
 var _traffic_signal
@@ -31,8 +33,7 @@ var _last_pedestrian_line_y: float = -999999.0
 var _last_traffic_line_y: float = -999999.0
 
 # Trial duration and timing (60 seconds)
-const TRIAL_DURATION: float = 60.0
-var _trial_time_left: float = TRIAL_DURATION
+var _trial_time_left: float = GameDefs.SafeCrossing.TRIAL_DURATION
 
 # Trial statistics
 var _trial_targets: int = 0      # Total crossings attempted
@@ -40,8 +41,8 @@ var _trial_successes: int = 0    # Successful crossings
 var _trial_failures: int = 0     # Failed crossings (collisions)
 
 # Space bar braking system
-var _base_speed: float = SCConstants.BASE_SPEED
-var _target_speed: float = SCConstants.BASE_SPEED
+var _base_speed: float = GameDefs.SafeCrossing.BASE_SPEED
+var _target_speed: float = GameDefs.SafeCrossing.BASE_SPEED
 var _is_braking: bool = false
 const BRAKE_DECELERATION: float = 500.0
 const BRAKE_ACCELERATION: float = 300.0
@@ -127,7 +128,7 @@ func _physics_process(delta: float) -> void:
 
 		if int(Engine.get_physics_frames()) % 30 == 0:
 			print("⏱️ Trial: %.1f/%.0fs | 🔍 SCROLL: %.0f | PHASE: %d | COLLIDED: %s | SCORE: %d | SUCCESS: %d | FAIL: %d" % [
-				TRIAL_DURATION - _trial_time_left, TRIAL_DURATION, _scroll_manager.scroll_offset,
+				GameDefs.SafeCrossing.TRIAL_DURATION - _trial_time_left, GameDefs.SafeCrossing.TRIAL_DURATION, _scroll_manager.scroll_offset,
 				_current_phase, _phase_collided, _player_score, _trial_successes, _trial_failures
 			])
 
@@ -141,7 +142,7 @@ func _physics_process(delta: float) -> void:
 		_update_phase_display()
 
 	_run_game_state_machine(delta)
-	AppDataTrial.set_game_context(GameState.keys()[_game_state], car.position.x, car.position.y, 0.0, 0.0)
+	AppdataTrial.set_game_context(GameState.keys()[_game_state], car.position.x, car.position.y, 0.0, 0.0)
 
 
 # ============================================================================
@@ -202,9 +203,18 @@ func _run_game_state_machine(delta: float) -> void:
 func _initialize_game() -> void:
 	SCGameManager.change_state("start")
 	_reset_trial_stats()
-	_trial_time_left = TRIAL_DURATION
+	_trial_time_left = GameDefs.SafeCrossing.TRIAL_DURATION
 	if ui:
-		ui.update_timer_display(TRIAL_DURATION)
+		ui.update_timer_display(GameDefs.SafeCrossing.TRIAL_DURATION)
+	# Set adaptive scroll speed from ROM data (flat for full trial — no auto-ramp)
+	if Appdata.selected_game != null:
+		var phase_time := Appdata.selected_game.get_speed_mode_parameter(Appdata.selected_game.selected_difficulty)
+		_base_speed = GameDefs.SafeCrossing.PHASE_HEIGHT / maxf(phase_time, 0.5)
+		print("🚗 SafeCrossing base_speed=%.1f px/s (phase_time=%.2fs, expected=%d)" % [_base_speed, phase_time, Appdata.selected_game.expected_targets])
+	else:
+		push_error("SCGame: selected_game is null — base_speed stays at default %.1f" % _base_speed)
+	_target_speed     = _base_speed
+	SCGameManager.game_speed = _base_speed
 	AppDataTrial.start_new_trial()
 	ScAudioManager.play_background_music("res://assets/audio/sc_bg.mp3")
 	SCGameManager.change_state("playing")
@@ -311,7 +321,7 @@ func _on_signal_changed(is_green: bool) -> void:
 func _update_phase_display() -> void:
 	var phase_names = {1: "Empty Road", 2: "Pedestrians", 3: "Signal"}
 	var phase_name = phase_names.get(_current_phase, "Unknown")
-	var time_str = "%.1f/%.0fs" % [TRIAL_DURATION - _trial_time_left, TRIAL_DURATION]
+	var time_str = "%.1f/%.0fs" % [GameDefs.SafeCrossing.TRIAL_DURATION - _trial_time_left, GameDefs.SafeCrossing.TRIAL_DURATION]
 	ui.update_phase_display("%s [%s]" % [phase_name, time_str], _phase_timer)
 
 
@@ -356,7 +366,7 @@ func _check_crossing_lines() -> void:
 						print("❌ Hit pedestrian - no points")
 						_game_state = GameState.FAILURE
 					_has_scored_this_crossing = true
-					_event_delay_timer = RESULT_DELAY
+					_event_delay_timer = GameDefs.SafeCrossing.RESULT_DELAY
 					_is_braking = false
 					_target_speed = _base_speed
 					SCGameManager.game_speed = _base_speed
@@ -385,7 +395,7 @@ func _check_crossing_lines() -> void:
 						print("❌ Hit traffic car - no points")
 						_game_state = GameState.FAILURE
 					_has_scored_this_crossing = true
-					_event_delay_timer = RESULT_DELAY
+					_event_delay_timer = GameDefs.SafeCrossing.RESULT_DELAY
 					_is_braking = false
 					_target_speed = _base_speed
 					SCGameManager.game_speed = _base_speed
@@ -453,8 +463,12 @@ func _show_game_over_screen() -> void:
 	print("  Crossings: %d/%d successful" % [_trial_successes, _trial_targets])
 	var success_rate = (_trial_successes / float(_trial_targets) * 100.0) if _trial_targets > 0 else 0.0
 	print("  Success Rate: %.1f%%" % success_rate)
-	if ui and ui.has_method("show_game_over"):
-		ui.show_game_over(_player_score, _trial_targets, _trial_successes, _trial_failures)
+	var _expected_sc: int = Appdata.selected_game.expected_targets if Appdata.selected_game != null else 0
+	var _card := Appdata.show_achievement(_player_score, _trial_successes, _expected_sc)
+	_card.finished.connect(func():
+		if ui and ui.has_method("show_game_over"):
+			ui.show_game_over(_player_score, _trial_targets, _trial_successes, _trial_failures)
+	)
 
 
 func resume_game() -> void:

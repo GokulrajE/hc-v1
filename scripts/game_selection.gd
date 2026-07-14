@@ -156,27 +156,32 @@ func _update_info() -> void:
 
 func _on_catch_game_pressed() -> void:
 	Appdata.set_game("Catch")
-	get_tree().change_scene_to_file("res://scene/catch_game/catch_game.tscn")
+	Appdata.target_game_scene = "res://scene/catch_game/catch_game.tscn"
+	get_tree().change_scene_to_file("res://scene/mode_select.tscn")
 
 
 func _on_safe_crossing_pressed() -> void:
 	Appdata.set_game("Safe Crossing")
-	get_tree().change_scene_to_file("res://scenes/safecrossing/sc_game.tscn")
+	Appdata.target_game_scene = "res://scenes/safecrossing/sc_game.tscn"
+	get_tree().change_scene_to_file("res://scene/mode_select.tscn")
 
 
 func _on_tw_game_pressed() -> void:
 	Appdata.set_game("Table Wipping")
-	get_tree().change_scene_to_file("res://scene/tablewipping/tw_game.tscn")
+	Appdata.target_game_scene = "res://scene/tablewipping/tw_game.tscn"
+	get_tree().change_scene_to_file("res://scene/mode_select.tscn")
 
 
 func _on_ht_game_pressed() -> void:
 	Appdata.set_game("Hat Trick")
-	get_tree().change_scene_to_file("res://scene/hattrick/ht_game.tscn")
+	Appdata.target_game_scene = "res://scene/hattrick/ht_game.tscn"
+	get_tree().change_scene_to_file("res://scene/mode_select.tscn")
 
 
 func _on_rnr_game_pressed() -> void:
 	Appdata.set_game("Rain and Rise")
-	get_tree().change_scene_to_file("res://scene/rainandrise/rnr_game.tscn")
+	Appdata.target_game_scene = "res://scene/rainandrise/rnr_game.tscn"
+	get_tree().change_scene_to_file("res://scene/mode_select.tscn")
 
 
 func _on_sc3d_pressed() -> void:
@@ -186,7 +191,35 @@ func _on_sc3d_pressed() -> void:
 
 func _on_juicer_game_pressed() -> void:
 	Appdata.set_game("Juicer")
-	get_tree().change_scene_to_file("res://scene/juicer/game.tscn")
+	Appdata.target_game_scene = "res://scene/juicer/game.tscn"
+	get_tree().change_scene_to_file("res://scene/mode_select.tscn")
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.ctrl_pressed and event.keycode == KEY_R:
+			_go_to_reassessment()
+
+
+func _go_to_reassessment() -> void:
+	if Appdata.selected_mechanism == null:
+		return
+	Appdata.reassessing = true
+	match Appdata.selected_mechanism.name:
+		"HANDLE":
+			get_tree().change_scene_to_file("res://scene/handle_assessment.tscn")
+		"GRIP":
+			get_tree().change_scene_to_file("res://scene/grip_assessment.tscn")
+		"KNOB", "FINE KNOB", "KEY KNOB":
+			get_tree().change_scene_to_file("res://scene/knob_assessment.tscn")
+		"TRIPOD":
+			get_tree().change_scene_to_file("res://scene/tripod_assessment.tscn")
+		"PINCH":
+			get_tree().change_scene_to_file("res://scene/pinch_assessment.tscn")
+		"BUTTONS":
+			get_tree().change_scene_to_file("res://scene/buttons_assessment.tscn")
+		_:
+			Appdata.reassessing = false
 
 
 func _on_back_pressed() -> void:

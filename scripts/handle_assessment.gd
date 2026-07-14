@@ -362,7 +362,8 @@ func _on_save_pressed() -> void:
 		await get_tree().create_timer(1.5).timeout
 		# Navigate to game launcher after AROM assessment complete
 		var grip_rom := ROM.new("GRIP", true)
-		if grip_rom.is_arom_set():
+		if grip_rom.is_arom_set() or Appdata.reassessing:
+			Appdata.reassessing = false
 			get_tree().change_scene_to_file("res://scene/game_selection.tscn")
 		else:
 			get_tree().change_scene_to_file("res://scene/mechanism.tscn")
@@ -372,8 +373,11 @@ func _on_save_pressed() -> void:
 		push_error("HandGripAssessment: Failed to save assessment data for Handle")
 
 func _on_back_pressed() -> void:
-	
 	_cleanup()
+	if Appdata.reassessing:
+		Appdata.reassessing = false
+		get_tree().change_scene_to_file("res://scene/game_selection.tscn")
+		return
 	get_tree().change_scene_to_file("res://scene/mechanism.tscn")
 
 func _cleanup() -> void:

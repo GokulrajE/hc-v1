@@ -42,16 +42,17 @@ func show_playing() -> void:
 	exit_button.visible     = true
 
 
-func show_game_over(score: int, targets: int, successes: int) -> void:
+func show_game_over(score: int, successes: int, spawned: int, expected: int) -> void:
 	exit_button.visible     = false
 	game_over_board.visible = true
 
-	var rate := (float(successes) / float(targets) * 100.0) if targets > 0 else 0.0
+	var pct := (float(successes) / float(expected) * 100.0) if expected > 0 else 0.0
 	results_label.text = (
 		"Score: %d\n" +
+		"Stains Spawned: %d\n" +
 		"Stains Cleaned: %d / %d\n" +
-		"Success Rate: %.1f%%"
-	) % [score, successes, targets, rate]
+		"Achievement: %.1f%%"
+	) % [score, spawned, successes, expected, pct]
 
 	restart_button.grab_focus()
 

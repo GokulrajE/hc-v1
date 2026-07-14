@@ -1,48 +1,7 @@
 class_name TWGame
 extends Node2D
 
-# ============================================================
-# CONSTANTS
-# ============================================================
-const PLAY_LEFT:   float = 180.0
-const PLAY_RIGHT:  float = 1740.0
-const PLAY_TOP:    float = 180.0
-const PLAY_BOTTOM: float = 820.0
 
-const CLOTH_SPEED:  float = 420.0
-const CLOTH_WIDTH:  float = 80.0
-const CLOTH_HEIGHT: float = 50.0
-
-# Stain image display size (pixels)
-const STAIN_W: int = 300
-const STAIN_H: int = 220
-
-# Elliptical brush: narrow in X (forces sweeping), full-height in Y (covers whole stain)
-const BRUSH_RX: int   = 20          # 10px left and right from cloth centre
-const BRUSH_RY: int   = 110         # vertical radius = STAIN_H / 2 (full stain height)
-
-# Each pass reduces pixel alpha by this amount — needs ~3-4 sweeps to fully erase
-const ALPHA_DECREMENT: float = 0.30
-
-const ERASE_THRESHOLD:    float = 0.98
-const CENTER_TOUCH_ZONE:  float = 40.0  # radius to register centre touch (= CLOTH_WIDTH/2)
-const CENTER_DEAD_ZONE:   float = 5.0   # radius where no erase happens (must be < BRUSH_RX)
-const MIN_STAIN_DIST:     float = 500.0 # minimum distance between consecutive stains
-
-const GAME_DURATION:    float = 60.0
-const GLITTER_COUNT:    int   = 20
-const GLITTER_DURATION: float = 1.6
-
-const STAIN_TIMEOUT: float = 20.0   # seconds per stain before FAILURE
-const RESULT_DELAY:  float = 0.8    # pause after SUCCESS/FAILURE
-
-const STAIN_PATHS: Array = [
-	"res://assets/tablewipping/stainsblue.png",
-	"res://assets/tablewipping/stainsbrown.png",
-	"res://assets/tablewipping/stainssandel.png",
-	"res://assets/tablewipping/redstain.png",
-	"res://assets/tablewipping/whitestain.png",
-]
 
 # ============================================================
 # NODES
@@ -68,7 +27,9 @@ var score:     int = 0
 var n_targets: int = 0
 var n_success: int = 0
 
-var time_left: float = GAME_DURATION
+var time_left: float = 60.0
+
+var _stain_timeout: float = 20.0
 
 # ============================================================
 # CLOTH
@@ -107,6 +68,11 @@ var _grip_threshold:  float = 10.0
 var _waiting_release: bool  = false
 var _at_center:       bool  = false
 var _stain_pulse_tw:  Tween = null
+var _cleaner_visible: bool    = false
+var _cleaner_rest_pos: Vector2 = Vector2.ZERO
+var _shake_tw: Tween = null
+var _blink_tw: Tween = null
+var _is_spraying: bool = false
 
 
 # ============================================================
@@ -131,20 +97,13 @@ func _is_grip_mode() -> bool:
 
 
 func _load_assessment_data() -> void:
-	if _is_handle_mode() or _is_grip_mode():
-		# Load HANDLE ROM for angle range, GRIP ROM for squeeze threshold (same as RNR)
-		var handle_rom := ROM.new("HANDLE", true)
-		if handle_rom.is_arom_set():
-			_angle_min = handle_rom.arom_min
-			_angle_max = handle_rom.arom_max
-		var grip_rom := ROM.new("GRIP", true)
-		if grip_rom.is_arom_set():
-			_grip_threshold = grip_rom.arom_max * 0.1
-	elif Appdata.selected_mechanism != null:
-		var arom := Appdata.selected_mechanism.get_current_arom()
-		if arom[1] > arom[0]:
-			_angle_min = arom[0]
-			_angle_max = arom[1]
+	if Appdata.selected_game == null:
+		return
+	var g := Appdata.selected_game
+	_angle_min      = g.angle_min
+	_angle_max      = g.angle_max
+	_grip_threshold = g.grip_threshold
+	_stain_timeout  = g.get_speed_mode_parameter(g.selected_difficulty)
 
 
 # ============================================================
@@ -169,20 +128,20 @@ func _physics_process(delta: float) -> void:
 				return
 		else:
 			_waiting_release = false
-	if _game_state == GameState.MOVE and not is_animating:
+	if _game_state in [GameState.MOVE, GameState.SUCCESS, GameState.FAILURE]:
 		# Cloth X movement — knob angle (arrow keys as fallback)
 		var prev_x := cloth_x
 		if HCcomm.device_is_connected and Appdata.selected_mechanism != null:
 			var a_max: float = _angle_max if _angle_max != _angle_min else _angle_min + 1.0
 			cloth_x = remap(_get_knob_angle(), _angle_min, a_max,
-				PLAY_LEFT  + CLOTH_WIDTH * 0.5,
-				PLAY_RIGHT - CLOTH_WIDTH * 0.5)
+				GameDefs.TableWipping.PLAY_LEFT  + GameDefs.TableWipping.CLOTH_WIDTH * 0.5,
+				GameDefs.TableWipping.PLAY_RIGHT - GameDefs.TableWipping.CLOTH_WIDTH * 0.5)
 		else:
 			if Input.is_action_pressed("ui_left"):
-				cloth_x -= CLOTH_SPEED * delta
+				cloth_x -= GameDefs.TableWipping.CLOTH_SPEED * delta
 			if Input.is_action_pressed("ui_right"):
-				cloth_x += CLOTH_SPEED * delta
-		cloth_x = clamp(cloth_x, PLAY_LEFT + CLOTH_WIDTH * 0.5, PLAY_RIGHT - CLOTH_WIDTH * 0.5)
+				cloth_x += GameDefs.TableWipping.CLOTH_SPEED * delta
+		cloth_x = clamp(cloth_x, GameDefs.TableWipping.PLAY_LEFT + GameDefs.TableWipping.CLOTH_WIDTH * 0.5, GameDefs.TableWipping.PLAY_RIGHT - GameDefs.TableWipping.CLOTH_WIDTH * 0.5)
 		var dx: float = cloth_x - prev_x
 
 		# Sprite2D uses centre position; flip and skew based on movement direction
@@ -199,37 +158,55 @@ func _physics_process(delta: float) -> void:
 			var dist: float = abs(cloth_x - stain_center.x)
 			if _is_handle_mode() or _is_grip_mode():
 				var is_forcing := HCcomm.device_is_connected and HCcomm.get_total_force() >= _grip_threshold
-				var in_zone    := dist <= CENTER_TOUCH_ZONE and not center_touched and not is_animating
-				if in_zone and not _at_center:
-					_at_center = true
-					_start_stain_pulse()
+				var in_zone    := dist <= GameDefs.TableWipping.CENTER_TOUCH_ZONE
+				# Trigger bottle descent + blink on zone entry (before any press)
+				if in_zone and not center_touched and not is_animating:
+					if not _at_center:
+						_at_center = true
+						_stop_stain_pulse()
+					center_touched = true
+					_play_cleaner_animation()
 				elif not in_zone and _at_center and not center_touched:
 					_at_center = false
 					_stop_stain_pulse()
-				if in_zone and is_forcing:
-					_at_center = false
-					_stop_stain_pulse()
-					center_touched = true
-					_play_cleaner_animation()
-				if center_touched and not is_animating and is_forcing and dist > CENTER_DEAD_ZONE:
-					_try_erase()
+				if _cleaner_visible:
+					if is_forcing:
+						# Grip pressed: track hand, spray continuously, erase
+						_stop_blink()
+						spray_particles.emitting = true
+						spray_particles.global_position = nozzle.global_position
+						if not _is_spraying:
+							_start_spray()
+						cleaner.position.x = cloth_x
+						_cleaner_rest_pos.x = cloth_x
+						if dist > GameDefs.TableWipping.CENTER_DEAD_ZONE:
+							_try_erase()
+					else:
+						# Grip released: stop spray, blink waiting — bottle stays visible
+						if _is_spraying:
+							_stop_spray()
+						_start_blink()
 			else:
-				if dist <= CENTER_TOUCH_ZONE and not center_touched:
+				if dist <= GameDefs.TableWipping.CENTER_TOUCH_ZONE and not center_touched:
 					center_touched = true
 					_play_cleaner_animation()
-				if center_touched and not is_animating and dx != 0.0 and dist > CENTER_DEAD_ZONE:
-					_try_erase()
+				if center_touched and not is_animating:
+					if _is_spraying:
+						spray_particles.emitting = true
+						spray_particles.global_position = nozzle.global_position
+						if dist > GameDefs.TableWipping.CENTER_DEAD_ZONE:
+							_try_erase()
 
 		# Stain timeout check
 		if not stain_done:
 			_stain_timer -= delta
-			ui.update_stain_timer(_stain_timer, STAIN_TIMEOUT)
+			ui.update_stain_timer(_stain_timer, _stain_timeout)
 			if _stain_timer <= 0.0:
 				_on_stain_timeout()
 
 	_run_game_state_machine(delta)
 	var _tgt: Vector2 = stain_center if stain_sprite != null else Vector2.ZERO
-	AppDataTrial.set_game_context(GameState.keys()[_game_state], cloth_x, cloth_y, _tgt.x, _tgt.y)
+	AppdataTrial.set_game_context(GameState.keys()[_game_state], cloth_x, cloth_y, _tgt.x, _tgt.y)
 
 
 # ============================================================
@@ -254,7 +231,7 @@ func _run_game_state_machine(delta: float) -> void:
 		GameState.SPAWN:
 			if not _run_once:
 				_spawn_stain()
-				_stain_timer = STAIN_TIMEOUT
+				_stain_timer = _stain_timeout
 				_run_once = true
 				_game_state = GameState.MOVE
 
@@ -287,13 +264,13 @@ func _initialize_game() -> void:
 	score     = 0
 	n_targets = 0
 	n_success = 0
-	time_left = GAME_DURATION
+	time_left = GameDefs.TableWipping.GAME_DURATION
 	cloth.visible = true
 	_run_once = false
 	_waiting_release = false
 	_event_delay_timer = 0.0
 	ui.update_score(0)
-	ui.update_timer(GAME_DURATION)
+	ui.update_timer(GameDefs.TableWipping.GAME_DURATION)
 	ui.update_progress(0.0)
 	ui.show_playing()
 	AppDataTrial.start_new_trial()
@@ -307,8 +284,12 @@ func _end_game() -> void:
 	AppDataTrial.stop_trial(n_targets, n_success, n_targets - n_success)
 	ScAudioManager.stop_music()
 	ScAudioManager.play_gameover()
-	ui.show_game_over(score, n_targets, n_success)
-	print("🏁 TW Game Over | Score:%d | %d/%d cleaned" % [score, n_success, n_targets])
+
+	var g := Appdata.selected_game
+	var expected: int = g.expected_targets if g != null else n_targets
+	var _card := Appdata.show_achievement(score, n_success, expected)
+	_card.finished.connect(func(): ui.show_game_over(score, n_success, n_targets, expected))
+	print("🏁 TW Game Over | Score:%d | %d/%d cleaned (expected %d)" % [score, n_success, n_targets, expected])
 
 
 # ============================================================
@@ -321,20 +302,20 @@ func _spawn_stain() -> void:
 	_at_center     = false
 	_stop_stain_pulse()
 
-	# Random position — at least MIN_STAIN_DIST away from last stain
-	var mx: float = STAIN_W * 0.5 + 30.0
-	var my: float = STAIN_H * 0.5 + 30.0
+	# Random position — at least GameDefs.TableWipping.MIN_STAIN_DIST away from last stain
+	var mx: float = GameDefs.TableWipping.STAIN_W * 0.5 + 30.0
+	var my: float = GameDefs.TableWipping.STAIN_H * 0.5 + 30.0
 	var sx: float
 	var sy: float
 	for _i in range(20):
-		sx = randf_range(PLAY_LEFT + mx, PLAY_RIGHT - mx)
-		sy = randf_range(PLAY_TOP  + my, PLAY_BOTTOM - my)
-		if Vector2(sx, sy).distance_to(last_stain_center) >= MIN_STAIN_DIST:
+		sx = randf_range(GameDefs.TableWipping.PLAY_LEFT + mx, GameDefs.TableWipping.PLAY_RIGHT - mx)
+		sy = randf_range(GameDefs.TableWipping.PLAY_TOP  + my, GameDefs.TableWipping.PLAY_BOTTOM - my)
+		if Vector2(sx, sy).distance_to(last_stain_center) >= GameDefs.TableWipping.MIN_STAIN_DIST:
 			break
 	stain_center = Vector2(sx, sy)
 
 	# Pick random stain image
-	var img_path: String = STAIN_PATHS[randi() % STAIN_PATHS.size()]
+	var img_path: String = GameDefs.TableWipping.STAIN_PATHS[randi() % GameDefs.TableWipping.STAIN_PATHS.size()]
 
 	stain_image = Image.load_from_file(img_path)
 	if stain_image == null:
@@ -345,7 +326,7 @@ func _spawn_stain() -> void:
 	if stain_image.get_format() != Image.FORMAT_RGBA8:
 		stain_image.convert(Image.FORMAT_RGBA8)
 
-	stain_image.resize(STAIN_W, STAIN_H, Image.INTERPOLATE_BILINEAR)
+	stain_image.resize(GameDefs.TableWipping.STAIN_W, GameDefs.TableWipping.STAIN_H, Image.INTERPOLATE_BILINEAR)
 
 	# Count opaque pixels (the "real" stain area)
 	total_stain_pixels  = 0
@@ -359,7 +340,7 @@ func _spawn_stain() -> void:
 				total_stain_alpha  += a
 
 	if total_stain_alpha <= 0.0:
-		total_stain_alpha = float(STAIN_W * STAIN_H)   # fallback
+		total_stain_alpha = float(GameDefs.TableWipping.STAIN_W * GameDefs.TableWipping.STAIN_H)   # fallback
 	pixels_remaining = total_stain_pixels
 
 	# Build live texture
@@ -371,8 +352,8 @@ func _spawn_stain() -> void:
 	add_child(stain_sprite)
 
 	# World-space X bounds for quick overlap check
-	stain_world_left  = stain_center.x - STAIN_W * 0.5
-	stain_world_right = stain_center.x + STAIN_W * 0.5
+	stain_world_left  = stain_center.x - GameDefs.TableWipping.STAIN_W * 0.5
+	stain_world_right = stain_center.x + GameDefs.TableWipping.STAIN_W * 0.5
 
 	# Auto-snap cloth Y to stain Y
 	cloth_y = stain_center.y
@@ -380,18 +361,23 @@ func _spawn_stain() -> void:
 
 	last_stain_center = stain_center
 	n_targets   += 1
-	if (_is_handle_mode() or _is_grip_mode()) and HCcomm.device_is_connected:
-		_waiting_release = true
 	ui.update_progress(0.0)
 	ui.show_stain_timer(true)
-	ui.update_stain_timer(STAIN_TIMEOUT, STAIN_TIMEOUT)
+	ui.update_stain_timer(_stain_timeout, _stain_timeout)
 
 	print("🧹 Stain spawned at (%.0f,%.0f) | opaque pixels: %d" % [sx, sy, total_stain_pixels])
 
 
 func _clear_stain() -> void:
 	_stop_stain_pulse()
+	_stop_shake()
+	_stop_blink()
+	_stop_spray()
 	_at_center = false
+	is_animating = false
+	_cleaner_visible = false
+	cleaner.visible = false
+	cleaner.modulate.a = 1.0
 	if stain_sprite != null:
 		stain_sprite.queue_free()
 		stain_sprite  = null
@@ -404,8 +390,8 @@ func _clear_stain() -> void:
 # ============================================================
 func _try_erase() -> void:
 	# Quick X bounds check before doing any pixel work
-	var cloth_right := cloth_x + CLOTH_WIDTH * 0.5
-	var cloth_left  := cloth_x - CLOTH_WIDTH * 0.5
+	var cloth_right := cloth_x + GameDefs.TableWipping.CLOTH_WIDTH * 0.5
+	var cloth_left  := cloth_x - GameDefs.TableWipping.CLOTH_WIDTH * 0.5
 	if cloth_right < stain_world_left or cloth_left > stain_world_right:
 		return
 
@@ -417,11 +403,11 @@ func _erase_at(wx: float, wy: float) -> void:
 		return
 
 	# World → image pixel centre
-	var cx := int((wx - stain_center.x) + STAIN_W * 0.5)
-	var cy := int((wy - stain_center.y) + STAIN_H * 0.5)
+	var cx := int((wx - stain_center.x) + GameDefs.TableWipping.STAIN_W * 0.5)
+	var cy := int((wy - stain_center.y) + GameDefs.TableWipping.STAIN_H * 0.5)
 
-	var rx:    int   = BRUSH_RX
-	var ry:    int   = BRUSH_RY
+	var rx:    int   = GameDefs.TableWipping.BRUSH_RX
+	var ry:    int   = GameDefs.TableWipping.BRUSH_RY
 	var rx_sq: float = float(rx * rx)
 	var ry_sq: float = float(ry * ry)
 	var tw:    int   = stain_image.get_width()
@@ -440,7 +426,7 @@ func _erase_at(wx: float, wy: float) -> void:
 				continue
 			var c := stain_image.get_pixel(px, py)
 			if c.a > 0.01:
-				var removed := minf(c.a, ALPHA_DECREMENT)
+				var removed := minf(c.a, GameDefs.TableWipping.ALPHA_DECREMENT)
 				c.a -= removed
 				if c.a <= 0.01:
 					pixels_remaining -= 1
@@ -452,7 +438,7 @@ func _erase_at(wx: float, wy: float) -> void:
 		stain_texture.update(stain_image)
 		var pct := total_alpha_removed / total_stain_alpha
 		ui.update_progress(minf(pct, 1.0))
-		if pct >= ERASE_THRESHOLD:
+		if pct >= GameDefs.TableWipping.ERASE_THRESHOLD:
 			_on_stain_cleared()
 
 
@@ -464,15 +450,18 @@ func _on_stain_cleared() -> void:
 	n_success += 1
 	if stain_sprite != null:
 		stain_sprite.visible = false
+	_hide_cleaner()
 	_show_glitter_stars()
 	print("✅ Stain cleared! Score: %d" % score)
 	ScAudioManager.play_sc_success()
 	ui.update_score(score)
 	ui.show_stain_timer(false)
-	var stain_top := Vector2(stain_center.x, stain_center.y - STAIN_H * 0.5)
+	var stain_top := Vector2(stain_center.x, stain_center.y - GameDefs.TableWipping.STAIN_H * 0.5)
 	ui.show_success_popup(stain_top)
 	# State machine handles the delay and next spawn
-	_event_delay_timer = GLITTER_DURATION
+	if _is_handle_mode() or _is_grip_mode():
+		_waiting_release = true
+	_event_delay_timer = GameDefs.TableWipping.GLITTER_DURATION
 	_game_state = GameState.SUCCESS
 	_run_once = false
 
@@ -480,10 +469,11 @@ func _on_stain_cleared() -> void:
 func _on_stain_timeout() -> void:
 	if stain_done:
 		return
+	stain_done = true
 	print("⏰ Stain timeout — moving to next stain")
 	ui.show_stain_timer(false)
 	_clear_stain()
-	_event_delay_timer = RESULT_DELAY
+	_event_delay_timer = GameDefs.TableWipping.RESULT_DELAY
 	_game_state = GameState.FAILURE
 	_run_once = false
 
@@ -491,9 +481,9 @@ func _on_stain_timeout() -> void:
 func _show_glitter_stars() -> void:
 	if _glitter_star_tex == null:
 		return
-	var half_w := STAIN_W * 0.45
-	var half_h := STAIN_H * 0.45
-	for _i in range(GLITTER_COUNT):
+	var half_w := GameDefs.TableWipping.STAIN_W * 0.45
+	var half_h := GameDefs.TableWipping.STAIN_H * 0.45
+	for _i in range(GameDefs.TableWipping.GLITTER_COUNT):
 		var star := Sprite2D.new()
 		star.texture  = _glitter_star_tex
 		star.z_index  = 5
@@ -522,7 +512,7 @@ func _show_glitter_stars() -> void:
 		blink_tw.tween_property(star, "scale", bs * 0.6, 0.18).set_trans(Tween.TRANS_SINE)
 
 		# Lifecycle: fade in → hold → fade out → free
-		var hold    := maxf(GLITTER_DURATION - delay - 0.15 - 0.4, 0.05)
+		var hold    := maxf(GameDefs.TableWipping.GLITTER_DURATION - delay - 0.15 - 0.4, 0.05)
 		var life_tw := create_tween()
 		life_tw.tween_interval(delay)
 		life_tw.tween_property(star, "modulate:a", 1.0, 0.15)
@@ -562,37 +552,90 @@ func _stop_stain_pulse() -> void:
 func _play_cleaner_animation() -> void:
 	is_animating    = true
 	cleaner.visible = true
+	cleaner.modulate.a = 1.0
 
-	# Compute target position so nozzle lands on the top-centre of the stain.
+	# Compute target position so nozzle lands on the stain centre.
 	cleaner.position = Vector2(stain_center.x, 0.0)
 	var nozzle_offset: Vector2 = nozzle.global_position - cleaner.global_position
-	var stain_top: Vector2     = Vector2(stain_center.x, stain_center.y - STAIN_H * 0.5)
+	var stain_top: Vector2     = Vector2(stain_center.x, stain_center.y - GameDefs.TableWipping.STAIN_H * 0.5)
 	var target_pos: Vector2    = stain_top - nozzle_offset
 
-	# Start off-screen above
+	# Start off-screen above, then slide in
 	cleaner.position = Vector2(target_pos.x, -200.0)
-
-	# Slide in so nozzle hits stain center
 	var tween := create_tween()
 	tween.tween_property(cleaner, "position", target_pos, 0.5) \
 		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
 	await tween.finished
 
-	# Spray from nozzle tip
+	_cleaner_rest_pos = target_pos
+	_cleaner_visible  = true
+	is_animating      = false
+	if _is_handle_mode() or _is_grip_mode():
+		# Blink to signal "press grip now"
+		_start_blink()
+	else:
+		# Knob mode: auto-spray immediately after descent
+		_start_spray()
+
+
+func _start_blink() -> void:
+	if _blink_tw and _blink_tw.is_valid():
+		return
+	_blink_tw = create_tween().set_loops()
+	_blink_tw.tween_property(cleaner, "modulate:a", 0.25, 0.28).set_trans(Tween.TRANS_SINE)
+	_blink_tw.tween_property(cleaner, "modulate:a", 1.0,  0.28).set_trans(Tween.TRANS_SINE)
+
+
+func _stop_blink() -> void:
+	if _blink_tw and _blink_tw.is_valid():
+		_blink_tw.kill()
+	_blink_tw = null
+	if is_instance_valid(cleaner):
+		cleaner.modulate.a = 1.0
+
+
+func _start_spray() -> void:
+	_is_spraying = true
 	spray_particles.global_position = nozzle.global_position
-	spray_particles.restart()
+	spray_particles.emitting = true
 	ScAudioManager.play_tw_spray()
-	await get_tree().create_timer(0.9).timeout
 
-	# Slide back out to top
-	tween = create_tween()
-	tween.tween_property(cleaner, "position",
-		Vector2(target_pos.x, -200.0), 0.4) \
+
+func _stop_spray() -> void:
+	_is_spraying = false
+	spray_particles.emitting = false
+
+
+func _start_shake() -> void:
+	if _shake_tw and _shake_tw.is_valid():
+		return
+	var ox := 10.0
+	_shake_tw = create_tween().set_loops()
+	_shake_tw.tween_property(cleaner, "position:x", _cleaner_rest_pos.x + ox, 0.04).set_trans(Tween.TRANS_SINE)
+	_shake_tw.tween_property(cleaner, "position:x", _cleaner_rest_pos.x - ox, 0.04).set_trans(Tween.TRANS_SINE)
+	_shake_tw.tween_property(cleaner, "position:x", _cleaner_rest_pos.x,      0.03).set_trans(Tween.TRANS_SINE)
+
+
+func _stop_shake() -> void:
+	if _shake_tw and _shake_tw.is_valid():
+		_shake_tw.kill()
+	_shake_tw = null
+	if is_instance_valid(cleaner):
+		cleaner.position.x = _cleaner_rest_pos.x
+
+
+func _hide_cleaner() -> void:
+	if not _cleaner_visible:
+		return
+	_stop_blink()
+	_stop_spray()
+	_cleaner_visible = false
+	center_touched   = false
+	cleaner.modulate.a = 1.0
+	var hide_tw := create_tween()
+	hide_tw.tween_property(cleaner, "position:y", -200.0, 0.3) \
 		.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_BACK)
-	await tween.finished
-
-	cleaner.visible = false
-	is_animating    = false
+	hide_tw.tween_callback(func(): cleaner.visible = false)
 
 
 # ============================================================

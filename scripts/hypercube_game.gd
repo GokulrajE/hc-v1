@@ -5,11 +5,7 @@ extends Resource
 ## Game metadata
 var name: String = ""
 var movement: String = ""  
-## Game parameters
-var reach_speed: float = 1.0 
-var game_speed: float = 0.0 
-var game_parameter: float = 0.0  
-var game_duration: float = 60.0  
+
 
 ## Current trial statistics (reset each trial)
 var current_targets: int = 0
@@ -31,81 +27,53 @@ var session_number: int = 1
 var trial_number_day: int = 1
 var trial_number_session: int = 1
 
+## Game speed and parameters (adaptive)
+var EASY_SPEED: float = 1.0
+var NORMAL_SPEED: float = 1.0
+var HARD_SPEED: float = 1.0
+var EXPECTED_TARGETS: int = 0
+var selected_difficulty: String = "normal"
+## Assessment-derived fields (populated by load_assessment_data)
+var angle_min:        float = 0.0
+var angle_max:        float = 110.0
+var grip_threshold:   float = 10.0
+var avg_reach_time:   float = 4.0
+var grip_reach_time:  float = 0.0
 
-func _init(game_name: String = "", mechanism_name: String = "", reach_spd: float = 1.0) -> void:
+## TW adaptive stain timeout tiers
+var base_stain_time:      float = 6.0
+var stain_timeout_easy:   float = 8.0
+var stain_timeout_normal: float = 6.0
+var stain_timeout_hard:   float = 4.0
+var expected_targets:     int   = 8     # targets achievable at normal difficulty in 60 s
+
+
+## RnR adaptive highlight duration tiers  (action window = 1.0 s RAIN_TO_GROW)
+var rnr_highlight_easy:   float = 7.0
+var rnr_highlight_normal: float = 5.0
+var rnr_highlight_hard:   float = 3.0
+var rnr_expected_targets: int   = 9
+
+## Juicer adaptive highlight duration tiers  (action window = 3.0 s JUICE_FILL_TIME)
+var juicer_highlight_easy:   float = 9.0
+var juicer_highlight_normal: float = 7.0
+var juicer_highlight_hard:   float = 5.0
+var juicer_expected_targets: int   = 7
+
+## HatTrick adaptive ball speed tiers  (ball fall dist = 840 px, no action window)
+## speed = 840 / fall_time  →  faster speed = less time for player
+var ht_ball_speed_easy:   float = 140.0   # 840 / (avg_reach + 2)
+var ht_ball_speed_normal: float = 210.0   # 840 / avg_reach
+var ht_ball_speed_hard:   float = 420.0   # 840 / max(avg_reach - 2, 1.5)
+var ht_expected_targets:  int   = 12
+
+
+func _init(game_name: String = "", mechanism_name: String = "") -> void:
 	name = game_name.to_upper() if game_name else "UNKNOWN"
 	movement = mechanism_name.to_upper() if mechanism_name else ""
-	reach_speed = clamp(reach_spd, 0.5, 2.0)
-	game_duration = 60.0
-	_calculate_game_speed()
+	compute_speed_mode_parameter(Appdata.selected_mechanism)
 
 
-## Calculate game speed based on reach speed
-func _calculate_game_speed() -> void:
-	# Scale game speed: reach_speed 1.0 = base speed 100
-	game_speed = reach_speed * 100.0
-	print("✓ Game speed calculated: %.0f (reach speed: %.2f)" % [game_speed, reach_speed])
-
-
-## Update reach speed and recalculate game speed
-func set_reach_speed(spd: float) -> void:
-	reach_speed = clamp(spd, 0.5, 2.0)
-	_calculate_game_speed()
-	print("✓ Reach speed for '%s' set to %.2f | Game speed: %.0f" % [name, reach_speed, game_speed])
-
-
-## Set game-specific parameter (e.g., reach duration, difficulty level)
-func set_game_parameter(param: float) -> void:
-	game_parameter = param
-	print("✓ Game parameter set to %.2f" % game_parameter)
-
-
-
-## Update current trial statistics
-func update_targets_hits_misses(targets: int, hits: int, misses: int) -> void:
-	current_targets = targets
-	current_hits = hits
-	current_misses = misses
-
-	# Add to cumulative
-	cumulative_targets += targets
-	cumulative_hits += hits
-	cumulative_misses += misses
-
-	print("📊 Trial Stats: Targets=%d, Hits=%d, Misses=%d" % [targets, hits, misses])
-	print("📈 Cumulative: Targets=%d, Hits=%d, Misses=%d" % [cumulative_targets, cumulative_hits, cumulative_misses])
-
-
-## Get success rate for current trial
-func get_current_success_rate() -> float:
-	if current_targets == 0:
-		return 0.0
-	return (current_hits / float(current_targets)) * 100.0
-
-
-## Get success rate for all trials (cumulative)
-func get_cumulative_success_rate() -> float:
-	if cumulative_targets == 0:
-		return 0.0
-	return (cumulative_hits / float(cumulative_targets)) * 100.0
-
-
-## Award star for achievement
-func award_star() -> void:
-	cumulative_stars += 1
-	current_star = 1
-	today_stars += 1
-	print("⭐ Star awarded! Total: %d | Today: %d" % [cumulative_stars, today_stars])
-
-
-## Reset current trial star count
-func reset_trial_star() -> void:
-	current_star = 0
-
-
-## Check if achievement unlocked today
-func is_achieved_today() -> bool:
-	return today_stars > 0
 
 
 ## Reset all cumulative scores (start fresh session)
@@ -133,3 +101,88 @@ func update_trial_numbers(sess_num: int, trial_day: int, trial_sess: int) -> voi
 	trial_number_day = trial_day
 	trial_number_session = trial_sess
 	print("📍 Updated: Session=%d, Trial Day=%d, Trial Session=%d" % [session_number, trial_day, trial_sess])
+func get_speed_for(difficulty: String) -> float:
+	match difficulty.to_lower():
+		"easy":   return EASY_SPEED
+		"normal": return NORMAL_SPEED
+		"hard":   return HARD_SPEED
+		_:        return NORMAL_SPEED
+
+func get_expected_targets_for(difficulty: String) -> int:
+	var speed := get_speed_for(difficulty)
+	match name:
+		"TABLE WIPPING": return maxi(int(60.0 / (speed + 0.8)), 1)
+		"RAIN AND RISE": return maxi(int(60.0 / (speed + 0.6)), 1)
+		"JUICER":        return maxi(int(60.0 / (speed + 1.0)), 1)
+		"HAT TRICK":     return maxi(int(60.0 / (speed + 0.65)), 1)
+		"CATCH":         return maxi(int(60.0 / (speed + 0.65)), 1)
+		"SAFE CROSSING": return maxi(int(120.0 / (3.0 * speed + 1.6)), 1)
+		_:               return maxi(int(60.0 / (speed + 1.0)), 1)
+
+func get_speed_mode_parameter(difficulty: String) -> float:
+	match difficulty:
+		"easy":
+			set_expected_targets(EASY_SPEED)
+			return EASY_SPEED
+		"normal":
+			set_expected_targets(NORMAL_SPEED)
+			return NORMAL_SPEED
+		"hard":
+			set_expected_targets(HARD_SPEED)
+			return HARD_SPEED
+		_:
+			return NORMAL_SPEED  # Default to normal if unknown
+func compute_speed_mode_parameter(mechanism: HyperCubeMechanism) -> void:
+	if mechanism == null:
+		return
+	var mech := mechanism.name.to_upper()
+	var h_reach := 0.0
+	var g_reach := 0.0
+	if mech == "HANDLE" or mech == "GRIP":
+		var h_rom := ROM.new("HANDLE", true)
+		var g_rom := ROM.new("GRIP",   true)
+		if h_rom.is_arom_set():
+			angle_min      = h_rom.arom_min
+			angle_max      = h_rom.arom_max
+			h_reach        = h_rom.reaching_time
+		if g_rom.is_arom_set():
+			grip_threshold = g_rom.arom_max * 0.1
+			g_reach        = g_rom.reaching_time
+	else:
+		var arom := mechanism.get_current_arom()
+		if arom.size() >= 2:
+			angle_min = arom[0]
+			angle_max = arom[1]
+		var rom = mechanism.get_current_rom()
+		if rom != null:
+			h_reach = rom.reaching_time
+
+	avg_reach_time  = maxf(h_reach / 5.0, 1.0) if h_reach > 0.0 else 4.0
+	grip_reach_time = g_reach / 5.0 if g_reach > 0.0 else 0.0
+
+	# Action window = fixed time the player has to complete the action per target
+	var action_window: float
+	match name:
+		"RAIN AND RISE": action_window = 1.0   # RAIN_TO_GROW duration
+		"JUICER":        action_window = 3.0   # JUICE_FILL_TIME duration
+		"HAT TRICK":     action_window = 0.0   # ball falls freely — no fixed window
+		"CATCH":         action_window = 0.0   # object falls freely — no fixed window
+		"SAFE CROSSING": action_window = 2.0   # braking + crossing window
+		_:               action_window = 2.0   # TABLE WIPPING: wipe window
+
+	var base_time := avg_reach_time + grip_reach_time + action_window
+	EASY_SPEED   = base_time + 2.0
+	NORMAL_SPEED = base_time
+	HARD_SPEED   = maxf(base_time - 2.0, (1.0+action_window))
+	
+
+## set expected targets based on current game and difficulty
+func set_expected_targets(speed: float) -> void:
+	match name:
+		"TABLE WIPPING": expected_targets = maxi(int(60.0 / (speed + 0.8)), 1)   # RESULT_DELAY 0.8
+		"RAIN AND RISE": expected_targets = maxi(int(60.0 / (speed + 0.6)), 1)   # RESULT_DELAY 0.6
+		"JUICER":        expected_targets = maxi(int(60.0 / (speed + 1.0)), 1)   # result+spawn ~1.0
+		"HAT TRICK":     expected_targets = maxi(int(60.0 / (speed + 0.65)), 1)  # RESULT+SPAWN 0.65
+		"CATCH":         expected_targets = maxi(int(60.0 / (speed + 0.65)), 1)
+		"SAFE CROSSING": expected_targets = maxi(int(120.0 / (3.0 * speed + 1.6)), 1)  # 2 targets per 3-phase cycle
+		_:               expected_targets = maxi(int(60.0 / (speed + 1.0)), 1)

@@ -13,6 +13,8 @@ var trail_stop_time:float
 var user_data: HyperCubeUserData
 var selected_mechanism : HyperCubeMechanism
 var selected_game : HyperCubeGame
+var target_game_scene: String = ""
+var reassessing: bool = false
 func initilize_user(hospital_id: String) -> void:
 	# Initialize user data
 	start_time = Datamanager.get_formatted_datetime()
@@ -63,7 +65,14 @@ static func close_connection() -> void:
 func set_mechanism(mech_name: String,) -> void:
 	selected_mechanism = HyperCubeMechanism.new(mech_name,current_session_number)
 
-func set_game(game_name: String, reach_speed: float = 1.0) -> void:
-	selected_game = HyperCubeGame.new(game_name, selected_mechanism.name, reach_speed)
+func set_game(game_name: String) -> void:
+	selected_game = HyperCubeGame.new(game_name, selected_mechanism.name)
 
-	
+
+func show_achievement(score: int, successes: int, expected: int) -> AchievementCard:
+	var gname: String = selected_game.name if selected_game != null else ""
+	var card_scene: PackedScene = load("res://scene/achievement_card.tscn")
+	var card: AchievementCard = card_scene.instantiate() as AchievementCard
+	get_tree().root.add_child(card)
+	card.setup(score, successes, expected, gname)
+	return card

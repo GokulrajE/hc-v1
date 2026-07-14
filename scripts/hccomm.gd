@@ -46,14 +46,24 @@ var moving_average_length: int = 5
 var moving_average_counter: int = 0
 var moving_average_value: float = 0.0
 
+# Disconnect detection
+const DATA_TIMEOUT_SEC: float = 2.5
+var _last_data_time: float = 0.0
+
 func _ready():
 	load_data_format()
 	skip_checksum_validation = true
-	
 
-func _process(_delta: float):
+
+func _process(delta: float):
 	if manager:
 		manager.poll_events()
+
+	if device_is_connected:
+		_last_data_time += delta
+		if _last_data_time >= DATA_TIMEOUT_SEC:
+			print("HCComm: no data for %.1fs — device disconnected" % DATA_TIMEOUT_SEC)
+			_do_disconnect()
 
 
 func _exit_tree() -> void:
@@ -94,6 +104,7 @@ func _parse_packets() -> void:
 			if skip_checksum_validation or checksum_calc == checksum_received:
 				payload_bytes = payload
 				_update_device_data()
+				_last_data_time = 0.0
 				new_device_data.emit()
 				packet_count += 1
 				if packet_count % 100 == 0:
@@ -276,6 +287,7 @@ func connect_device(port: String, baud: int) -> void:
 	if ok:
 		print("✓ HCComm: %s opened!" % port)
 		device_is_connected = true
+		_last_data_time = 0.0
 		device_connected.emit()
 	else:
 		push_error("✗ HCComm: failed to open %s" % port)
@@ -283,10 +295,14 @@ func connect_device(port: String, baud: int) -> void:
 		device_disconnected.emit()
 
 func disconnect_device() -> void:
+	_do_disconnect()
+
+func _do_disconnect() -> void:
 	if manager and _active_port != "" and manager.is_open(_active_port):
 		manager.close(_active_port)
 		print("HCComm: %s closed." % _active_port)
 	device_is_connected = false
+	_last_data_time = 0.0
 	device_disconnected.emit()
 	manager = null
 	_active_port = ""

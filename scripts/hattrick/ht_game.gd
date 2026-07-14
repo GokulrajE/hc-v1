@@ -1,29 +1,6 @@
 class_name HTGame
 extends Node2D
 
-# ============================================================
-# CONSTANTS
-# ============================================================
-const PLAY_LEFT:  float = 150.0
-const PLAY_RIGHT: float = 1770.0
-
-const HAT_Y:      float = 860.0
-const HAT_SPEED:  float = 700.0
-const HAT_HALF_W: float = 120.0
-
-const BALL_SPEED:  float = 380.0
-const BALL_RADIUS: float = 45.0
-
-const SPAWN_DELAY:   float = 0.05   # small gap after spawning before MOVE starts
-const RESULT_DELAY:  float = 0.6    # pause after catch/miss before next ball
-
-const GAME_DURATION: float = 60.0
-
-const BALL_SCALE: float = 0.7
-
-# ============================================================
-# NODES
-# ============================================================
 @onready var hat_sprite: Sprite2D = $HatSprite
 @onready var ui                   = $HTUI
 
@@ -45,23 +22,37 @@ var score:     int = 0
 var n_targets: int = 0
 var n_success: int = 0
 var n_failure: int = 0
-var time_left: float = GAME_DURATION
+var time_left: float = 0.0
 
+#Get Rom
+var a_min: float = 0.0
+var a_max: float = 0.0
+var arom: Array = []
 # Hat
-var hat_x: float = 960.0
+var hat_x: float = GameDefs.HatTrick.HAT_START_X
 
 # Current single falling object (one ball at a time)
 var _ball_sprite: Sprite2D = null
+var _ball_tex:    Texture2D = null
 
-var _ball_tex: Texture2D = null
+var _ball_speed: float = GameDefs.HatTrick.BALL_SPEED   # adaptive; overridden from ROM in _load_assessment_data
+
+
+
 
 
 # ============================================================
 # READY
 # ============================================================
 func _ready() -> void:
+	if Appdata.selected_mechanism == null:
+		push_error("HTGame: No mechanism selected in Appdata")
+		return
+	arom = Appdata.selected_mechanism.get_current_arom()
+	a_min = arom[0]
+	a_max = arom[1] if arom[1] != arom[0] else arom[0] + 1.0
 	_ball_tex = load("res://assets/hattrick/BowlingBallSprite.png")
-	hat_sprite.position = Vector2(960.0, HAT_Y)
+	hat_sprite.position = Vector2(GameDefs.HatTrick.HAT_START_X, GameDefs.HatTrick.HAT_Y)
 	hat_sprite.visible  = false
 	ui.show_start()
 
@@ -86,22 +77,20 @@ func _physics_process(delta: float) -> void:
 
 	_run_game_state_machine(delta)
 	var _tgt: Vector2 = _ball_sprite.position if _ball_sprite != null else Vector2.ZERO
-	AppDataTrial.set_game_context(GameState.keys()[_game_state], hat_x, HAT_Y, _tgt.x, _tgt.y)
+	AppdataTrial.set_game_context(GameState.keys()[_game_state], hat_x, GameDefs.HatTrick.HAT_Y, _tgt.x, _tgt.y)
 
 
 func _update_hat(delta: float) -> void:
 	if HCcomm.device_is_connected and Appdata.selected_mechanism != null:
-		var arom := Appdata.selected_mechanism.get_current_arom()
-		var a_min: float = arom[0]
-		var a_max: float = arom[1] if arom[1] != arom[0] else arom[0] + 1.0
+		
 		hat_x = remap(_get_knob_angle(), a_min, a_max,
-				PLAY_LEFT + HAT_HALF_W, PLAY_RIGHT - HAT_HALF_W)
+				GameDefs.HatTrick.PLAY_LEFT + GameDefs.HatTrick.HAT_HALF_W, GameDefs.HatTrick.PLAY_RIGHT - GameDefs.HatTrick.HAT_HALF_W)
 	else:
 		if Input.is_action_pressed("ui_left"):
-			hat_x -= HAT_SPEED * delta
+			hat_x -= GameDefs.HatTrick.HAT_SPEED * delta
 		if Input.is_action_pressed("ui_right"):
-			hat_x += HAT_SPEED * delta
-	hat_x = clamp(hat_x, PLAY_LEFT + HAT_HALF_W, PLAY_RIGHT - HAT_HALF_W)
+			hat_x += GameDefs.HatTrick.HAT_SPEED * delta
+	hat_x = clamp(hat_x, GameDefs.HatTrick.PLAY_LEFT + GameDefs.HatTrick.HAT_HALF_W, GameDefs.HatTrick.PLAY_RIGHT - GameDefs.HatTrick.	HAT_HALF_W)
 	hat_sprite.position.x = hat_x
 
 
@@ -140,7 +129,7 @@ func _run_game_state_machine(delta: float) -> void:
 		GameState.SPAWNBALL:
 			if _event_delay_timer <= 0.0 and not _run_once:
 				_spawn_ball()
-				_event_delay_timer = SPAWN_DELAY
+				_event_delay_timer = GameDefs.HatTrick.SPAWN_DELAY
 				_run_once = true
 			else:
 				_event_delay_timer -= delta
@@ -149,13 +138,13 @@ func _run_game_state_machine(delta: float) -> void:
 
 		GameState.MOVE:
 			if is_instance_valid(_ball_sprite):
-				_ball_sprite.position.y += BALL_SPEED * delta
+				_ball_sprite.position.y += _ball_speed * delta
 				var ball_y := _ball_sprite.position.y
 
-				if ball_y >= HAT_Y - 80.0:
+				if ball_y >= GameDefs.HatTrick.HAT_Y - 80.0:
 					# Reached hat level — check overlap
 					var dx: float = absf(_ball_sprite.position.x - hat_x)
-					if dx <= HAT_HALF_W + BALL_RADIUS:
+					if dx <= GameDefs.HatTrick.HAT_HALF_W + GameDefs.HatTrick.BALL_RADIUS:
 						_is_ball_caught = true
 					else:
 						_is_ball_missed = true
@@ -167,11 +156,11 @@ func _run_game_state_machine(delta: float) -> void:
 
 			if _is_ball_caught:
 				_on_catch()
-				_event_delay_timer = RESULT_DELAY
+				_event_delay_timer = GameDefs.HatTrick.RESULT_DELAY
 				_game_state = GameState.SUCCESS
 			elif _is_ball_missed:
 				_on_miss()
-				_event_delay_timer = RESULT_DELAY
+				_event_delay_timer = GameDefs.HatTrick.RESULT_DELAY
 				_game_state = GameState.FAILURE
 
 		GameState.SUCCESS, GameState.FAILURE:
@@ -194,11 +183,12 @@ func _run_game_state_machine(delta: float) -> void:
 # GAME LIFECYCLE
 # ============================================================
 func _initialize_game() -> void:
+	# Reset game state
 	score     = 0
 	n_targets = 0
 	n_success = 0
 	n_failure = 0
-	time_left = GAME_DURATION
+	time_left = GameDefs.HatTrick.GAME_DURATION
 	hat_x     = 960.0
 	hat_sprite.position.x = hat_x
 	hat_sprite.visible    = true
@@ -206,11 +196,18 @@ func _initialize_game() -> void:
 	_is_ball_missed  = false
 	_run_once        = false
 	_event_delay_timer = 0.0
-
+	# Set UI to initial state
 	ui.update_score(0)
-	ui.update_timer(GAME_DURATION)
+	ui.update_timer(GameDefs.HatTrick.GAME_DURATION)
 	ui.show_playing()
-
+	# get_speed_mode_parameter returns fall time (s); convert to px/s over 840px fall distance
+	if Appdata.selected_game != null:
+		var fall_time := Appdata.selected_game.get_speed_mode_parameter(Appdata.selected_game.selected_difficulty)
+		_ball_speed = 840.0 / maxf(fall_time, 0.5)
+		print("🎩 HatTrick ball_speed=%.1f px/s (fall_time=%.2fs, expected=%d)" % [_ball_speed, fall_time, Appdata.selected_game.expected_targets])
+	else:
+		push_error("HTGame: selected_game is null — ball_speed stays at default %.1f, expected_targets unknown" % _ball_speed)
+	#start new trial
 	AppDataTrial.start_new_trial()
 	ScAudioManager.play_background_music("res://assets/audio/hattrick_bg.mp3")
 	print("🎩 HatTrick started — 60s trial")
@@ -220,10 +217,13 @@ func _end_game() -> void:
 	_free_ball()
 	hat_sprite.visible = false
 
+	var g := Appdata.selected_game
+	var expected: int = g.expected_targets if g != null else n_targets
 	AppDataTrial.stop_trial(n_targets, n_success, n_failure)
 	ScAudioManager.stop_music()
 	ScAudioManager.play_gameover()
-	ui.show_game_over(score, n_targets, n_success, n_failure)
+	var _card := Appdata.show_achievement(score, n_success, expected)
+	_card.finished.connect(func(): ui.show_game_over(score, n_success, n_targets, expected))
 	print("🏁 HatTrick Over | Score:%d | %d/%d caught" % [score, n_success, n_targets])
 
 
@@ -240,9 +240,9 @@ func _spawn_ball() -> void:
 
 	_ball_sprite          = Sprite2D.new()
 	_ball_sprite.texture  = _ball_tex
-	_ball_sprite.scale    = Vector2(BALL_SCALE, BALL_SCALE)
+	_ball_sprite.scale    = Vector2(GameDefs.HatTrick.BALL_SCALE, GameDefs.HatTrick.BALL_SCALE)
 	_ball_sprite.position = Vector2(
-		randf_range(PLAY_LEFT + 60.0, PLAY_RIGHT - 60.0), -60.0
+		randf_range(GameDefs.HatTrick.PLAY_LEFT + 60.0, GameDefs.HatTrick.PLAY_RIGHT - 60.0), -60.0
 	)
 	_ball_sprite.z_index  = 10
 	add_child(_ball_sprite)
@@ -277,8 +277,8 @@ func _on_miss() -> void:
 
 func _animate_hat_catch() -> void:
 	var tw := create_tween()
-	tw.tween_property(hat_sprite, "position:y", HAT_Y - 25.0, 0.08).set_ease(Tween.EASE_OUT)
-	tw.tween_property(hat_sprite, "position:y", HAT_Y,        0.12).set_ease(Tween.EASE_IN)
+	tw.tween_property(hat_sprite, "position:y", GameDefs.HatTrick.HAT_Y - 25.0, 0.08).set_ease(Tween.EASE_OUT)
+	tw.tween_property(hat_sprite, "position:y", GameDefs.HatTrick.HAT_Y,        0.12).set_ease(Tween.EASE_IN)
 
 
 # ============================================================

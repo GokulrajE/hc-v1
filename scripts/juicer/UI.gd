@@ -9,14 +9,16 @@ extends CanvasLayer
 @onready var results_label:   Label     = $Control/GameOverBoard/ContentVBox/ResultsLabel
 @onready var restart_button:  Button    = $Control/GameOverBoard/ContentVBox/RestartButton
 @onready var menu_button:     Button    = $Control/GameOverBoard/ContentVBox/MenuButton
-@onready var success_popup:   Control   = $SuccessPopup
-@onready var failure_popup:   Control   = $FailurePopup
+@onready var success_popup:      Control = $SuccessPopup
+@onready var failure_popup:      Control = $FailurePopup
+@onready var target_timer_ctrl: Control  = $Control/TargetTimerCtrl
 
 func _ready() -> void:
-	game_over_board.visible = false
-	exit_button.visible     = true
-	success_popup.visible   = false
-	failure_popup.visible   = false
+	game_over_board.visible     = false
+	exit_button.visible         = true
+	success_popup.visible       = false
+	failure_popup.visible       = false
+	target_timer_ctrl.visible   = false
 
 	restart_button.pressed.connect(func(): get_parent().restart_game())
 	menu_button.pressed.connect(func():    get_parent().go_to_menu())
@@ -33,20 +35,23 @@ func show_start() -> void:
 
 
 func show_playing() -> void:
-	start_board.visible     = false
-	game_over_board.visible = false
-	exit_button.visible     = true
+	start_board.visible          = false
+	game_over_board.visible      = false
+	exit_button.visible          = true
+	target_timer_ctrl.visible   = true
 
 
-func show_game_over(score: int, targets: int, success: int, _failure: int) -> void:
-	exit_button.visible     = false
-	game_over_board.visible = true
-	var rate := (float(success) / float(targets) * 100.0) if targets > 0 else 0.0
+func show_game_over(score: int, success: int, spawned: int, expected: int) -> void:
+	exit_button.visible         = false
+	game_over_board.visible     = true
+	target_timer_ctrl.visible   = false
+	var pct := (float(success) / float(expected) * 100.0) if expected > 0 else 0.0
 	results_label.text = (
 		"Score: %d\n" +
+		"Fruits Spawned: %d\n" +
 		"Fruits Juiced: %d / %d\n" +
-		"Success Rate: %.1f%%"
-	) % [score, success, targets, rate]
+		"Achievement: %.1f%%"
+	) % [score, spawned, success, expected, pct]
 	restart_button.grab_focus()
 
 
@@ -105,3 +110,13 @@ func _show_popup(popup: Control, label_color: Color, do_shake: bool) -> void:
 	tw.tween_property(popup, "modulate:a", 0.0, 0.4) \
 		.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_SINE)
 	tw.tween_callback(func(): popup.visible = false)
+
+
+func update_target_timer(time_left: float) -> void:
+	target_timer_ctrl.set_time(time_left, 7.0)
+
+
+func set_target_timer_pos(fruit_x: float) -> void:
+	var half := (target_timer_ctrl.offset_right - target_timer_ctrl.offset_left) * 0.5
+	target_timer_ctrl.offset_left  = fruit_x - half
+	target_timer_ctrl.offset_right = fruit_x + half

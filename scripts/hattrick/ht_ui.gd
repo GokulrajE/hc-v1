@@ -39,15 +39,16 @@ func show_playing() -> void:
 	exit_button.visible     = true
 
 
-func show_game_over(score: int, targets: int, success: int, failure: int) -> void:
+func show_game_over(score: int, success: int, spawned: int, expected: int) -> void:
 	exit_button.visible     = false
 	game_over_board.visible = true
-	var rate := (float(success) / float(targets) * 100.0) if targets > 0 else 0.0
+	var pct := (float(success) / float(expected) * 100.0) if expected > 0 else 0.0
 	results_label.text = (
 		"Score: %d\n" +
+		"Balls Spawned: %d\n" +
 		"Balls Caught: %d / %d\n" +
-		"Success Rate: %.1f%%"
-	) % [score, success, targets, rate]
+		"Achievement: %.1f%%"
+	) % [score, spawned, success, expected, pct]
 	restart_button.grab_focus()
 
 

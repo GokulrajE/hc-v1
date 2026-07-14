@@ -107,26 +107,21 @@ func show_playing() -> void:
 	exit_button.visible = true
 
 
-func show_game_over(score: int, caught: int, missed: int, avoided: int, caught_unwanted: int, success_rate: float) -> void:
+func show_game_over(score: int, success: int, spawned: int, expected: int) -> void:
 	exit_button.visible = false
 	game_over_board.visible = true
 	game_over_label.text = "GAME OVER!"
 
-	var results_text = (
+	var pct := (float(success) / float(expected) * 100.0) if expected > 0 else 0.0
+	results_label.text = (
 		"Score: %d\n" +
-		"✅ Caught: %d  |  ❌ Missed: %d\n" +
-		"🟢 Dodged: %d  |  💥 Wrong: %d\n" +
-		"Success Rate: %.1f%%"
-	) % [score, caught, missed, avoided, caught_unwanted, success_rate]
+		"Objects Spawned: %d\n" +
+		"Caught + Dodged: %d / %d\n" +
+		"Achievement: %.1f%%"
+	) % [score, spawned, success, expected, pct]
 
-	results_label.text = results_text
 	restart_button.grab_focus()
-
-	print("✅ Game Over Panel Shown")
-	print("   Score: %d" % score)
-	print("   Caught wanted: %d | Missed wanted: %d" % [caught, missed])
-	print("   Dodged unwanted: %d | Caught unwanted: %d" % [avoided, caught_unwanted])
-	print("   Success Rate: %.1f%%" % success_rate)
+	print("🏁 Catch Over | Score:%d | success=%d / expected=%d | Achievement=%.1f%%" % [score, success, expected, pct])
 
 
 func _on_exit_pressed() -> void:

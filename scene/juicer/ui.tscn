@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://cqjxygnlamcv"]
 
 [ext_resource type="Script" uid="uid://dfumocnm1cgoa" path="res://scripts/juicer/UI.gd" id="1_ui_script"]
+[ext_resource type="Script" path="res://scripts/juicer/TargetTimerControl.gd" id="11_timer_ctrl"]
 [ext_resource type="Texture2D" uid="uid://kwcjyyaksqc5" path="res://assets/ui/start game board.png" id="2_startboard"]
 [ext_resource type="Texture2D" uid="uid://sk2a0xm7sp3k" path="res://assets/ui/gameover board.png" id="3_goboard"]
 [ext_resource type="Texture2D" uid="uid://bmwg8y55461y8" path="res://assets/ui/Button13.png" id="4_btn_play_n"]
@@ -190,6 +191,15 @@ theme_override_styles/normal = SubResource("Juicer_MenuNormal")
 theme_override_styles/pressed = SubResource("Juicer_MenuNormal")
 theme_override_styles/hover = SubResource("Juicer_MenuHover")
 text = "Back to Menu"
+
+[node name="TargetTimerCtrl" type="Control" parent="Control" unique_id=100000020]
+visible = false
+layout_mode = 0
+offset_left = 895.0
+offset_top = 372.0
+offset_right = 1025.0
+offset_bottom = 492.0
+script = ExtResource("11_timer_ctrl")
 
 [node name="SuccessPopup" type="Control" parent="." unique_id=100000017]
 visible = false

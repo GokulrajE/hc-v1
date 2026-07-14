@@ -5,6 +5,24 @@ var juice_level = 0.0
 var is_full = false
 var is_pouring = false
 var completion_pulse = 1.0
+var count: int = 0
+
+var _count_label: Label = null
+
+func _ready() -> void:
+	_count_label = Label.new()
+	_count_label.text = "🍹 0"
+	_count_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_count_label.position = Vector2(-60.0, 88.0)
+	_count_label.custom_minimum_size = Vector2(120.0, 40.0)
+	_count_label.add_theme_font_size_override("font_size", 42)
+	_count_label.add_theme_color_override("font_outline_color", Color.BLACK)
+	_count_label.add_theme_constant_override("outline_size", 4)
+	# Use a dim version of the juice color so it's visible but not distracting at 0
+	var base_col: Color = juice_colors[fruit_index]
+	_count_label.add_theme_color_override("font_color", Color(base_col.r, base_col.g, base_col.b, 0.65))
+	add_child(_count_label)
+
 
 var juice_colors = [
 	Color(1.0, 0.6, 0.1, 0.85),
@@ -47,6 +65,44 @@ func reset():
 	bubble_positions.clear()
 	bubble_rise_times.clear()
 	queue_redraw()
+
+
+func reset_count() -> void:
+	count = 0
+	if _count_label:
+		_count_label.text = "🍹 0"
+		_count_label.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 0.7))
+
+
+func increment_count() -> void:
+	count += 1
+	var juice_col: Color = juice_colors[fruit_index]
+	if _count_label:
+		_count_label.text = "🍹 %d" % count
+		_count_label.add_theme_color_override("font_color", juice_col.lightened(0.3))
+		# Scale pop on the count label
+		_count_label.pivot_offset = _count_label.size * 0.5
+		var tw := create_tween()
+		tw.tween_property(_count_label, "scale", Vector2(1.5, 1.5), 0.08) \
+			.set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
+		tw.tween_property(_count_label, "scale", Vector2(1.0, 1.0), 0.22) \
+			.set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
+	# "+1" floating pop label
+	var pop := Label.new()
+	pop.text = "+1"
+	pop.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	pop.position = Vector2(-30.0, 70.0)
+	pop.custom_minimum_size = Vector2(60.0, 36.0)
+	pop.add_theme_font_size_override("font_size", 30)
+	pop.add_theme_color_override("font_color", juice_col.lightened(0.5))
+	pop.add_theme_color_override("font_outline_color", Color.BLACK)
+	pop.add_theme_constant_override("outline_size", 4)
+	add_child(pop)
+	var pop_tw := create_tween()
+	pop_tw.tween_property(pop, "position:y", 20.0, 0.55).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	pop_tw.parallel().tween_property(pop, "modulate:a", 0.0, 0.55).set_trans(Tween.TRANS_SINE)
+	pop_tw.tween_callback(func(): pop.queue_free())
+
 
 func _process(delta):
 	if is_pouring or juice_level > 0:

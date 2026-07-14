@@ -2,15 +2,7 @@ class_name CatchGameMain
 
 extends Node2D
 
-## Game Settings
-const GAME_DURATION: float = 60.0
-const HAND_SPEED: float = 500.0  # pixels per second
-const MAX_HAND_SPREAD_LEFT: float = 960  # max distance from center to left edge
-const MAX_HAND_SPREAD_RIGHT: float = 1820.0  # max distance from center to right edge
-const SPAWN_RATE: float = 1.0  # One object at a time
-const FALL_SPEED: float = 300.0  # pixels per second
-const SPAWN_DELAY: float = 0.05
-const RESULT_DELAY: float = 0.6
+
 
 ## Asset paths
 const ASSET_FILE: String = "res://assets/catchgame/catch_game.png"
@@ -42,7 +34,8 @@ var _game_state: GameState = GameState.WAITING
 var _is_game_started: bool = false
 var _run_once: bool = false
 var _event_delay_timer: float = 0.0
-var _time_left: float = GAME_DURATION
+var _time_left: float = GameDefs.Catch.GAME_DURATION
+var _fall_speed: float = GameDefs.Catch.FALL_SPEED
 var _score: int = 0
 var _caught_objects: int = 0
 var _missed_objects: int = 0
@@ -115,16 +108,8 @@ func _on_device_data_received() -> void:
 		_hand_spread_left  = spread
 		_hand_spread_right = spread
 	else:
-		var raw := HCcomm.get_btw_distance()
-		_moving_avg_counter += 1
-		if _moving_avg_counter > MOVING_AVG_LEN:
-			_moving_avg = _moving_avg + (raw - _moving_avg) / (MOVING_AVG_LEN + 1)
-		else:
-			_moving_avg += raw
-			if _moving_avg_counter == MOVING_AVG_LEN:
-				_moving_avg = _moving_avg / _moving_avg_counter
 		var arom_range: float = max(_arom_max - _arom_min, 0.01)
-		var normalized: float = clamp((_moving_avg - _arom_min) / arom_range, 0.0, 1.0)
+		var normalized: float = clamp((HCcomm.get_avg_btw_distance() - _arom_min) / arom_range, 0.0, 1.0)
 		var spread: float = normalized * MAX_DEVICE_SPREAD
 		_hand_spread_left  = spread
 		_hand_spread_right = spread
@@ -150,7 +135,7 @@ func _physics_process(delta: float) -> void:
 	_run_game_state_machine(delta)
 	var _pl_x: float   = (_left_hand_pos.x + _right_hand_pos.x) * 0.5
 	var _tgt:  Vector2 = _current_obj.get("position") if not _current_obj.is_empty() else Vector2.ZERO
-	AppDataTrial.set_game_context(GameState.keys()[_game_state], _pl_x, _left_hand_pos.y, _tgt.x, _tgt.y)
+	AppdataTrial.set_game_context(GameState.keys()[_game_state], _pl_x, _left_hand_pos.y, _tgt.x, _tgt.y)
 
 
 func _run_game_state_machine(delta: float) -> void:
@@ -172,7 +157,7 @@ func _run_game_state_machine(delta: float) -> void:
 		GameState.SPAWN:
 			if not _run_once:
 				_spawn_single_object()
-				_event_delay_timer = SPAWN_DELAY
+				_event_delay_timer = GameDefs.Catch.SPAWN_DELAY
 				_run_once = true
 			else:
 				_event_delay_timer -= delta
@@ -182,7 +167,7 @@ func _run_game_state_machine(delta: float) -> void:
 		GameState.MOVE:
 			var node = _current_obj.get("node")
 			if node and is_instance_valid(node):
-				_current_obj["position"].y += FALL_SPEED * delta
+				_current_obj["position"].y += _fall_speed * delta
 				node.position = _current_obj["position"]
 				var hand = _get_catching_hand(_current_obj)
 				if hand != null:
@@ -193,7 +178,7 @@ func _run_game_state_machine(delta: float) -> void:
 			else:
 				# Object gone unexpectedly — treat as miss
 				_game_state = GameState.FAILURE
-				_event_delay_timer = RESULT_DELAY
+				_event_delay_timer = GameDefs.Catch.RESULT_DELAY
 
 		GameState.SUCCESS, GameState.FAILURE:
 			_event_delay_timer -= delta
@@ -230,9 +215,9 @@ func _update_hand_positions(delta: float) -> void:
 	elif not _use_device:
 		var spread_change := 0.0
 		if Input.is_action_pressed("ui_right"):
-			spread_change = HAND_SPEED * delta
+			spread_change = GameDefs.Catch.HAND_SPEED * delta
 		if Input.is_action_pressed("ui_left"):
-			spread_change = -HAND_SPEED * delta
+			spread_change = -GameDefs.Catch.HAND_SPEED * delta
 		_hand_spread_left = clamp(_hand_spread_left + spread_change, 0.0, _center_x)
 		_hand_spread_right = clamp(_hand_spread_right + spread_change, 0.0, _center_x + 100.0)
 
@@ -281,7 +266,7 @@ func _spawn_single_object() -> void:
 	var spawn_x = _center_x
 	_current_obj = {
 		"position": Vector2(spawn_x, -50),
-		"velocity": Vector2(0, FALL_SPEED),
+		"velocity": Vector2(0, _fall_speed),
 		"is_wanted": is_wanted,
 		"object_type": object_type,
 		"caught": false,
@@ -487,14 +472,14 @@ func _animate_miss() -> void:
 ## Setup UI
 func _setup_ui() -> void:
 	if ui and ui.has_method("setup"):
-		ui.setup(GAME_DURATION)
+		ui.setup(GameDefs.Catch.GAME_DURATION)
 
 
 ## Initialize game
 func _initialize_game() -> void:
 	print("▶️ GAME STARTED - 60 seconds")
 	_score = 0
-	_time_left = GAME_DURATION
+	_time_left = GameDefs.Catch.GAME_DURATION
 	_caught_objects = 0
 	_missed_objects = 0
 	_avoided_objects = 0
@@ -507,6 +492,12 @@ func _initialize_game() -> void:
 	_consecutive_wanted = 0
 	_shake_offset = 0.0
 	_reset_hand_positions()
+	if Appdata.selected_game != null:
+		var fall_time := Appdata.selected_game.get_speed_mode_parameter(Appdata.selected_game.selected_difficulty)
+		_fall_speed = 1130.0 / maxf(fall_time, 0.5)
+		print("🎮 CatchGame fall_speed=%.1f px/s (fall_time=%.2fs, expected=%d)" % [_fall_speed, fall_time, Appdata.selected_game.expected_targets])
+	else:
+		push_error("CatchGame: selected_game is null — fall_speed stays at default %.1f" % _fall_speed)
 	if Appdata.selected_mechanism != null:
 		AppDataTrial.start_new_trial()
 	ScAudioManager.play_background_music("res://assets/audio/cg_bg.mp3")
@@ -514,29 +505,25 @@ func _initialize_game() -> void:
 		ui.show_playing()
 	if ui:
 		ui.update_score(0)
-		ui.update_timer(GAME_DURATION)
+		ui.update_timer(GameDefs.Catch.GAME_DURATION)
 
 
 ## End game
 func _end_game() -> void:
-	print("⏹️ GAME ENDED")
 	_free_current_obj()
-	var total = _caught_objects + _missed_objects + _caught_unwanted + _avoided_objects
+	var total  = _caught_objects + _missed_objects + _caught_unwanted + _avoided_objects
 	var correct = _caught_objects + _avoided_objects
-	var wrong = _missed_objects + _caught_unwanted
-	var success_rate = (correct / float(max(total, 1))) * 100.0
+	var wrong   = _missed_objects + _caught_unwanted
 	if Appdata.selected_mechanism != null:
 		AppDataTrial.stop_trial(total, correct, wrong)
 	ScAudioManager.stop_music()
 	ScAudioManager.play_gameover()
-	print("📊 Final Results:")
-	print("   Score: %d" % _score)
-	print("   Caught wanted: %d | Missed wanted: %d" % [_caught_objects, _missed_objects])
-	print("   Dodged unwanted: %d | Caught unwanted: %d" % [_avoided_objects, _caught_unwanted])
-	print("   Success Rate: %.1f%%" % success_rate)
-	if ui and ui.has_method("show_game_over"):
-		ui.show_game_over(_score, _caught_objects, _missed_objects,
-						  _avoided_objects, _caught_unwanted, success_rate)
+	var expected: int = Appdata.selected_game.expected_targets if Appdata.selected_game != null else total
+	var _card := Appdata.show_achievement(_score, correct, expected)
+	_card.finished.connect(func():
+		if ui and ui.has_method("show_game_over"):
+			ui.show_game_over(_score, correct, total, expected)
+	)
 
 
 func restart_game() -> void:

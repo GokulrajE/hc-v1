@@ -2,37 +2,6 @@ class_name RNRGame
 extends Node2D
 
 # ============================================================
-# CONSTANTS
-# ============================================================
-const PLAY_LEFT:    float = 100.0
-const PLAY_RIGHT:   float = 1800.0
-
-const CLOUD_Y:      float = 150.0
-const CLOUD_SPEED:  float = 600.0
-const CLOUD_HALF_W: float = 140.0
-
-const SEED_COUNT:   int   = 5
-const SEED_Y:       float = 1000.0  # grass visual surface (texture row 583 → world y≈1002)
-const SEED_HALF_W:  float = 60.0
-
-const HIGHLIGHT_DURATION: float = 4.0
-const RAIN_TO_GROW:       float = 1.0
-const SPAWN_DELAY:        float = 0.05
-const RESULT_DELAY:       float = 0.6
-const EMOTION_INTERVAL:   float = 12.0
-const GAME_DURATION:      float = 60.0
-
-const CLOUD_SCALE:  float = 0.4
-const SEED_SCALE:   float = 0.25
-
-const SEED_XS: PackedFloat64Array = [235.0, 558.0, 881.0, 1204.0, 1527.0]
-
-const RAIN_DROP_COUNT: int   = 100
-const RAIN_DROP_SPEED: float = 500.0
-const DRAIN_RATE:      float = 0.4    # water lost per second while raining  (full→empty in 2.5s)
-const FILL_RATE:       float = 0.5   # water gained per second while stopped (empty→full in 4s)
-
-# ============================================================
 # NODES
 # ============================================================
 @onready var _seed_container: Node2D   = $SeedContainer
@@ -57,7 +26,7 @@ var score:     int   = 0
 var n_targets: int   = 0
 var n_success: int   = 0
 var n_failure: int   = 0
-var time_left: float = GAME_DURATION
+var time_left: float = GameDefs.RainAndRise.GAME_DURATION
 
 # ============================================================
 # CLOUD
@@ -69,12 +38,12 @@ var _is_raining:    bool  = false
 # ============================================================
 # DEVICE STATE
 # ============================================================
-var _angle_min:       float = 0.0
-var _angle_max:       float = 110.0
-var _max_force:       float = 100.0
-var _rain_threshold:  float = 10.0
-var _cloud_water:     float = 1.0
-var _waiting_release: bool  = false
+var _angle_min:        float = 0.0
+var _angle_max:        float = 110.0
+var _max_force:        float = 100.0
+var _rain_threshold:   float = 10.0
+var _waiting_release:  bool  = false
+var _highlight_duration: float = GameDefs.RainAndRise.HIGHLIGHT_DURATION
 
 # ============================================================
 # SEEDS
@@ -91,7 +60,14 @@ var _rain_timer:      float = 0.0
 # TEXTURES
 # ============================================================
 var _stage_textures: Array     = []
-var _cloud_emotions: Array     = []
+var _e_normal:   Array[Texture2D] = []
+var _e_laugh:    Texture2D        = null
+var _e_success:  Array[Texture2D] = []
+var _e_failure:  Array[Texture2D] = []
+var _e_timer50:  Array[Texture2D] = []
+var _e_timer80:  Texture2D        = null
+var _e_timer90:  Texture2D        = null
+var _current_emotion_key: String  = ""
 var _rain_drop_tex:  Texture2D = null
 var _glow_tex:       Texture2D = null
 var _ray_tex:        Texture2D = null
@@ -152,9 +128,8 @@ func _get_cloud_angle() -> float:
 
 func _load_assessment_data() -> void:
 	if _is_knob_mode():
-		var arom := Appdata.selected_mechanism.get_current_arom()
-		_angle_min = arom[0]
-		_angle_max = arom[1]
+		_angle_min = Appdata.selected_game.angle_min
+		_angle_max = Appdata.selected_game.angle_max
 	elif _is_pinch_mode():
 		pass  # no AROM for pinch button — fixed threshold used
 	else:
@@ -166,6 +141,9 @@ func _load_assessment_data() -> void:
 		if grip_rom.is_arom_set():
 			_max_force = grip_rom.arom_max
 			_rain_threshold = _max_force * 0.1
+
+	if Appdata.selected_game != null:
+		_highlight_duration = Appdata.selected_game.get_speed_mode_parameter(Appdata.selected_game.selected_difficulty)
 
 
 func _load_textures() -> void:
@@ -179,11 +157,18 @@ func _load_textures() -> void:
 	for p in stage_paths:
 		_stage_textures.append(load(p) if ResourceLoader.exists(p) else null)
 
-	var emotion_ids := [0,1,2,3,4,6,7,8,9,10,12,13,14,15,16,18,19,20,22,24,25,26,27,28]
-	for idx in emotion_ids:
-		var p := "res://assets/rainandrise/CloudEmotions/tile%03d.png" % idx
-		if ResourceLoader.exists(p):
-			_cloud_emotions.append(load(p))
+	var base := "res://assets/rainandrise/CloudEmotions/"
+	for f in ["normal.png", "normal1.png"]:
+		if ResourceLoader.exists(base + f): _e_normal.append(load(base + f))
+	if ResourceLoader.exists(base + "laugh.png"):    _e_laugh   = load(base + "laugh.png")
+	for f in ["success1.png", "success2.png"]:
+		if ResourceLoader.exists(base + f): _e_success.append(load(base + f))
+	for f in ["failure1.png", "failure2.png", "cry.png"]:
+		if ResourceLoader.exists(base + f): _e_failure.append(load(base + f))
+	for f in ["timer50%.png", "timer50%1.png"]:
+		if ResourceLoader.exists(base + f): _e_timer50.append(load(base + f))
+	if ResourceLoader.exists(base + "timer80%.png"): _e_timer80 = load(base + "timer80%.png")
+	if ResourceLoader.exists(base + "timer90%.png"): _e_timer90 = load(base + "timer90%.png")
 
 	# Raindrop texture
 	var dimg := Image.create(5, 18, false, Image.FORMAT_RGBA8)
@@ -223,17 +208,17 @@ func _load_textures() -> void:
 
 
 func _setup_cloud() -> void:
-	if _cloud_emotions.size() > 0:
-		_cloud_sprite.texture = _cloud_emotions[0]
-	_cloud_sprite.scale    = Vector2(CLOUD_SCALE, CLOUD_SCALE)
-	_cloud_sprite.position = Vector2(cloud_x, CLOUD_Y)
+	if _e_normal.size() > 0:
+		_cloud_sprite.texture = _e_normal[0]
+	_cloud_sprite.scale    = Vector2(GameDefs.RainAndRise.CLOUD_SCALE, GameDefs.RainAndRise.CLOUD_SCALE)
+	_cloud_sprite.position = Vector2(cloud_x, GameDefs.RainAndRise.CLOUD_Y)
 	_cloud_sprite.visible  = false
 
 
 func _setup_seeds() -> void:
-	for i in SEED_COUNT:
+	for i in GameDefs.RainAndRise.SEED_COUNT:
 		var node := Node2D.new()
-		node.position = Vector2(SEED_XS[i], SEED_Y)
+		node.position = Vector2(GameDefs.RainAndRise.SEED_XS[i], GameDefs.RainAndRise.SEED_Y)
 		_seed_container.add_child(node)
 
 		# Glow — at plant base (node position = grass level), above grass z=3
@@ -259,7 +244,7 @@ func _setup_seeds() -> void:
 		var spr := Sprite2D.new()
 		var tex0: Texture2D = _stage_textures[0] if _stage_textures.size() > 0 else null
 		spr.texture  = tex0
-		spr.scale    = Vector2(SEED_SCALE, SEED_SCALE)
+		spr.scale    = Vector2(GameDefs.RainAndRise.SEED_SCALE, GameDefs.RainAndRise.SEED_SCALE)
 		spr.z_index  = 5
 		spr.position = Vector2.ZERO
 		if tex0:
@@ -271,8 +256,8 @@ func _setup_seeds() -> void:
 
 func _setup_rain_drops() -> void:
 	# Counteract CloudSprite's (0.5,0.5) scale so drop positions are direct world offsets from cloud
-	_rain_container.scale = Vector2(1.0 / CLOUD_SCALE, 1.0 / CLOUD_SCALE)
-	for i in RAIN_DROP_COUNT:
+	_rain_container.scale = Vector2(1.0 / GameDefs.RainAndRise.CLOUD_SCALE, 1.0 / GameDefs.RainAndRise.CLOUD_SCALE)
+	for i in GameDefs.RainAndRise.RAIN_DROP_COUNT:
 		var drop := Sprite2D.new()
 		drop.texture  = _rain_drop_tex
 		drop.visible  = false
@@ -302,9 +287,9 @@ func _physics_process(delta: float) -> void:
 
 	_update_rain_visual(delta)
 	_run_game_state_machine(delta)
-	var _tgt_x: float = SEED_XS[_highlighted] if _highlighted >= 0 else 0.0
-	var _tgt_y: float = SEED_Y if _highlighted >= 0 else 0.0
-	AppDataTrial.set_game_context(GameState.keys()[_game_state], cloud_x, CLOUD_Y, _tgt_x, _tgt_y)
+	var _tgt_x: float = GameDefs.RainAndRise.SEED_XS[_highlighted] if _highlighted >= 0 else 0.0
+	var _tgt_y: float = GameDefs.RainAndRise.SEED_Y if _highlighted >= 0 else 0.0
+	AppdataTrial.set_game_context(GameState.keys()[_game_state], cloud_x, GameDefs.RainAndRise.CLOUD_Y, _tgt_x, _tgt_y)
 
 
 func _update_cloud(delta: float) -> void:
@@ -317,9 +302,8 @@ func _update_cloud(delta: float) -> void:
 			if released:
 				_waiting_release = false
 			else:
-				cloud_x = clamp(cloud_x, PLAY_LEFT + CLOUD_HALF_W, PLAY_RIGHT - CLOUD_HALF_W)
+				cloud_x = clamp(cloud_x, GameDefs.RainAndRise.PLAY_LEFT + GameDefs.RainAndRise.CLOUD_HALF_W, GameDefs.RainAndRise.PLAY_RIGHT - GameDefs.RainAndRise.CLOUD_HALF_W)
 				_cloud_sprite.position.x = cloud_x
-				_cloud_sprite.modulate.a = lerp(0.3, 1.0, _cloud_water)
 				return
 		else:
 			_waiting_release = false
@@ -328,55 +312,75 @@ func _update_cloud(delta: float) -> void:
 		if _is_pinch_mode():
 			# Cloud auto-targets the highlighted seed; any button triggers rain
 			if _highlighted >= 0:
-				cloud_x = move_toward(cloud_x, SEED_XS[_highlighted], CLOUD_SPEED * delta)
+				cloud_x = move_toward(cloud_x, GameDefs.RainAndRise.SEED_XS[_highlighted], GameDefs.RainAndRise.CLOUD_SPEED * delta)
 			squeezing = _read_active_input()
 		else:
 			var a_max := _angle_max if _angle_max != _angle_min else _angle_min + 110.0
 			var t := clampf(inverse_lerp(_angle_min, a_max, _get_cloud_angle()), 0.0, 1.0)
-			cloud_x = lerp(PLAY_LEFT + CLOUD_HALF_W, PLAY_RIGHT - CLOUD_HALF_W, t)
+			cloud_x = lerp(GameDefs.RainAndRise.PLAY_LEFT + GameDefs.RainAndRise.CLOUD_HALF_W, GameDefs.RainAndRise.PLAY_RIGHT - GameDefs.RainAndRise.CLOUD_HALF_W, t)
 			if _is_knob_mode():
 				squeezing = _game_state == GameState.MOVE and _highlighted >= 0 \
-					and absf(cloud_x - SEED_XS[_highlighted]) <= CLOUD_HALF_W + SEED_HALF_W
+					and absf(cloud_x - GameDefs.RainAndRise.SEED_XS[_highlighted]) <= GameDefs.RainAndRise.CLOUD_HALF_W + GameDefs.RainAndRise.SEED_HALF_W
 			else:
 				squeezing = HCcomm.get_total_force() >= _rain_threshold
 	else:
 		if Input.is_action_pressed("ui_left"):
-			cloud_x -= CLOUD_SPEED * delta
+			cloud_x -= GameDefs.RainAndRise.CLOUD_SPEED * delta
 		if Input.is_action_pressed("ui_right"):
-			cloud_x += CLOUD_SPEED * delta
+			cloud_x += GameDefs.RainAndRise.CLOUD_SPEED * delta
 		squeezing = Input.is_key_pressed(KEY_R)
 
-	if _is_pinch_mode():
-		# Pinch button: rain on/off with button press, no cloud drain
-		_is_raining = squeezing
-	elif squeezing and _cloud_water > 0.0:
-		_is_raining = true
-		_cloud_water = maxf(_cloud_water - DRAIN_RATE * delta, 0.0)
-	elif not squeezing:
-		_is_raining = false
-		_cloud_water = minf(_cloud_water + FILL_RATE * delta, 1.0)
-	else:
-		_is_raining = false  # squeezing but cloud is empty — wait for release
+	_is_raining = squeezing
 
-	cloud_x = clamp(cloud_x, PLAY_LEFT + CLOUD_HALF_W, PLAY_RIGHT - CLOUD_HALF_W)
+	cloud_x = clamp(cloud_x, GameDefs.RainAndRise.PLAY_LEFT + GameDefs.RainAndRise.CLOUD_HALF_W, GameDefs.RainAndRise.PLAY_RIGHT - GameDefs.RainAndRise.CLOUD_HALF_W)
 	_cloud_sprite.position.x = cloud_x
-	_cloud_sprite.modulate.a = lerp(0.3, 1.0, _cloud_water)
 
 
 func _update_emotion(delta: float) -> void:
-	_emotion_timer += delta
-	if _emotion_timer >= EMOTION_INTERVAL and _cloud_emotions.size() > 0:
-		_emotion_timer = 0.0
-		_cloud_sprite.texture = _cloud_emotions[randi() % _cloud_emotions.size()]
+	if _game_state != GameState.MOVE:
+		return
+
+	var key: String
+	if _is_raining:
+		key = "laugh"
+	else:
+		var frac := clampf(_highlight_timer / _highlight_duration, 0.0, 1.0) if _highlight_duration > 0.0 else 0.0
+		if   frac >= 0.9: key = "timer90"
+		elif frac >= 0.8: key = "timer80"
+		elif frac >= 0.5: key = "timer50"
+		else:             key = "normal"
+
+	if key != _current_emotion_key:
+		_current_emotion_key = key
+		match key:
+			"laugh":   _set_cloud_emotion(_e_laugh)
+			"timer90": _set_cloud_emotion(_e_timer90)
+			"timer80": _set_cloud_emotion(_e_timer80)
+			"timer50":
+				if _e_timer50.size() > 0:
+					_set_cloud_emotion(_e_timer50[randi() % _e_timer50.size()])
+			"normal":
+				_emotion_timer = 0.0
+				if _e_normal.size() > 0: _set_cloud_emotion(_e_normal[0])
+	elif key == "normal":
+		_emotion_timer += delta
+		if _emotion_timer >= GameDefs.RainAndRise.EMOTION_INTERVAL and _e_normal.size() > 0:
+			_emotion_timer = 0.0
+			_set_cloud_emotion(_e_normal[randi() % _e_normal.size()])
+
+
+func _set_cloud_emotion(tex: Texture2D) -> void:
+	if tex != null:
+		_cloud_sprite.texture = tex
 
 
 func _update_rain_visual(delta: float) -> void:
 	var raining := _is_raining and _game_state == GameState.MOVE
-	var max_y := (SEED_Y - CLOUD_Y) + 60
+	var max_y := (GameDefs.RainAndRise.SEED_Y - GameDefs.RainAndRise.CLOUD_Y) + 60
 	for drop in _rain_drops:
 		drop.visible = raining
 		if raining:
-			drop.position.y += RAIN_DROP_SPEED * delta
+			drop.position.y += GameDefs.RainAndRise.RAIN_DROP_SPEED * delta
 			if drop.position.y > max_y:
 				drop.position.y = 70.0
 				drop.position.x = randf_range(-90.0, 90.0)
@@ -404,7 +408,7 @@ func _run_game_state_machine(delta: float) -> void:
 		GameState.SPAWNSEED:
 			if _event_delay_timer <= 0.0 and not _run_once:
 				_highlight_next_seed()
-				_event_delay_timer = SPAWN_DELAY
+				_event_delay_timer = GameDefs.RainAndRise.SPAWN_DELAY
 				_run_once = true
 			else:
 				_event_delay_timer -= delta
@@ -415,23 +419,25 @@ func _run_game_state_machine(delta: float) -> void:
 			_highlight_timer += delta
 
 			if _highlighted >= 0 and _is_raining:
-				var dx := absf(cloud_x - SEED_XS[_highlighted])
-				if dx <= CLOUD_HALF_W + SEED_HALF_W:
-					_rain_timer = minf(_rain_timer + delta, RAIN_TO_GROW)
+				var dx := absf(cloud_x - GameDefs.RainAndRise.SEED_XS[_highlighted])
+				if dx <= GameDefs.RainAndRise.CLOUD_HALF_W + GameDefs.RainAndRise.SEED_HALF_W:
+					_rain_timer = minf(_rain_timer + delta, GameDefs.RainAndRise.RAIN_TO_GROW)
 				else:
 					_rain_timer = maxf(_rain_timer - delta, 0.0)
 			else:
 				_rain_timer = maxf(_rain_timer - delta, 0.0)
 
 			_animate_highlight(delta)
+			if _highlighted >= 0:
+				ui.update_target_timer(_highlight_duration - _highlight_timer, _highlight_duration)
 
-			if _rain_timer >= RAIN_TO_GROW:
+			if _rain_timer >= GameDefs.RainAndRise.RAIN_TO_GROW:
 				_on_success()
-				_event_delay_timer = RESULT_DELAY
+				_event_delay_timer = GameDefs.RainAndRise.RESULT_DELAY
 				_game_state = GameState.SUCCESS
-			elif _highlight_timer >= HIGHLIGHT_DURATION:
+			elif _highlight_timer >= _highlight_duration:
 				_on_failure()
-				_event_delay_timer = RESULT_DELAY
+				_event_delay_timer = GameDefs.RainAndRise.RESULT_DELAY
 				_game_state = GameState.FAILURE
 
 		GameState.SUCCESS, GameState.FAILURE:
@@ -471,12 +477,12 @@ func _initialize_game() -> void:
 	n_targets = 0
 	n_success = 0
 	n_failure = 0
-	time_left = GAME_DURATION
+	time_left = GameDefs.RainAndRise.GAME_DURATION
 	cloud_x   = 960.0
 	_cloud_sprite.position.x = cloud_x
 	_cloud_sprite.visible    = true
 
-	for i in SEED_COUNT:
+	for i in GameDefs.RainAndRise.SEED_COUNT:
 		_seed_stages[i] = 0
 		var spr0 := _seed_sprites[i] as Sprite2D
 		if _stage_textures.size() > 0:
@@ -490,13 +496,13 @@ func _initialize_game() -> void:
 	_highlight_timer = 0.0
 	_rain_timer      = 0.0
 	_is_raining      = false
-	_cloud_water     = 1.0
 	_waiting_release = false
 	_run_once        = false
 	_event_delay_timer = 0.0
 
 	ui.update_score(0)
-	ui.update_timer(GAME_DURATION)
+	ui.update_timer(GameDefs.RainAndRise.GAME_DURATION)
+	ui.show_target_timer(false)
 	ui.show_playing()
 
 	AppDataTrial.start_new_trial()
@@ -505,18 +511,21 @@ func _initialize_game() -> void:
 
 
 func _end_game() -> void:
-	for i in SEED_COUNT:
+	for i in GameDefs.RainAndRise.SEED_COUNT:
 		(_seed_glows[i] as Sprite2D).visible = false
 		(_seed_rays[i] as Sprite2D).visible  = false
 	_cloud_sprite.visible    = false
 	_cloud_sprite.modulate.a = 1.0
 	_is_raining = false
+	ui.show_target_timer(false)
 
 	AppDataTrial.stop_trial(n_targets, n_success, n_failure)
 	ScAudioManager.stop_music()
 	ScAudioManager.play_gameover()
-	ui.show_game_over(score, n_targets, n_success, n_failure)
-	print("🏁 RainAndRise Over | Score:%d | %d/%d watered" % [score, n_success, n_targets])
+	var expected: int = Appdata.selected_game.expected_targets if Appdata.selected_game != null else n_targets
+	var _card := Appdata.show_achievement(score, n_success, expected)
+	_card.finished.connect(func(): ui.show_game_over(score, n_success, n_targets, expected))
+	print("🏁 RainAndRise Over | Score:%d | %d/%d watered (expected %d)" % [score, n_success, n_targets, expected])
 
 
 # ============================================================
@@ -527,7 +536,7 @@ func _highlight_next_seed() -> void:
 		(_seed_glows[_highlighted] as Sprite2D).visible = false
 		(_seed_rays[_highlighted] as Sprite2D).visible  = false
 
-	_highlighted     = randi() % SEED_COUNT
+	_highlighted     = randi() % GameDefs.RainAndRise.SEED_COUNT
 	n_targets       += 1
 	_highlight_timer = 0.0
 	_rain_timer      = 0.0
@@ -544,6 +553,13 @@ func _highlight_next_seed() -> void:
 			_waiting_release = true
 	elif not _is_knob_mode():
 		_waiting_release = true
+
+	_current_emotion_key = ""
+	_emotion_timer = 0.0
+	if _e_normal.size() > 0:
+		_cloud_sprite.texture = _e_normal[0]
+	ui.set_target_timer_pos(GameDefs.RainAndRise.SEED_XS[_highlighted])
+	ui.show_target_timer(true)
 
 
 func _on_success() -> void:
@@ -563,7 +579,11 @@ func _on_success() -> void:
 	n_success += 1
 	ui.update_score(score)
 	ui.show_success_popup()
+	ui.show_target_timer(false)
 	ScAudioManager.play_rnr_success()
+	if _e_success.size() > 0:
+		_set_cloud_emotion(_e_success[randi() % _e_success.size()])
+	_current_emotion_key = "success"
 	print("🌱 Seed %d → stage %d | Score: %d" % [idx, next_stage, score])
 
 
@@ -573,15 +593,19 @@ func _on_failure() -> void:
 		(_seed_rays[_highlighted] as Sprite2D).visible  = false
 	n_failure += 1
 	ui.show_failure_popup()
+	ui.show_target_timer(false)
 	ScAudioManager.play_cg_miss()
+	if _e_failure.size() > 0:
+		_set_cloud_emotion(_e_failure[randi() % _e_failure.size()])
+	_current_emotion_key = "failure"
 
 
 func _animate_grow(seed_idx: int) -> void:
 	var spr := _seed_sprites[seed_idx] as Sprite2D
 	var tw  := create_tween()
-	tw.tween_property(spr, "scale", Vector2(SEED_SCALE * 1.4, SEED_SCALE * 1.4), 0.12) \
+	tw.tween_property(spr, "scale", Vector2(GameDefs.RainAndRise.SEED_SCALE * 1.4, GameDefs.RainAndRise.SEED_SCALE * 1.4), 0.12) \
 		.set_ease(Tween.EASE_OUT)
-	tw.tween_property(spr, "scale", Vector2(SEED_SCALE, SEED_SCALE), 0.18) \
+	tw.tween_property(spr, "scale", Vector2(GameDefs.RainAndRise.SEED_SCALE, GameDefs.RainAndRise.SEED_SCALE), 0.18) \
 		.set_ease(Tween.EASE_IN)
 
 

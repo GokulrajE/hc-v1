@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://byi3ixsrqtqi"
-path="res://.godot/imported/tile012.png-8ea55ba740bf3727dc68fcbb6c3203b6.ctex"
+uid="uid://ctspi0b7ynhiv"
+path="res://.godot/imported/normal.png-6b154ec19990f9d1a5d33f9891036dc8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/rainandrise/CloudEmotions/tile012.png"
-dest_files=["res://.godot/imported/tile012.png-8ea55ba740bf3727dc68fcbb6c3203b6.ctex"]
+source_file="res://assets/rainandrise/CloudEmotions/normal.png"
+dest_files=["res://.godot/imported/normal.png-6b154ec19990f9d1a5d33f9891036dc8.ctex"]
 
 [params]
 

@@ -12,11 +12,21 @@ extends CanvasLayer
 @onready var success_popup:   Control     = $SuccessPopup
 @onready var failure_popup:   Control     = $FailurePopup
 
+var target_timer_ctrl: Control = null
+
 func _ready() -> void:
 	game_over_board.visible = false
 	exit_button.visible     = true
 	success_popup.visible   = false
 	failure_popup.visible   = false
+
+	var ttc := Control.new()
+	ttc.set_script(load("res://scripts/juicer/TargetTimerControl.gd"))
+	ttc.custom_minimum_size = Vector2(90, 90)
+	ttc.visible = false
+	add_child(ttc)
+	ttc.size = Vector2(90, 90)
+	target_timer_ctrl = ttc
 
 	restart_button.pressed.connect(func(): get_parent().restart_game())
 	menu_button.pressed.connect(func():    get_parent().go_to_menu())
@@ -38,15 +48,16 @@ func show_playing() -> void:
 	exit_button.visible     = true
 
 
-func show_game_over(score: int, targets: int, success: int, _failure: int) -> void:
+func show_game_over(score: int, success: int, spawned: int, expected: int) -> void:
 	exit_button.visible     = false
 	game_over_board.visible = true
-	var rate := (float(success) / float(targets) * 100.0) if targets > 0 else 0.0
+	var pct := (float(success) / float(expected) * 100.0) if expected > 0 else 0.0
 	results_label.text = (
 		"Score: %d\n" +
+		"Seeds Spawned: %d\n" +
 		"Seeds Watered: %d / %d\n" +
-		"Success Rate: %.1f%%"
-	) % [score, success, targets, rate]
+		"Achievement: %.1f%%"
+	) % [score, spawned, success, expected, pct]
 	restart_button.grab_focus()
 
 
@@ -65,6 +76,23 @@ func update_timer(time_left: float) -> void:
 		timer_label.self_modulate = Color.YELLOW
 	else:
 		timer_label.self_modulate = Color.WHITE
+
+
+func show_target_timer(enabled: bool) -> void:
+	if target_timer_ctrl:
+		target_timer_ctrl.visible = enabled
+
+
+func update_target_timer(time_left: float, time_max: float) -> void:
+	if target_timer_ctrl and target_timer_ctrl.visible:
+		target_timer_ctrl.set_time(time_left, time_max)
+
+
+func set_target_timer_pos(seed_x: float) -> void:
+	if target_timer_ctrl:
+		const SEED_Y := 1000.0
+		var w := target_timer_ctrl.size.x
+		target_timer_ctrl.position = Vector2(seed_x - w * 0.5, SEED_Y - 150.0)
 
 
 func show_success_popup() -> void:
