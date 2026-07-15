@@ -5,7 +5,7 @@ var buttons_done:       bool   = false
 var buttons_reach_time: float  = 0.0
 var buttons_datetime:   String = ""
 var mechanism:          String = ""
-
+var reaching_time:      float = 0.0
 
 func _init(mechanism_name: String = "", read_from_file: bool = true) -> void:
 	mechanism = mechanism_name
@@ -53,6 +53,7 @@ func load_file() -> bool:
 	buttons_datetime   = parts[0]
 	buttons_done       = parts[1] == "1"
 	buttons_reach_time = float(parts[2])
+	reaching_time       = buttons_reach_time
 	return true
 
 

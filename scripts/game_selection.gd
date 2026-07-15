@@ -154,34 +154,53 @@ func _update_info() -> void:
 	message_label.text = "Mechanism: %s  |  AROM Range: %.2f → %.2f" % [mech.name, arom[0], arom[1]]
 
 
+func _is_difficulty_unlocked() -> bool:
+	if Appdata.user_data == null or Appdata.selected_mechanism == null:
+		return false
+	var status := Datamanager.get_mechanism_training_status(
+		Appdata.user_data.hospital_id, Appdata.selected_mechanism.name)
+	print("🎓 Training [%s]: %d normal trials, avg %.1f%% — unlocked=%s" % [
+		Appdata.selected_mechanism.name,
+		status.normal_count, status.avg_achievement, status.unlocked])
+	return status.unlocked
+
+
+func _launch_game() -> void:
+	if _is_difficulty_unlocked():
+		get_tree().change_scene_to_file("res://scene/mode_select.tscn")
+	else:
+		Appdata.selected_game.selected_difficulty = "normal"
+		get_tree().change_scene_to_file(Appdata.target_game_scene)
+
+
 func _on_catch_game_pressed() -> void:
 	Appdata.set_game("Catch")
 	Appdata.target_game_scene = "res://scene/catch_game/catch_game.tscn"
-	get_tree().change_scene_to_file("res://scene/mode_select.tscn")
+	_launch_game()
 
 
 func _on_safe_crossing_pressed() -> void:
 	Appdata.set_game("Safe Crossing")
 	Appdata.target_game_scene = "res://scenes/safecrossing/sc_game.tscn"
-	get_tree().change_scene_to_file("res://scene/mode_select.tscn")
+	_launch_game()
 
 
 func _on_tw_game_pressed() -> void:
 	Appdata.set_game("Table Wipping")
 	Appdata.target_game_scene = "res://scene/tablewipping/tw_game.tscn"
-	get_tree().change_scene_to_file("res://scene/mode_select.tscn")
+	_launch_game()
 
 
 func _on_ht_game_pressed() -> void:
 	Appdata.set_game("Hat Trick")
 	Appdata.target_game_scene = "res://scene/hattrick/ht_game.tscn"
-	get_tree().change_scene_to_file("res://scene/mode_select.tscn")
+	_launch_game()
 
 
 func _on_rnr_game_pressed() -> void:
 	Appdata.set_game("Rain and Rise")
 	Appdata.target_game_scene = "res://scene/rainandrise/rnr_game.tscn"
-	get_tree().change_scene_to_file("res://scene/mode_select.tscn")
+	_launch_game()
 
 
 func _on_sc3d_pressed() -> void:
@@ -192,7 +211,7 @@ func _on_sc3d_pressed() -> void:
 func _on_juicer_game_pressed() -> void:
 	Appdata.set_game("Juicer")
 	Appdata.target_game_scene = "res://scene/juicer/game.tscn"
-	get_tree().change_scene_to_file("res://scene/mode_select.tscn")
+	_launch_game()
 
 
 func _unhandled_input(event: InputEvent) -> void:

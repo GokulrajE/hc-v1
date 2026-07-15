@@ -2,7 +2,7 @@ extends Node
 class_name DataStructure
 
 const CONFIG_HEADER = ["DateTime", "HospitalID", "Name", "Age", "Location", "AffectedLimb","PinchGrasp1", "PinchGrasp2", "Buttons"]
-const SESSION_HEADER = ["SessionNumber", "DateTime", "TrialNumberDay", "TrialNumberSession", "TrialStartTime", "TrialStopTime", "Mechanism", "GameName",  "GameParameter", "GameDuration", "SuccessRate","CurrentTargets", "CurrentHits", "CurrentMisses", "CumulativeTargets", "CumulativeHits", "CumulativeMisses", "RawDataFileName"]
+const SESSION_HEADER = ["SessionNumber", "DateTime", "TrialNumberDay", "TrialNumberSession", "TrialStartTime", "TrialStopTime", "Mechanism", "GameName", "GameParameter", "GameDuration", "SuccessRate", "CurrentTargets", "CurrentHits", "CurrentMisses", "CumulativeTargets", "CumulativeHits", "CumulativeMisses", "RawDataFileName", "ExpectedTarget"]
 const RAW_HEADER = ["Force1", "Force2", "Angle1", "Angle2", "Angle3", "Angle4", "Distance1", "Distance2", "Button1", "Button2", "Button3", "Button4", "Button5", "Button6", "Button7", "GameState", "PlayerX", "PlayerY", "TargetX", "TargetY"]
 
 func get_formatted_datetime() -> String:
@@ -184,3 +184,22 @@ func load_csv(filepath: String) -> Array:
 		line_num += 1
 
 	return data
+
+
+## Returns {normal_count, avg_achievement, unlocked} for the given mechanism.
+## unlocked = True when the user has completed 3+ normal trials with avg SuccessRate >= 50%.
+func get_mechanism_training_status(hospital_id: String, mechanism_name: String) -> Dictionary:
+	var path := get_user_path(hospital_id) + "sessions/sessions.csv"
+	var rows  := load_csv(path)
+	var normal_count := 0
+	var total_rate   := 0.0
+	for row: Dictionary in rows:
+		if row.get("Mechanism", "") == mechanism_name and row.get("GameParameter", "").begins_with("N|"):
+			normal_count += 1
+			total_rate   += float(row.get("SuccessRate", "0"))
+	var avg := (total_rate / float(normal_count)) if normal_count > 0 else 0.0
+	return {
+		"normal_count": normal_count,
+		"avg_achievement": avg,
+		"unlocked": normal_count >= 3 and avg >= 50.0
+	}

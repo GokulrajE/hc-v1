@@ -24,6 +24,12 @@ var _final_pct   : float = 0.0
 var _star_count  : int   = 0
 
 
+func _ready() -> void:
+	var btn := get_node_or_null("card/continue_btn")
+	if btn:
+		btn.visible = false
+
+
 func setup(score: int, successes: int, expected: int, gname: String) -> void:
 	_final_score = score
 	_expected    = maxi(expected, 1)

@@ -139,9 +139,9 @@ func _calculate_cumulative_stats() -> void:
 	for row_str in session_data_table:
 		var parts = row_str.split(",")
 		if parts.size() >= 18:
-			cumulative_targets += int(parts[7])  # CurrentTargets
-			cumulative_hits += int(parts[8])     # CurrentHits
-			cumulative_misses += int(parts[9])   # CurrentMisses
+			cumulative_targets += int(parts[11])  # CurrentTargets
+			cumulative_hits    += int(parts[12])  # CurrentHits
+			cumulative_misses  += int(parts[13])  # CurrentMisses
 
 # Get user's affected side
 func get_affected_side() -> String:
@@ -182,9 +182,9 @@ func get_last_session_data() -> Dictionary:
 		"datetime": parts[1] if parts.size() > 1 else "",
 		"trial_number_day": int(parts[2]) if parts.size() > 2 else 0,
 		"trial_number_session": int(parts[3]) if parts.size() > 3 else 0,
-		"targets": int(parts[7]) if parts.size() > 7 else 0,
-		"hits": int(parts[8]) if parts.size() > 8 else 0,
-		"misses": int(parts[9]) if parts.size() > 9 else 0,
+		"targets": int(parts[11]) if parts.size() > 11 else 0,
+		"hits":    int(parts[12]) if parts.size() > 12 else 0,
+		"misses":  int(parts[13]) if parts.size() > 13 else 0,
 	}
 
 	return session_dict

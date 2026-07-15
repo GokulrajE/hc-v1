@@ -101,9 +101,15 @@ func stop_trial(n_targets: int, n_success: int, n_failure: int) -> void:
 	Appdata.user_data.cumulative_hits += n_success
 	Appdata.user_data.cumulative_misses += n_failure
 
-	var raw_filename = Datamanager.get_raw_filename(Appdata.current_session_number, Appdata.selected_mechanism.trial_number_session, Appdata.selected_mechanism.name)
+	var raw_filename := Datamanager.get_raw_filename(Appdata.current_session_number, Appdata.selected_mechanism.trial_number_session, Appdata.selected_mechanism.name)
 
-	var session_row = [
+	var g := Appdata.selected_game
+	var diff := g.selected_difficulty if g != null else "normal"
+	var speed := g.get_speed_for(diff) if g != null else 0.0
+	var game_param := "%s|%.1f sec" % [diff.substr(0, 1).to_upper(), speed]
+	var expected_count := g.expected_targets if g != null else 0
+
+	var session_row := [
 		Appdata.current_session_number,
 		Appdata.start_time,
 		Appdata.selected_mechanism.trial_number_day,
@@ -112,17 +118,17 @@ func stop_trial(n_targets: int, n_success: int, n_failure: int) -> void:
 		trial_stop_time,
 		Appdata.selected_mechanism.name,
 		Appdata.selected_game.name,
-		"%.2f" % 0.0,  # Trial time placeholder (can be calculated if needed)
+		game_param,
 		"%.2f" % 60.0,
 		"%.1f" % success_rate,
-		"%.2f" % 0.0,
 		n_targets,
 		n_success,
 		n_failure,
 		Appdata.user_data.cumulative_targets,
 		Appdata.user_data.cumulative_hits,
 		Appdata.user_data.cumulative_misses,
-		raw_filename
+		raw_filename,
+		expected_count
 	]
 
 	Datamanager.append_session_row(Appdata.user_data.hospital_id, session_row)

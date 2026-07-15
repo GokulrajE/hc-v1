@@ -40,32 +40,9 @@ var grip_threshold:   float = 10.0
 var avg_reach_time:   float = 4.0
 var grip_reach_time:  float = 0.0
 
-## TW adaptive stain timeout tiers
-var base_stain_time:      float = 6.0
-var stain_timeout_easy:   float = 8.0
-var stain_timeout_normal: float = 6.0
-var stain_timeout_hard:   float = 4.0
+
 var expected_targets:     int   = 8     # targets achievable at normal difficulty in 60 s
 
-
-## RnR adaptive highlight duration tiers  (action window = 1.0 s RAIN_TO_GROW)
-var rnr_highlight_easy:   float = 7.0
-var rnr_highlight_normal: float = 5.0
-var rnr_highlight_hard:   float = 3.0
-var rnr_expected_targets: int   = 9
-
-## Juicer adaptive highlight duration tiers  (action window = 3.0 s JUICE_FILL_TIME)
-var juicer_highlight_easy:   float = 9.0
-var juicer_highlight_normal: float = 7.0
-var juicer_highlight_hard:   float = 5.0
-var juicer_expected_targets: int   = 7
-
-## HatTrick adaptive ball speed tiers  (ball fall dist = 840 px, no action window)
-## speed = 840 / fall_time  →  faster speed = less time for player
-var ht_ball_speed_easy:   float = 140.0   # 840 / (avg_reach + 2)
-var ht_ball_speed_normal: float = 210.0   # 840 / avg_reach
-var ht_ball_speed_hard:   float = 420.0   # 840 / max(avg_reach - 2, 1.5)
-var ht_expected_targets:  int   = 12
 
 
 func _init(game_name: String = "", mechanism_name: String = "") -> void:
@@ -93,7 +70,6 @@ func reset_current_trial() -> void:
 	current_misses = 0
 	current_star = 0
 	print("🔄 Current trial reset")
-
 
 ## Update trial and session numbers
 func update_trial_numbers(sess_num: int, trial_day: int, trial_sess: int) -> void:
