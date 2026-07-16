@@ -422,7 +422,7 @@ func _end_game() -> void:
 	_state  = _S.DONE
 	_hl_idx = -1
 	_stop_juicing()
-	AppDataTrial.stop_trial(_targets, _successes, _failures)
+	AppDataTrial.stop_trial(_targets, _successes, _failures, _game_timer)
 	_bgm.stop()
 	ScAudioManager.play_gameover()
 	for f: Node in _fruits:

@@ -17,7 +17,7 @@ const _SOUND_PATHS: Dictionary = {
 	"rnr_success":   "res://assets/audio/rnr_success.mp3",
 	"asmnt_reach":   "res://assets/audio/reach.mp3",
 	"asmnt_complete":"res://assets/audio/reachTaskCompleted.mp3",
-	"asmnt_btn":     "res://assets/audio/buttons.WAV",
+	"asmnt_btn":     "res://assets/audio/buttons.wav",
 }
 
 func _ready() -> void:

@@ -224,7 +224,7 @@ func _initialize_game() -> void:
 func _end_trial() -> void:
 	print("⏹️ TRIAL ENDED - Time's Up!")
 	SCGameManager.change_state("game_over")
-	AppDataTrial.stop_trial(_trial_targets, _trial_successes, _trial_failures)
+	AppDataTrial.stop_trial(_trial_targets, _trial_successes, _trial_failures, GameDefs.SafeCrossing.TRIAL_DURATION - _trial_time_left)
 	ScAudioManager.stop_music()
 	ScAudioManager.play_gameover()
 	print("💾 Trial data saved: Targets=%d, Success=%d, Failures=%d" % [
@@ -478,6 +478,7 @@ func resume_game() -> void:
 
 func return_to_menu() -> void:
 	get_tree().paused = false
+	ScAudioManager.stop_music()
 	get_tree().change_scene_to_file("res://scene/game_selection.tscn")
 
 
@@ -487,8 +488,8 @@ func restart_game() -> void:
 
 
 func exit_game() -> void:
-	
 	if _game_state in [GameState.WAITING, GameState.DONE]:
+		ScAudioManager.stop_music()
 		get_tree().change_scene_to_file("res://scene/game_selection.tscn")
 	else:
 		_game_state = GameState.STOP

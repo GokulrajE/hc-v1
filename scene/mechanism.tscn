@@ -102,10 +102,17 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
-[node name="Mechanism" type="Node2D" unique_id=1500000001]
+[node name="Mechanism" type="Control" unique_id=644170923]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_mechanism")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=1741888370]
+layout_mode = 0
 offset_left = -37.0
 offset_top = -27.0
 offset_right = 1969.0
@@ -114,6 +121,7 @@ texture = ExtResource("2_dk3wa")
 
 [node name="bg" type="ColorRect" parent="." unique_id=1500000002]
 visible = false
+layout_mode = 0
 offset_left = -4.0
 offset_top = -12.0
 offset_right = 1936.0
@@ -123,6 +131,7 @@ color = Color(0.11348272, 0.097934835, 0.21125305, 1)
 [node name="ConnectStatus" parent="." unique_id=442870427 instance=ExtResource("2_divyx")]
 
 [node name="title" type="Label" parent="." unique_id=1500000003]
+layout_mode = 0
 offset_left = 67.0
 offset_top = 44.0
 offset_right = 1867.0
@@ -133,6 +142,7 @@ theme_override_font_sizes/font_size = 70
 text = "Device Mechanisms.."
 
 [node name="panle_hand_grip" type="TextureRect" parent="." unique_id=423271877]
+layout_mode = 0
 offset_left = 56.0
 offset_top = 152.0
 offset_right = 532.0
@@ -140,6 +150,7 @@ offset_bottom = 654.0
 texture = ExtResource("3_7bxdt")
 
 [node name="category_grip" type="Label" parent="." unique_id=1500000012]
+layout_mode = 0
 offset_left = 100.0
 offset_top = 180.0
 offset_right = 500.0
@@ -150,6 +161,7 @@ text = "HAND GRIP ASSESSMENTS"
 
 [node name="hand_grip_button" type="Button" parent="." unique_id=1500000005]
 custom_minimum_size = Vector2(350, 120)
+layout_mode = 0
 offset_left = 76.0
 offset_top = 209.0
 offset_right = 510.0
@@ -164,6 +176,7 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_62t8m")
 text = "Handel"
 
 [node name="hand_grip_desc" type="Label" parent="." unique_id=1500000013]
+layout_mode = 0
 offset_left = 100.0
 offset_top = 375.0
 offset_right = 450.0
@@ -174,6 +187,7 @@ text = "Handle assessment"
 
 [node name="grip_button" type="Button" parent="." unique_id=1500000010]
 custom_minimum_size = Vector2(350, 120)
+layout_mode = 0
 offset_left = 77.0
 offset_top = 385.0
 offset_right = 518.0
@@ -188,6 +202,7 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_dk3wa")
 text = "Grip Force"
 
 [node name="grip_force_desc" type="Label" parent="." unique_id=1500000014]
+layout_mode = 0
 offset_left = 100.0
 offset_top = 565.0
 offset_right = 450.0
@@ -204,6 +219,7 @@ region_enabled = true
 region_rect = Rect2(253.14655, 20.73948, 258.85345, 452.7261)
 
 [node name="category_knob" type="Label" parent="." unique_id=1500000015]
+layout_mode = 0
 offset_left = 700.0
 offset_top = 180.0
 offset_right = 1100.0
@@ -214,6 +230,7 @@ text = "KNOB ASSESSMENTS"
 
 [node name="knob" type="Button" parent="." unique_id=1500000006]
 custom_minimum_size = Vector2(350, 120)
+layout_mode = 0
 offset_left = 676.0
 offset_top = 201.0
 offset_right = 1074.0
@@ -228,6 +245,7 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_skn3h")
 text = "Knob"
 
 [node name="knob_desc" type="Label" parent="." unique_id=1500000016]
+layout_mode = 0
 offset_left = 700.0
 offset_top = 375.0
 offset_right = 1050.0
@@ -238,6 +256,7 @@ text = "Standard knob rotation"
 
 [node name="fine_knob" type="Button" parent="." unique_id=1281583165]
 custom_minimum_size = Vector2(350, 120)
+layout_mode = 0
 offset_left = 680.0
 offset_top = 388.0
 offset_right = 1071.0
@@ -253,6 +272,7 @@ theme_override_styles/focus = SubResource("KnobButtonStyle")
 text = "Fine Knob"
 
 [node name="fine_knob_desc" type="Label" parent="." unique_id=1500000017]
+layout_mode = 0
 offset_left = 700.0
 offset_top = 565.0
 offset_right = 1050.0
@@ -263,6 +283,7 @@ text = "Precise fine motor control"
 
 [node name="key_knob" type="Button" parent="." unique_id=1359068104]
 custom_minimum_size = Vector2(350, 120)
+layout_mode = 0
 offset_left = 681.0
 offset_top = 576.0
 offset_right = 1077.0
@@ -277,6 +298,7 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_mtq1e")
 text = "Key Knob"
 
 [node name="key_knob_desc" type="Label" parent="." unique_id=1500000018]
+layout_mode = 0
 offset_left = 700.0
 offset_top = 755.0
 offset_right = 1050.0
@@ -293,6 +315,7 @@ region_enabled = true
 region_rect = Rect2(0, 25.711174, 257.7149, 442.43686)
 
 [node name="category_pinch" type="Label" parent="." unique_id=1500000019]
+layout_mode = 0
 offset_left = 1300.0
 offset_top = 180.0
 offset_right = 1700.0
@@ -303,6 +326,7 @@ text = "PINCH / BUTTONS"
 
 [node name="tripod_grip_button" type="Button" parent="." unique_id=1500000007]
 custom_minimum_size = Vector2(350, 120)
+layout_mode = 0
 offset_left = 1264.0
 offset_top = 193.0
 offset_right = 1650.0
@@ -317,6 +341,7 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_dpuc6")
 text = "Tripod Grasp"
 
 [node name="tripod_grip_desc" type="Label" parent="." unique_id=1500000020]
+layout_mode = 0
 offset_left = 1300.0
 offset_top = 342.0
 offset_right = 1650.0
@@ -327,6 +352,7 @@ text = "Three-finger  grasp"
 
 [node name="pinch_button_button" type="Button" parent="." unique_id=1500000011]
 custom_minimum_size = Vector2(350, 120)
+layout_mode = 0
 offset_left = 1264.0
 offset_top = 374.0
 offset_right = 1662.0
@@ -342,6 +368,7 @@ text = "Pinch"
 
 [node name="buttons_button" type="Button" parent="." unique_id=1500000022]
 custom_minimum_size = Vector2(350, 120)
+layout_mode = 0
 offset_left = 1264.0
 offset_top = 524.0
 offset_right = 1662.0
@@ -356,6 +383,7 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_x15oo")
 text = "Buttons"
 
 [node name="message_label" type="Label" parent="." unique_id=1500000008]
+layout_mode = 0
 offset_left = 100.0
 offset_top = 850.0
 offset_right = 1800.0
@@ -366,6 +394,7 @@ horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="back_button" type="Button" parent="." unique_id=1500000009]
+layout_mode = 0
 offset_left = 50.0
 offset_top = 950.0
 offset_right = 250.0

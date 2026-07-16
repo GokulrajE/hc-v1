@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://xa50siwtfcu8" path="res://scripts/rainandrise/rnr_ui.gd" id="2_rnrui"]
 [ext_resource type="Texture2D" uid="uid://cgreswuet21xq" path="res://assets/hattrick/SkySprite.png" id="2_stj35"]
 [ext_resource type="Texture2D" uid="uid://blvhwv0d31tqo" path="res://assets/rainandrise/Background/GrassSprite.png" id="4_grass"]
-[ext_resource type="Texture2D" uid="uid://dbv7qnrke6we8" path="res://assets/rainandrise/CloudEmotions/tile000.png" id="5_cloud"]
+[ext_resource type="Texture2D" uid="uid://cnq8sh534m570" path="res://assets/rainandrise/CloudEmotions/cry.png" id="5_cloud"]
 [ext_resource type="Texture2D" uid="uid://kwcjyyaksqc5" path="res://assets/ui/start game board.png" id="6_startboard"]
 [ext_resource type="Texture2D" uid="uid://sk2a0xm7sp3k" path="res://assets/ui/gameover board.png" id="7_goboard"]
 [ext_resource type="Texture2D" uid="uid://bmwg8y55461y8" path="res://assets/ui/Button13.png" id="8_btn13"]

@@ -115,8 +115,8 @@ func load_config(hospital_id: String) -> Dictionary:
 
 	return config_data
 
-func get_raw_filename(session: int, trial: int, movement: String) -> String:
-	return "raw-s%02d-t%03d-%s.csv" % [session, trial, movement.to_lower()]
+func get_raw_filename(session: int, trial: int, movement: String, game: String) -> String:
+	return "raw-s%02d-t%03d-%s-%s-%s.csv" % [session, trial, game.to_lower(), movement.to_lower()]
 
 func get_rom_file_path(mechanism: String) -> String:
 	if Appdata.user_data.hospital_id == "":

@@ -82,6 +82,32 @@ animations = [{
 "speed": 1.0
 }]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_DevPanel"]
+bg_color = Color(0.07, 0.07, 0.13, 0.92)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0.78, 1, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_DiscNorm"]
+bg_color = Color(0.65, 0.08, 0.08, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_DiscHover"]
+bg_color = Color(0.85, 0.12, 0.12, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
 [node name="Main" type="Control" unique_id=1361795996]
 layout_mode = 3
 anchors_preset = 15
@@ -207,10 +233,84 @@ selecting_enabled = false
 
 [node name="hyper_cube_annimation" type="AnimatedSprite2D" parent="bg" unique_id=1069330336]
 position = Vector2(507, 579)
-scale = Vector2(1.2, 1.2)
 sprite_frames = SubResource("SpriteFrames_hybxs")
 frame_progress = 0.7033103
 script = ExtResource("13_hypercube")
+
+[node name="device_panel" type="Panel" parent="bg" unique_id=624897950]
+z_index = 10
+layout_mode = 0
+offset_left = 234.0
+offset_top = 345.0
+offset_right = 734.0
+offset_bottom = 795.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_DevPanel")
+
+[node name="scan_content" type="VBoxContainer" parent="bg/device_panel" unique_id=602528782]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -207.0
+offset_top = -216.0
+offset_right = 209.0
+offset_bottom = 104.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="header_row" type="HBoxContainer" parent="bg/device_panel/scan_content" unique_id=1252260116]
+layout_mode = 2
+
+[node name="header_lbl" type="Label" parent="bg/device_panel/scan_content/header_row" unique_id=319074437]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0, 0.78, 1, 1)
+theme_override_font_sizes/font_size = 22
+text = "HyperCube Device"
+
+[node name="rescan_btn" type="Button" parent="bg/device_panel/scan_content/header_row" unique_id=1412085240]
+custom_minimum_size = Vector2(80, 30)
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+text = "Scan"
+
+[node name="separator" type="HSeparator" parent="bg/device_panel/scan_content" unique_id=909371114]
+layout_mode = 2
+
+[node name="scan_lbl" type="Label" parent="bg/device_panel/scan_content" unique_id=333823742]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.65, 0.7, 1)
+theme_override_font_sizes/font_size = 18
+text = "Scanning..."
+horizontal_alignment = 1
+
+[node name="scroll" type="ScrollContainer" parent="bg/device_panel/scan_content" unique_id=2080703660]
+custom_minimum_size = Vector2(416, 220)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="port_list" type="VBoxContainer" parent="bg/device_panel/scan_content/scroll" unique_id=838930942]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+[node name="disc_btn" type="Button" parent="bg" unique_id=348475850]
+visible = false
+layout_mode = 0
+offset_left = 955.0
+offset_top = 129.0
+offset_right = 1135.0
+offset_bottom = 173.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_DiscNorm")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_DiscHover")
+theme_override_styles/hover = SubResource("StyleBoxFlat_DiscHover")
+text = "Disconnect"
 
 [node name="title" type="Label" parent="." unique_id=840081165]
 layout_mode = 0

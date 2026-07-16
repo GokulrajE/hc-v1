@@ -59,10 +59,17 @@ corner_radius_top_right = 18
 corner_radius_bottom_right = 18
 corner_radius_bottom_left = 18
 
-[node name="ModeSelect" type="Node2D" unique_id=1414077626]
+[node name="ModeSelect" type="Control" unique_id=1677076436]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_ms")
 
 [node name="bg" type="TextureRect" parent="." unique_id=1367264181]
+layout_mode = 0
 offset_left = -37.0
 offset_top = -27.0
 offset_right = 1969.0
@@ -70,6 +77,7 @@ offset_bottom = 1133.0
 texture = ExtResource("2_ms")
 
 [node name="title" type="Label" parent="." unique_id=1476381763]
+layout_mode = 0
 offset_left = 73.0
 offset_top = 25.0
 offset_right = 1873.0
@@ -81,6 +89,7 @@ text = "SELECT DIFFICULTY"
 horizontal_alignment = 1
 
 [node name="game_name_label" type="Label" parent="." unique_id=1720886648]
+layout_mode = 0
 offset_left = 73.0
 offset_top = 100.0
 offset_right = 1873.0
@@ -90,6 +99,7 @@ theme_override_font_sizes/font_size = 28
 horizontal_alignment = 1
 
 [node name="reach_note_label" type="Label" parent="." unique_id=563113068]
+layout_mode = 0
 offset_left = 73.0
 offset_top = 149.0
 offset_right = 1873.0
@@ -99,6 +109,7 @@ theme_override_font_sizes/font_size = 20
 horizontal_alignment = 1
 
 [node name="back_button" type="Button" parent="." unique_id=907516017]
+layout_mode = 0
 offset_left = 36.0
 offset_top = 965.0
 offset_right = 256.0
@@ -110,6 +121,7 @@ theme_override_styles/hover = SubResource("BackBtnHover")
 text = "Back"
 
 [node name="card_easy" type="Panel" parent="." unique_id=902321066]
+layout_mode = 0
 offset_left = 80.0
 offset_top = 272.0
 offset_right = 630.0
@@ -253,6 +265,7 @@ theme_override_styles/hover = SubResource("SelBtnHover")
 text = "▶  SELECT"
 
 [node name="card_normal" type="Panel" parent="." unique_id=1287792107]
+layout_mode = 0
 offset_left = 685.0
 offset_top = 270.0
 offset_right = 1235.0
@@ -395,6 +408,7 @@ theme_override_styles/hover = SubResource("SelBtnHover")
 text = "▶  SELECT"
 
 [node name="card_hard" type="Panel" parent="." unique_id=1639472620]
+layout_mode = 0
 offset_left = 1290.0
 offset_top = 270.0
 offset_right = 1840.0

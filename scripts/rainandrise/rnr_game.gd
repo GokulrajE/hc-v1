@@ -519,7 +519,7 @@ func _end_game() -> void:
 	_is_raining = false
 	ui.show_target_timer(false)
 
-	AppDataTrial.stop_trial(n_targets, n_success, n_failure)
+	AppDataTrial.stop_trial(n_targets, n_success, n_failure, GameDefs.RainAndRise.GAME_DURATION - time_left)
 	ScAudioManager.stop_music()
 	ScAudioManager.play_gameover()
 	var expected: int = Appdata.selected_game.expected_targets if Appdata.selected_game != null else n_targets

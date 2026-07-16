@@ -281,7 +281,7 @@ func _initialize_game() -> void:
 func _end_game() -> void:
 	_clear_stain()
 	cloth.visible = false
-	AppDataTrial.stop_trial(n_targets, n_success, n_targets - n_success)
+	AppDataTrial.stop_trial(n_targets, n_success, n_targets - n_success, GameDefs.TableWipping.GAME_DURATION - time_left)
 	ScAudioManager.stop_music()
 	ScAudioManager.play_gameover()
 
@@ -317,9 +317,14 @@ func _spawn_stain() -> void:
 	# Pick random stain image
 	var img_path: String = GameDefs.TableWipping.STAIN_PATHS[randi() % GameDefs.TableWipping.STAIN_PATHS.size()]
 
-	stain_image = Image.load_from_file(img_path)
+	# load() reads from the PCK in builds; Image.load_from_file() only works on OS filesystem.
+	var stain_tex := load(img_path) as Texture2D
+	if stain_tex == null:
+		push_error("TWGame: cannot load stain texture: " + img_path)
+		return
+	stain_image = stain_tex.get_image()
 	if stain_image == null:
-		push_error("TWGame: cannot load stain image: " + img_path)
+		push_error("TWGame: get_image() failed for: " + img_path)
 		return
 
 	# Ensure RGBA8 for pixel manipulation

@@ -30,6 +30,7 @@ var arom_mechanism: String = ""
 var arom_knob_type: String = ""
 
 func start_new_trial() -> void:
+	raw_data_buffer       = ""
 	game_context_state    = ""
 	game_context_player_x = 0.0
 	game_context_player_y = 0.0
@@ -37,7 +38,7 @@ func start_new_trial() -> void:
 	game_context_target_y = 0.0
 	trial_start_time = Datamanager.get_formatted_datetime()
 	Appdata.selected_mechanism.next_trial()
-	var filename = Datamanager.get_raw_filename(Appdata.current_session_number, Appdata.selected_mechanism.trial_number_session, Appdata.selected_mechanism.name)
+	var filename = Datamanager.get_raw_filename(Appdata.current_session_number, Appdata.selected_mechanism.trial_number_session, Appdata.selected_mechanism.name, Appdata.selected_game.name)
 	var user_path = Datamanager.get_user_path(Appdata.user_data.hospital_id)
 	var rawdata_dir = user_path + "rawdata/"
 
@@ -86,8 +87,10 @@ func flush_raw_data() -> void:
 	if file:
 		file.seek_end()
 		file.store_buffer(raw_data_buffer.to_utf8_buffer())
+		file.close()
+	raw_data_buffer = ""
 
-func stop_trial(n_targets: int, n_success: int, n_failure: int) -> void:
+func stop_trial(n_targets: int, n_success: int, n_failure: int, played_duration: float = 60.0) -> void:
 	HCcomm.new_device_data.disconnect(write_frame_data)
 	trial_stop_time = Datamanager.get_formatted_datetime()
 	flush_raw_data()
@@ -101,7 +104,7 @@ func stop_trial(n_targets: int, n_success: int, n_failure: int) -> void:
 	Appdata.user_data.cumulative_hits += n_success
 	Appdata.user_data.cumulative_misses += n_failure
 
-	var raw_filename := Datamanager.get_raw_filename(Appdata.current_session_number, Appdata.selected_mechanism.trial_number_session, Appdata.selected_mechanism.name)
+	var raw_filename := Datamanager.get_raw_filename(Appdata.current_session_number, Appdata.selected_mechanism.trial_number_session, Appdata.selected_mechanism.name, Appdata.selected_game.name)
 
 	var g := Appdata.selected_game
 	var diff := g.selected_difficulty if g != null else "normal"
@@ -119,7 +122,7 @@ func stop_trial(n_targets: int, n_success: int, n_failure: int) -> void:
 		Appdata.selected_mechanism.name,
 		Appdata.selected_game.name,
 		game_param,
-		"%.2f" % 60.0,
+		"%.2f" % played_duration,
 		"%.1f" % success_rate,
 		n_targets,
 		n_success,

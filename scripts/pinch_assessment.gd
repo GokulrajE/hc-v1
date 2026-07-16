@@ -1,4 +1,4 @@
-extends Node2D
+extends Control
 
 # ── node refs ─────────────────────────────────────────────────────────────────
 var back_button:      Button   = null

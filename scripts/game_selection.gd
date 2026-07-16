@@ -89,12 +89,12 @@ func _update_game_visibility() -> void:
 				nd.visible = false
 
 	# Build ordered list of visible cards then show them in one centered row
-	var visible: Array = []
+	var visible_cards: Array = []
 	for key in CARD_KEYS:
 		if show_map[key]:
-			visible.append(key)
+			visible_cards.append(key)
 
-	_reposition_and_show(visible)
+	_reposition_and_show(visible_cards)
 
 	var sc3d = get_node_or_null("sc3d_button")
 	if sc3d:

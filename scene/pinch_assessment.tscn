@@ -200,17 +200,25 @@ corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 
-[node name="PinchAssessment" type="Node2D" unique_id=1368716062]
+[node name="PinchAssessment" type="Control" unique_id=773120335]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_pinch_script")
 
 [node name="bg" type="TextureRect" parent="." unique_id=104113357]
+layout_mode = 0
 offset_left = -35.0
 offset_top = -18.0
-offset_right = 1991.0
+offset_right = 1966.0
 offset_bottom = 1126.0
 texture = ExtResource("2_ihexf")
 
 [node name="title" type="Label" parent="." unique_id=2121930229]
+layout_mode = 0
 offset_left = 50.0
 offset_top = 20.0
 offset_right = 1850.0
@@ -236,6 +244,7 @@ shape = SubResource("CircleClickShape")
 script = SubResource("GDScript_arc_layer")
 
 [node name="back_button" type="Button" parent="." unique_id=508570293]
+layout_mode = 0
 offset_left = 32.0
 offset_top = 977.0
 offset_right = 232.0
@@ -248,6 +257,7 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_yihel")
 text = "Back"
 
 [node name="save_button" type="Button" parent="." unique_id=1482149908]
+layout_mode = 1
 anchors_preset = -1
 offset_left = 1705.0
 offset_top = 969.0
@@ -261,6 +271,7 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_yog1n")
 text = "Save"
 
 [node name="hint_label" type="Label" parent="." unique_id=917866990]
+layout_mode = 0
 offset_left = 8.0
 offset_top = 886.0
 offset_right = 1928.0
@@ -272,6 +283,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="card_pinch1" type="Panel" parent="." unique_id=1092781948]
+layout_mode = 0
 offset_left = 257.0
 offset_top = 143.0
 offset_right = 757.0
@@ -382,6 +394,7 @@ theme_override_styles/hover = SubResource("SF_cont_h")
 text = "Continue"
 
 [node name="card_pinch2" type="Panel" parent="." unique_id=1644638672]
+layout_mode = 0
 offset_left = 1181.0
 offset_top = 150.0
 offset_right = 1681.0
@@ -493,6 +506,7 @@ text = "Continue"
 
 [node name="warning_panel" type="Panel" parent="." unique_id=655679005]
 visible = false
+layout_mode = 1
 anchors_preset = -1
 offset_left = 571.0
 offset_top = 484.0

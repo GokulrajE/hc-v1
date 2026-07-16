@@ -219,7 +219,7 @@ func _end_game() -> void:
 
 	var g := Appdata.selected_game
 	var expected: int = g.expected_targets if g != null else n_targets
-	AppDataTrial.stop_trial(n_targets, n_success, n_failure)
+	AppDataTrial.stop_trial(n_targets, n_success, n_failure, GameDefs.HatTrick.GAME_DURATION - time_left)
 	ScAudioManager.stop_music()
 	ScAudioManager.play_gameover()
 	var _card := Appdata.show_achievement(score, n_success, expected)

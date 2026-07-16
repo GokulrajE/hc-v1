@@ -67,7 +67,7 @@ script = ExtResource("1_qjwtc")
 offset_left = -27.0
 offset_top = -20.0
 offset_right = 1970.0
-offset_bottom = 1117.0
+offset_bottom = 1141.0
 texture = ExtResource("2_bptnn")
 
 [node name="ConnectStatus" parent="." unique_id=442870427 instance=ExtResource("2_4qrfr")]

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cd6hlgynj0m1m"]
 
-[ext_resource type="Script" path="res://scripts/pinch_assessment.gd" id="1_pinch_script"]
+[ext_resource type="Script" uid="uid://cbcc6h57vtwbv" path="res://scripts/pinch_assessment.gd" id="1_pinch_script"]
 [ext_resource type="Texture2D" uid="uid://sal3ip0hwbsd" path="res://assets/ui/Window04.png" id="2_ihexf"]
 [ext_resource type="PackedScene" uid="uid://ca8b3v7p5hc5" path="res://scene/connect_status.tscn" id="2_qncqe"]
 [ext_resource type="Texture2D" uid="uid://cov80lucdvvvm" path="res://sprites/Circle Filled.png" id="3_kcucj"]
@@ -39,10 +39,17 @@ texture = ExtResource("6_s6hp7")
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_yog1n"]
 texture = ExtResource("7_ihexf")
 
-[node name="PinchButtonAssessment" type="Node2D" unique_id=269487740]
+[node name="PinchButtonAssessment" type="Control" unique_id=409213061]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_pinch_script")
 
 [node name="bg" type="TextureRect" parent="." unique_id=2058561690]
+layout_mode = 0
 offset_left = -35.0
 offset_top = -18.0
 offset_right = 1991.0
@@ -50,6 +57,7 @@ offset_bottom = 1126.0
 texture = ExtResource("2_ihexf")
 
 [node name="title" type="Label" parent="." unique_id=294674978]
+layout_mode = 0
 offset_left = 50.0
 offset_top = 20.0
 offset_right = 1850.0
@@ -77,6 +85,7 @@ scale = Vector2(0.75, 0.75)
 script = SubResource("GDScript_arc_layer")
 
 [node name="back_button" type="Button" parent="." unique_id=946906280]
+layout_mode = 0
 offset_left = 32.0
 offset_top = 977.0
 offset_right = 232.0
@@ -89,6 +98,7 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_yihel")
 text = "Back"
 
 [node name="save_button" type="Button" parent="." unique_id=1063475869]
+layout_mode = 1
 anchors_preset = -1
 offset_left = 1705.0
 offset_top = 969.0
@@ -102,6 +112,7 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_yog1n")
 text = "Save"
 
 [node name="hint_label" type="Label" parent="." unique_id=100000030]
+layout_mode = 0
 offset_left = 8.0
 offset_top = 886.0
 offset_right = 1928.0
@@ -112,6 +123,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="card_pinch1" type="Panel" parent="." unique_id=100000001]
+layout_mode = 0
 offset_left = 147.0
 offset_top = 217.0
 offset_right = 647.0
@@ -214,6 +226,7 @@ theme_override_font_sizes/font_size = 20
 text = "Continue"
 
 [node name="card_pinch2" type="Panel" parent="." unique_id=100000011]
+layout_mode = 0
 offset_left = 750.0
 offset_top = 217.0
 offset_right = 1250.0
@@ -317,6 +330,7 @@ text = "Continue"
 
 [node name="warning_panel" type="ColorRect" parent="." unique_id=100000037]
 visible = false
+layout_mode = 0
 offset_left = 560.0
 offset_top = 360.0
 offset_right = 1360.0

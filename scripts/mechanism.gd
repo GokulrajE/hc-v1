@@ -1,4 +1,4 @@
-extends Node2D
+extends Control
 
 var hand_grip_button: Button
 var grip_button: Button

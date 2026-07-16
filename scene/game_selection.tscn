@@ -38,7 +38,7 @@ script = ExtResource("1_gsel")
 offset_left = -37.0
 offset_top = -27.0
 offset_right = 1969.0
-offset_bottom = 1133.0
+offset_bottom = 1139.0
 texture = ExtResource("3_gsel")
 
 [node name="ConnectStatus" parent="." unique_id=905347685 instance=ExtResource("2_gsel")]

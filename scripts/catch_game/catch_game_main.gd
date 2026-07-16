@@ -515,7 +515,7 @@ func _end_game() -> void:
 	var correct = _caught_objects + _avoided_objects
 	var wrong   = _missed_objects + _caught_unwanted
 	if Appdata.selected_mechanism != null:
-		AppDataTrial.stop_trial(total, correct, wrong)
+		AppDataTrial.stop_trial(total, correct, wrong, GameDefs.Catch.GAME_DURATION - _time_left)
 	ScAudioManager.stop_music()
 	ScAudioManager.play_gameover()
 	var expected: int = Appdata.selected_game.expected_targets if Appdata.selected_game != null else total
